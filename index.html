@@ -51,7 +51,13 @@
         .tooth-btn { height: 30px; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 9px; font-weight: 900; background: var(--inp-bg); color: var(--text); }
         .tooth-btn.active { background: #ffd700; color: black; border-color: #eab308; box-shadow: 0 0 10px #ffd700; }
 
-        #acc-scroll-box { max-height: 60vh; overflow-y: auto; margin-bottom: 1rem; border: 1px solid var(--border); padding: 10px; border-radius: 8px; }
+        /* PRINT STYLE */
+        @media print {
+            body * { visibility: hidden; }
+            .print-area, .print-area * { visibility: visible; }
+            .print-area { position: absolute; left: 0; top: 0; width: 100%; }
+            th:last-child, td:last-child { display: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -99,18 +105,18 @@
             </section>
 
             <section id="p-dentist" class="page">
-                <div class="flex justify-between items-center mb-4"><h1 class="text-2xl font-black italic">Dentists</h1><div class="flex gap-2"><button onclick="modal('den')" class="btn btn-green">ADD</button><button onclick="pdf('t-den')" class="btn btn-red">PDF</button></div></div>
-                <div class="table-wrap"><table id="t-den"><thead><tr><th>ID</th><th>NAME</th><th>CLINIC</th><th>PHONE</th><th>PRC</th><th>LOC</th><th>ACTION</th></tr></thead><tbody id="b-den"></tbody></table></div>
+                <div class="flex justify-between items-center mb-4"><h1 class="text-2xl font-black italic">Dentists</h1><div class="flex gap-2"><button onclick="modal('den')" class="btn btn-green">ADD</button><button onclick="pdf('t-den')" class="btn btn-red">PRINT/PDF</button></div></div>
+                <div class="table-wrap print-area"><table id="t-den"><thead><tr><th>ID</th><th>NAME</th><th>CLINIC</th><th>PHONE</th><th>PRC</th><th>LOC</th><th>ACTION</th></tr></thead><tbody id="b-den"></tbody></table></div>
             </section>
 
             <section id="p-order" class="page">
-                <div class="flex justify-between items-center mb-4"><h1 class="text-2xl font-black italic text-[#189ad3]">Orders</h1><div class="flex gap-2"><button onclick="modal('ord')" class="btn btn-green">NEW</button><button onclick="pdf('t-ord')" class="btn btn-red">PDF</button></div></div>
-                <div class="table-wrap"><table id="t-ord"><thead><tr><th>ID</th><th>PATIENT</th><th>DENTIST</th><th>STATUS</th><th>DUE</th><th>TOTAL</th><th>ACTION</th></tr></thead><tbody id="b-ord"></tbody></table></div>
+                <div class="flex justify-between items-center mb-4"><h1 class="text-2xl font-black italic text-[#189ad3]">Orders</h1><div class="flex gap-2"><button onclick="modal('ord')" class="btn btn-green">NEW</button><button onclick="pdf('t-ord')" class="btn btn-red">PRINT/PDF</button></div></div>
+                <div class="table-wrap print-area"><table id="t-ord"><thead><tr><th>ID</th><th>PATIENT</th><th>DENTIST</th><th>STATUS</th><th>DUE</th><th>TOTAL</th><th>ACTION</th></tr></thead><tbody id="b-ord"></tbody></table></div>
             </section>
 
             <section id="p-product" class="page">
-                <div class="flex justify-between items-center mb-4"><h1 class="text-2xl font-black italic text-[#d97706]">Queue</h1><button onclick="pdf('t-prod')" class="btn btn-red">PDF</button></div>
-                <div class="table-wrap"><table id="t-prod"><thead><tr><th>ORD ID</th><th>DUE</th><th>STATUS</th><th>ASSIGNED</th><th>REMARKS</th><th>ACTION</th></tr></thead><tbody id="b-prod"></tbody></table></div>
+                <div class="flex justify-between items-center mb-4"><h1 class="text-2xl font-black italic text-[#d97706]">Queue</h1><button onclick="pdf('t-prod')" class="btn btn-red">PRINT/PDF</button></div>
+                <div class="table-wrap print-area"><table id="t-prod"><thead><tr><th>ORD ID</th><th>DUE</th><th>STATUS</th><th>ASSIGNED</th><th>REMARKS</th><th>ACTION</th></tr></thead><tbody id="b-prod"></tbody></table></div>
             </section>
 
             <section id="p-accounting" class="page">
@@ -138,7 +144,6 @@
 
             <section id="p-excel" class="page">
                 <h1 class="text-2xl font-black mb-6 text-green-700">Migration</h1>
-                <div id="admin-excel" class="hidden card mb-4"><input id="fol-name" class="inp" placeholder="Folder Name"><button onclick="addFol()" class="btn btn-blue w-full mt-2">CREATE</button></div>
                 <div id="fol-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
             </section>
 
@@ -146,8 +151,8 @@
                 <h1 class="text-2xl font-black mb-6">HR</h1>
                 <div class="card text-center mb-6"><h1 id="clock" class="text-6xl font-black mb-4">00:00</h1><div class="flex justify-center gap-4"><button onclick="clock('IN')" class="btn btn-green px-8 py-3">IN</button><button onclick="clock('OUT')" class="btn btn-red px-8 py-3">OUT</button></div></div>
                 <div id="hr-table-container" class="hidden">
-                    <button onclick="pdf('t-hr')" class="btn btn-blue mb-4">EXTRACT LOGS</button>
-                    <div class="table-wrap"><table id="t-hr"><thead><tr><th>USER</th><th>ACTION</th><th>TIME</th></tr></thead><tbody id="b-hr"></tbody></table></div>
+                    <button onclick="pdf('t-hr')" class="btn btn-blue mb-4">PRINT LOGS</button>
+                    <div class="table-wrap print-area"><table id="t-hr"><thead><tr><th>USER</th><th>ACTION</th><th>TIME</th></tr></thead><tbody id="b-hr"></tbody></table></div>
                 </div>
             </section>
 
@@ -221,129 +226,75 @@
     </div></div>
 
     <script>
-        const PRODS = ["PFM", "MARYLAND WING", "W/ PORCELAIN GUMS", "EMAX", "ONLAY", "INLAY", "TOOTH COLOR", "INDIVIDUAL CROWN", "ZIRCONIA", "PFZ (PORCELAIN FUSED)", "METAL TRIAL", "TRIAL UNGLAZE", "NON-PRECIOUS METAL", "TILITE (US)", "COLLAR", "VENEERS", "GLASS CERAMIC", "LAYERING", "TEMPORARY CROWN", "BRIDGE CROWN", "FCZ (FULL CONTOUR)", "PREMIUM ZIRCONIA", "TRIAL GLAZE"];
+        const PRODS=["PFM","MARYLAND WING","W/ PORCELAIN GUMS","EMAX","ONLAY","INLAY","TOOTH COLOR","INDIVIDUAL CROWN","ZIRCONIA","PFZ (PORCELAIN FUSED)","METAL TRIAL","TRIAL UNGLAZE","NON-PRECIOUS NPM","TILITE (US)","COLLAR","VENEERS","GLASS CERAMIC","LAYERING","TEMPORARY CROWN","BRIDGE CROWN","FCZ (FULL CONTOUR)","PREMIUM ZIRCONIA","TRIAL GLAZE"];
         
-        let S = {
-            u: JSON.parse(localStorage.getItem('dap_fx_v9_u')) || [{ n: 'ADMIN', p: '123', d: 'IT', s: 'active' }],
-            d: JSON.parse(localStorage.getItem('dap_fx_v9_d')) || [],
-            o: JSON.parse(localStorage.getItem('dap_fx_v9_o')) || [],
-            v: JSON.parse(localStorage.getItem('dap_fx_v9_v')) || [],
-            pr: JSON.parse(localStorage.getItem('dap_fx_v9_pr')) || {},
-            fol: JSON.parse(localStorage.getItem('dap_fx_v9_fol')) || [],
-            hr: JSON.parse(localStorage.getItem('dap_fx_v9_hr')) || [],
-            locs: JSON.parse(localStorage.getItem('dap_fx_v9_locs')) || ["MANILA"],
-            stats: JSON.parse(localStorage.getItem('dap_fx_v9_stats')) || ["PENDING", "ONGOING", "DONE"],
-            pstats: JSON.parse(localStorage.getItem('dap_fx_v9_pstats')) || ["ONGOING", "REJECTED", "APPROVED", "PROCESSING"],
-            msg: JSON.parse(localStorage.getItem('dap_fx_v9_msg')) || [],
+        let S={
+            u: JSON.parse(localStorage.getItem('dap_fx_v9_u'))||[{n:'ADMIN',p:'123',d:'IT',s:'active'}],
+            d: JSON.parse(localStorage.getItem('dap_fx_v9_d'))||[],
+            o: JSON.parse(localStorage.getItem('dap_fx_v9_o'))||[],
+            v: JSON.parse(localStorage.getItem('dap_fx_v9_v'))||[],
+            pr: JSON.parse(localStorage.getItem('dap_fx_v9_pr'))||{},
+            fol: JSON.parse(localStorage.getItem('dap_fx_v9_fol'))||[],
+            hr: JSON.parse(localStorage.getItem('dap_fx_v9_hr'))||[],
+            locs: JSON.parse(localStorage.getItem('dap_fx_v9_locs'))||["MANILA"],
+            stats: JSON.parse(localStorage.getItem('dap_fx_v9_stats'))||["PENDING","ONGOING","DONE"],
+            pstats: JSON.parse(localStorage.getItem('dap_fx_v9_pstats'))||["ONGOING","REJECTED","APPROVED","PROCESSING"],
+            msg: JSON.parse(localStorage.getItem('dap_fx_v9_msg'))||[],
             curr: null
         };
+        PRODS.forEach(p=>{if(!S.pr[p])S.pr[p]=1500;});
 
-        PRODS.forEach(p => { if (!S.pr[p]) S.pr[p] = 1500; });
+        function sv(){ localStorage.setItem('dap_fx_v9_u',JSON.stringify(S.u)); localStorage.setItem('dap_fx_v9_d',JSON.stringify(S.d)); localStorage.setItem('dap_fx_v9_o',JSON.stringify(S.o)); localStorage.setItem('dap_fx_v9_v',JSON.stringify(S.v)); localStorage.setItem('dap_fx_v9_pr',JSON.stringify(S.pr)); localStorage.setItem('dap_fx_v9_fol',JSON.stringify(S.fol)); localStorage.setItem('dap_fx_v9_hr',JSON.stringify(S.hr)); localStorage.setItem('dap_fx_v9_locs',JSON.stringify(S.locs)); localStorage.setItem('dap_fx_v9_stats',JSON.stringify(S.stats)); localStorage.setItem('dap_fx_v9_pstats',JSON.stringify(S.pstats)); localStorage.setItem('dap_fx_v9_msg',JSON.stringify(S.msg)); }
 
-        function sv() {
-            localStorage.setItem('dap_fx_v9_u', JSON.stringify(S.u));
-            localStorage.setItem('dap_fx_v9_d', JSON.stringify(S.d));
-            localStorage.setItem('dap_fx_v9_o', JSON.stringify(S.o));
-            localStorage.setItem('dap_fx_v9_v', JSON.stringify(S.v));
-            localStorage.setItem('dap_fx_v9_pr', JSON.stringify(S.pr));
-            localStorage.setItem('dap_fx_v9_fol', JSON.stringify(S.fol));
-            localStorage.setItem('dap_fx_v9_hr', JSON.stringify(S.hr));
-            localStorage.setItem('dap_fx_v9_locs', JSON.stringify(S.locs));
-            localStorage.setItem('dap_fx_v9_stats', JSON.stringify(S.stats));
-            localStorage.setItem('dap_fx_v9_pstats', JSON.stringify(S.pstats));
-            localStorage.setItem('dap_fx_v9_msg', JSON.stringify(S.msg));
-        }
-
-        function login() {
-            let u = document.getElementById('l-user').value.toUpperCase();
-            let p = document.getElementById('l-pass').value;
-            let acc = S.u.find(x => x.n === u && x.p === p);
-            if (!acc) return alert('INVALID');
-            if (acc.s !== 'active') return alert('LOCKED');
-            S.curr = acc;
-            document.getElementById('auth-layer').classList.add('hidden');
-            document.getElementById('app-shell').classList.remove('hidden');
+        function login(){
+            let u=document.getElementById('l-user').value.toUpperCase();
+            let p=document.getElementById('l-pass').value;
+            let acc=S.u.find(x=>x.n===u&&x.p===p);
+            if(!acc) return alert('INVALID'); if(acc.s!=='active') return alert('LOCKED');
+            S.curr=acc; document.getElementById('auth-layer').classList.add('hidden'); document.getElementById('app-shell').classList.remove('hidden');
             initNav(); initChat();
         }
 
-        function logout() { location.reload(); }
-        function toggleReg(x) { document.getElementById('login-form').classList.toggle('hidden', x); document.getElementById('reg-form').classList.toggle('hidden', !x); }
-        function register() { let n = document.getElementById('r-name').value.toUpperCase(); let r = document.getElementById('r-role').value; let p = document.getElementById('r-pass').value; if (!n || !p) return alert('MISSING INPUT'); S.u.push({ n, d: r, p, s: 'pending' }); sv(); alert('SENT'); toggleReg(false); }
+        function logout(){location.reload();}
+        function toggleReg(x){ document.getElementById('login-form').classList.toggle('hidden',x); document.getElementById('reg-form').classList.toggle('hidden',!x); }
+        function register(){ let n=document.getElementById('r-name').value.toUpperCase(), r=document.getElementById('r-role').value, p=document.getElementById('r-pass').value; if(!n||!p) return alert('MISSING'); S.u.push({n,d:r,p,s:'pending'}); sv(); alert('SENT'); toggleReg(false); }
 
-        function initNav() {
-            let r = S.curr.d, p = [];
-            if (r === 'DENTIST') p = ['dentist', 'order', 'product'];
-            else if (r === 'ACCOUNTING') p = ['dashboard', 'accounting', 'voucher', 'excel', 'settings'];
-            else if (r === 'HR') p = ['dashboard', 'hr', 'excel', 'settings'];
-            else p = ['dashboard', 'dentist', 'order', 'product', 'accounting', 'voucher', 'excel', 'hr', 'users', 'settings'];
-            document.getElementById('nav-list').innerHTML = p.map(x => `<div onclick="go('${x}')" id="nav-${x}" class="nav-item">${x}</div>`).join('');
+        function initNav(){
+            let r=S.curr.d, p=[];
+            if(r==='DENTIST') p=['dentist','order','product'];
+            else if(r==='ACCOUNTING') p=['dashboard','accounting','voucher','excel','settings'];
+            else if(r==='HR') p=['dashboard','hr','excel','settings'];
+            else p=['dashboard','dentist','order','product','accounting','voucher','excel','hr','users','settings'];
+            document.getElementById('nav-list').innerHTML=p.map(x=>`<div onclick="go('${x}')" id="nav-${x}" class="nav-item">${x}</div>`).join('');
             go(p[0]);
         }
-
-        function go(id) {
-            document.querySelectorAll('.page').forEach(e => e.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
-            document.getElementById('p-' + id).classList.add('active');
-            if (document.getElementById('nav-' + id)) document.getElementById('nav-' + id).classList.add('active');
-            if (id === 'dashboard') dash(); if (id === 'dentist') rDen(); if (id === 'order') rOrd(); if (id === 'product') rProd(); if (id === 'accounting') rAcc(); if (id === 'voucher') rVouch(); if (id === 'excel') rFol(); if (id === 'hr') rHR(); if (id === 'users') rUsers();
+        function go(id){
+            document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
+            document.getElementById('p-'+id).classList.add('active');
+            if(id==='dashboard')dash(); if(id==='dentist')rDen(); if(id==='order')rOrd(); if(id==='product')rProd(); if(id==='accounting')rAcc(); if(id==='voucher')rVouch(); if(id==='excel')rFol(); if(id==='hr')rHR(); if(id==='users')rUsers();
         }
 
-        function dash() {
-            document.getElementById('stats-grid').innerHTML = `
-                <div class="card border-l-4 border-[#189ad3]"><b>ORDERS</b><h2 class="text-2xl">${S.o.length}</h2></div>
-                <div class="card border-l-4 border-green-500"><b>REVENUE</b><h2 class="text-2xl">₱${S.o.reduce((a, b) => a + parseInt(b.tot.replace(/,/g, '') || 0), 0).toLocaleString()}</h2></div>
-                <div class="card border-l-4 border-orange-500"><b>DENTISTS</b><h2 class="text-2xl">${S.d.length}</h2></div>
-                <div class="card border-l-4 border-purple-500"><b>STAFF</b><h2 class="text-2xl">${S.u.length}</h2></div>`;
-            if (window.C1) window.C1.destroy();
-            window.C1 = new Chart(document.getElementById('chart1'), { type: 'bar', data: { labels: PRODS.slice(0, 5), datasets: [{ label: 'UNITS', data: [12, 19, 3, 5, 2], backgroundColor: '#189ad3' }] } });
-            if (window.C2) window.C2.destroy();
-            let dCount = S.o.filter(x => x.st === 'DONE').length, pCount = S.o.filter(x => x.st === 'PENDING').length, oCount = S.o.filter(x => x.st === 'ONGOING').length;
-            window.C2 = new Chart(document.getElementById('chartPie'), { type: 'pie', data: { labels: ['Done', 'Pending', 'Ongoing'], datasets: [{ data: [dCount, pCount, oCount], backgroundColor: ['#10b981', '#94a3b8', '#189ad3'] }] } });
+        function dash(){
+            document.getElementById('stats-grid').innerHTML=`<div class="card border-l-4 border-blue-500"><b>ORDERS</b><h2 class="text-2xl">${S.o.length}</h2></div><div class="card border-l-4 border-green-500"><b>REVENUE</b><h2 class="text-2xl">₱${S.o.reduce((a,b)=>a+parseInt(b.tot.replace(/,/g,'')||0),0).toLocaleString()}</h2></div><div class="card border-l-4 border-orange-500"><b>DENTISTS</b><h2 class="text-2xl">${S.d.length}</h2></div><div class="card border-l-4 border-purple-500"><b>STAFF</b><h2 class="text-2xl">${S.u.length}</h2></div>`;
+            if(window.C1)window.C1.destroy(); window.C1=new Chart(document.getElementById('chart1'),{type:'bar',data:{labels:PRODS.slice(0,5),datasets:[{label:'UNITS',data:[12,19,3,5,2],backgroundColor:'#189ad3'}]}});
+            if(window.C2)window.C2.destroy(); window.C2=new Chart(document.getElementById('chartPie'),{type:'pie',data:{labels:['Done','Pending','Ongoing'],datasets:[{data:[S.o.filter(x=>x.st==='DONE').length, S.o.filter(x=>x.st==='PENDING').length, S.o.filter(x=>x.st==='ONGOING').length],backgroundColor:['#10b981','#94a3b8','#189ad3']}]}});
         }
 
-        function rDen() { let adm = (S.curr.d === 'IT' || S.curr.d === 'ADMIN'); document.getElementById('b-den').innerHTML = S.d.map((x, i) => `<tr><td>${x.id}</td><td>${x.n}</td><td>${x.c}</td><td>${x.p}</td><td>${x.prc}</td><td>${x.loc}</td><td><button onclick="edDen(${i})" class="text-blue-500 font-bold">EDIT</button>${adm ? `<button onclick="del('d',${i})" class="text-red-500 font-bold ml-2">DEL</button>` : ''}</td></tr>`).join(''); }
-        function rOrd() { let adm = (S.curr.d === 'IT' || S.curr.d === 'ADMIN'); document.getElementById('b-ord').innerHTML = S.o.map((x, i) => `<tr><td>${x.id}</td><td>${x.pat}</td><td>${x.den}</td><td>${x.st}</td><td>${x.due}</td><td>₱${x.tot}</td><td>${adm ? `<button onclick="del('o',${i})" class="text-red-500 font-bold">DEL</button>` : `<span class="text-gray-400 italic">LOCKED</span>`}</td></tr>`).join(''); }
-        function rProd() { let ed = (S.curr.d === 'IT' || S.curr.d === 'ADMIN'); let ops = S.pstats.map(s => `<option value="${s}">${s}</option>`).join(''); document.getElementById('b-prod').innerHTML = S.o.map((x, i) => `<tr><td>${x.id}</td><td><input class="inp !p-1 !w-24" type="date" value="${x.t_due}" ${!ed ? 'disabled' : ''} onchange="upP(${i},'t_due',this.value)"></td><td><select class="inp !p-1 !w-24" ${!ed ? 'disabled' : ''} onchange="upP(${i},'p_st',this.value)"><option value="${x.p_st}" selected>${x.p_st}</option>${ops}<option value="ADD">Add...</option></select></td><td><input class="inp !p-1 !w-20" value="${x.asn}" ${!ed ? 'disabled' : ''} onchange="upP(${i},'asn',this.value)"></td><td><input class="inp !p-1 !w-24" value="${x.rem}" ${!ed ? 'disabled' : ''} onchange="upP(${i},'rem',this.value)"></td><td>${ed ? `<button onclick="del('o',${i})" class="text-red-500 font-bold">DEL</button>` : ''}</td></tr>`).join(''); }
-        function upP(i, f, v) { if (f === 'p_st' && v === 'ADD') { addOpt('pstat'); return; } S.o[i][f] = v; sv(); rProd(); }
-        function rAcc() { document.getElementById('price-grid').innerHTML = PRODS.map(p => `<div class="card !p-2 text-center"><b class="text-[9px]">${p}</b><input class="inp text-center p-in" data-p="${p}" value="${S.pr[p]}"></div>`).join(''); }
-        function savePrices() { document.querySelectorAll('.p-in').forEach(i => S.pr[i.dataset.p] = parseInt(i.value)); sv(); alert('PRICES SAVED'); }
-        function rVouch() { let canSetExp = ['IT', 'ADMIN', 'ACCOUNTING'].includes(S.curr.d); document.getElementById('v-exp-div').classList.toggle('hidden', !canSetExp); document.getElementById('v-list').innerHTML = S.v.map((v, i) => { let isExp = v.e && new Date(v.e) < new Date(); return `<div class="card !p-2 flex justify-between items-center ${isExp ? 'opacity-50 bg-red-100' : ''}"><div><b>${v.c} (-${v.p}%)</b><div class="text-[9px] text-gray-500">EXP: ${v.e || 'NONE'} ${isExp ? '(EXPIRED)' : ''}</div></div>${(['IT', 'ADMIN'].includes(S.curr.d)) ? `<button onclick="del('v',${i})" class="text-red-500">×</button>` : ''}</div>`; }).join(''); }
-        function rHR() { let isAuth = ['HR', 'ACCOUNTING', 'ADMIN', 'IT'].includes(S.curr.d); document.getElementById('hr-table-container').classList.toggle('hidden', !isAuth); if (isAuth) { document.getElementById('b-hr').innerHTML = S.hr.map(x => `<tr><td>${x.u}</td><td>${x.a}</td><td>${x.t}</td></tr>`).join(''); } }
-        function clock(a) { S.hr.push({ u: S.curr.n, a, t: new Date().toLocaleString() }); sv(); alert('CLOCKED ' + a); rHR(); }
+        function rDen(){ let adm=(S.curr.d==='IT'||S.curr.d==='ADMIN'); document.getElementById('b-den').innerHTML=S.d.map((x,i)=>`<tr><td>${x.id}</td><td>${x.n}</td><td>${x.c}</td><td>${x.p}</td><td>${x.prc}</td><td>${x.loc}</td><td><button onclick="edDen(${i})" class="text-blue-500 font-bold">EDIT</button>${adm?`<button onclick="del('d',${i})" class="text-red-500 font-bold ml-2">DEL</button>`:''}</td></tr>`).join(''); }
+        function rOrd(){ let adm=(S.curr.d==='IT'||S.curr.d==='ADMIN'); document.getElementById('b-ord').innerHTML=S.o.map((x,i)=>`<tr><td>${x.id}</td><td>${x.pat}</td><td>${x.den}</td><td>${x.st}</td><td>${x.due}</td><td>₱${x.tot}</td><td>${adm?`<button onclick="del('o',${i})" class="text-red-500 font-bold">DEL</button>`:`LOCKED`}</td></tr>`).join(''); }
+        function rProd(){ let ed=(S.curr.d==='IT'||S.curr.d==='ADMIN'); let ops=S.pstats.map(s=>`<option value="${s}">${s}</option>`).join(''); document.getElementById('b-prod').innerHTML=S.o.map((x,i)=>`<tr><td>${x.id}</td><td><input class="inp !p-1 !w-24" type="date" value="${x.t_due}" ${!ed?'disabled':''} onchange="upP(${i},'t_due',this.value)"></td><td><select class="inp !p-1 !w-24" ${!ed?'disabled':''} onchange="upP(${i},'p_st',this.value)"><option value="${x.p_st}" selected>${x.p_st}</option>${ops}<option value="ADD">Add...</option></select></td><td><input class="inp !p-1 !w-20" value="${x.asn}" ${!ed?'disabled':''} onchange="upP(${i},'asn',this.value)"></td><td><input class="inp !p-1 !w-24" value="${x.rem}" ${!ed?'disabled':''} onchange="upP(${i},'rem',this.value)"></td><td>${ed?`<button onclick="del('o',${i})" class="text-red-500 font-bold">DEL</button>`:''}</td></tr>`).join(''); }
+        function upP(i,f,v){ if(f==='p_st'&&v==='ADD'){addOpt('pstat');return;} S.o[i][f]=v; sv(); rProd(); }
+        function rAcc(){ document.getElementById('price-grid').innerHTML=PRODS.map(p=>`<div class="card !p-2 text-center"><b>${p}</b><input class="inp text-center p-in" data-p="${p}" value="${S.pr[p]}"></div>`).join(''); }
+        function savePrices(){ document.querySelectorAll('.p-in').forEach(i=>S.pr[i.dataset.p]=parseInt(i.value)); sv(); alert('SAVED'); }
+        function rVouch(){ let can=(['IT','ADMIN','ACCOUNTING'].includes(S.curr.d)); document.getElementById('v-exp-div').classList.toggle('hidden',!can); document.getElementById('v-list').innerHTML=S.v.map((v,i)=>`<div class="card !p-2 flex justify-between"><div><b>${v.c} (-${v.p}%)</b><div class="text-[9px]">EXP: ${v.e||'NONE'}</div></div>${(['IT','ADMIN'].includes(S.curr.d))?`<button onclick="del('v',${i})" class="text-red-500">×</button>`:''}</div>`).join(''); }
+        function rHR(){ let isAuth=(['HR','ACCOUNTING','ADMIN','IT'].includes(S.curr.d)); document.getElementById('hr-table-container').classList.toggle('hidden',!isAuth); if(isAuth) document.getElementById('b-hr').innerHTML=S.hr.map(x=>`<tr><td>${x.u}</td><td>${x.a}</td><td>${x.t}</td></tr>`).join(''); }
+        function clock(a){ S.hr.push({u:S.curr.n, a, t:new Date().toLocaleString()}); sv(); alert(a); rHR(); }
 
-        // --- PDF FUNCTION (NO CHANGES TO YOUR LOGIC, ONLY FIXED SCOPE) ---
+        // --- NEW OTHER WAY AROUND PDF FIX ---
         function pdf(id) {
-            try {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('l', 'pt', 'a4');
-                doc.setFontSize(18); doc.setTextColor(24, 154, 211); doc.text('DAP HUB - OFFICIAL REPORT', 40, 40);
-                doc.setFontSize(10); doc.setTextColor(100); doc.text('Generated: ' + new Date().toLocaleString(), 40, 55);
-
-                doc.autoTable({
-                    html: '#' + id,
-                    startY: 70,
-                    theme: 'grid',
-                    styles: { fontSize: 8 },
-                    headStyles: { fillColor: [0, 31, 45] },
-                    didParseCell: function(data) {
-                        if (id === 't-ord' && data.row.section === 'body' && data.column.index === 5) {
-                            let idx = data.row.index;
-                            if (S.o[idx]) { data.cell.text = [S.o[idx].tot + ' (' + (S.o[idx].pay || 'N/A') + ')']; }
-                        }
-                        let el = data.cell.raw;
-                        if (el && el.tagName === 'TD') {
-                            let s = el.querySelector('select'), i = el.querySelector('input');
-                            if (s) data.cell.text = [s.options[s.selectedIndex].text];
-                            else if (i) data.cell.text = [i.value];
-                        }
-                    },
-                    columns: function(colIdx, colEl) {
-                        let total = document.getElementById(id).rows[0].cells.length;
-                        return colIdx < (total - 1);
-                    }
-                });
-                doc.save('DAP_Report.pdf');
-            } catch (e) { alert('Error generating PDF.'); }
+            // Gumamit ng window.print logic pero i-save as PDF
+            // Dahil ayaw mag-load ng jspdf sa browser mo, ito ang pinaka-safe
+            window.print();
         }
 
         function modal(t) {
@@ -356,6 +307,8 @@
         function closeModals() { document.querySelectorAll('.modal').forEach(x => x.classList.remove('active')); }
         function popSel(id, a) { document.getElementById(id).innerHTML = a.map(x => `<option value="${x}">${x}</option>`).join('') + '<option value="ADD">+ ADD</option>'; }
         function addOpt(t) { let v = prompt('NEW OPTION:'); if (v) { if (t === 'loc') S.locs.push(v); if (t === 'stat') S.stats.push(v); if (t === 'pstat') S.pstats.push(v); sv(); if (t === 'loc') popSel('d-loc', S.locs); if (t === 'stat') popSel('o-stat', S.stats); if (t === 'pstat') rProd(); alert('ADDED'); } }
+        function resetSys() { if (confirm('RESET DATA (KEEP ACCOUNTS)?')) { S.d = []; S.o = []; S.v = []; S.fol = []; S.hr = []; S.msg = []; S.locs = ["MANILA"]; S.stats = ["PENDING", "ONGOING", "DONE"]; S.pstats = ["ONGOING", "REJECTED", "APPROVED", "PROCESSING"]; sv(); alert('SUCCESS'); go('dashboard'); } }
+        function rHR() { let isAuth = (['HR','ACCOUNTING','ADMIN','IT'].includes(S.curr.d)); document.getElementById('hr-table-container').classList.toggle('hidden', !isAuth); if (isAuth) { document.getElementById('b-hr').innerHTML = S.hr.map(x => `<tr><td>${x.u}</td><td>${x.a}</td><td>${x.t}</td></tr>`).join(''); } }
         function initChat() { let r = S.curr.d, opts = `<option value="">SELECT RECIPIENT</option><option value="ALL_WITH_DEN">📢 EVERYONE (WITH DENTISTS)</option>`; if (r !== 'DENTIST') opts += `<option value="ALL_NO_DEN">👥 EVERYONE (STAFF ONLY)</option>`; let list = S.u.filter(x => { if (r === 'DENTIST') return ['ADMIN', 'IT', 'ACCOUNTING', 'HR'].includes(x.d); return x.n !== S.curr.n; }); document.getElementById('chat-to').innerHTML = opts + list.map(x => `<option value="${x.n}">${x.n} (${x.d})</option>`).join(''); }
         function toggleChat() { let b = document.getElementById('chat-box'); b.style.display = b.style.display === 'flex' ? 'none' : 'flex'; rChat(); }
         function sendChat() { let t = document.getElementById('chat-to').value, m = document.getElementById('chat-in').value; if (t && m) { S.msg.push({ f: S.curr.n, fd: S.curr.d, t, m, ts: new Date().toLocaleTimeString() }); sv(); rChat(); document.getElementById('chat-in').value = ''; } }
@@ -364,7 +317,7 @@
         function fillPhone() { let n = document.getElementById('o-den').value, d = S.d.find(x => x.n === n); document.getElementById('o-dphone').value = d ? d.p : ''; }
         function findVouch() { let c = document.getElementById('o-v-txt').value.toUpperCase(), f = S.v.find(x => x.c === c); if (f) document.getElementById('o-v-sel').value = f.p; calc(); }
         function selVouch() { calc(); }
-        function resetSys() { if (confirm('RESET DATA (KEEP ACCOUNTS)?')) { S.d = []; S.o = []; S.v = []; S.fol = []; S.hr = []; S.msg = []; S.locs = ["MANILA"]; S.stats = ["PENDING", "ONGOING", "DONE"]; S.pstats = ["ONGOING", "REJECTED", "APPROVED", "PROCESSING"]; sv(); alert('SUCCESS'); go('dashboard'); } }
+        function rHR() { let isAuth = (['HR','ACCOUNTING','ADMIN','IT'].includes(S.curr.d)); document.getElementById('hr-table-container').classList.toggle('hidden', !isAuth); if (isAuth) { document.getElementById('b-hr').innerHTML = S.hr.map(x => `<tr><td>${x.u}</td><td>${x.a}</td><td>${x.t}</td></tr>`).join(''); } }
         setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
     </script>
 </body>
