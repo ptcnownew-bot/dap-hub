@@ -50,6 +50,7 @@
         .tooth-grid { display: grid; grid-template-columns: repeat(16, 1fr); gap: 2px; }
         .tooth-btn { height: 30px; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 9px; font-weight: 900; background: var(--inp-bg); color: var(--text); }
         .tooth-btn.active { background: #ffd700; color: black; border-color: #eab308; box-shadow: 0 0 10px #ffd700; }
+
         #acc-scroll-box { max-height: 60vh; overflow-y: auto; margin-bottom: 1rem; border: 1px solid var(--border); padding: 10px; border-radius: 8px; }
     </style>
 </head>
@@ -171,6 +172,54 @@
     </div>
     <div id="chat-bubble" onclick="toggleChat()">💬</div>
 
+    <div id="mod-den" class="modal"><div class="modal-box">
+        <h2 class="text-xl font-black mb-4">DENTIST</h2>
+        <input type="hidden" id="d-idx">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div><label>ID</label><input id="d-id" class="inp bg-slate-200" readonly></div>
+            <div><label>PTR</label><input id="d-ptr" class="inp" type="number"></div>
+            <div><label>NAME</label><input id="d-name" class="inp"></div>
+            <div><label>EMAIL</label><input id="d-email" class="inp"></div>
+            <div><label>PHONE</label><input id="d-phone" class="inp"></div>
+            <div><label>CLINIC</label><input id="d-clinic" class="inp"></div>
+            <div><label>PRC</label><input id="d-prc" class="inp" type="number"></div>
+            <div><label>LOC <button class="btn-add" onclick="addOpt('loc')">+</button></label><select id="d-loc" class="inp"></select></div>
+            <div class="col-span-2"><label>ADDR</label><input id="d-addr" class="inp"></div>
+        </div>
+        <div class="flex justify-end gap-2 mt-6"><button onclick="closeModals()" class="btn btn-red">CANCEL</button><button onclick="saveDen()" class="btn btn-green">SAVE</button></div>
+    </div></div>
+
+    <div id="mod-ord" class="modal"><div class="modal-box">
+        <h2 class="text-xl font-black mb-4 text-[#189ad3]">NEW ORDER</h2>
+        <input type="hidden" id="o-idx">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label>ID</label><input id="o-id" class="inp bg-slate-200" readonly>
+                <label>DENTIST</label><select id="o-den" class="inp" onchange="fillPhone()"></select>
+                <label>PHONE</label><input id="o-dphone" class="inp bg-slate-200" readonly>
+                <label>PATIENT</label><input id="o-pat" class="inp">
+                <label>CASE #</label><input id="o-case" class="inp" type="number">
+                <label>SEX</label><div class="flex gap-2"><label><input type="radio" name="sex" value="M"> M</label><label><input type="radio" name="sex" value="F"> F</label></div>
+            </div>
+            <div>
+                <label>DATE</label><input id="o-date" type="date" class="inp">
+                <label>DUE</label><input id="o-due" type="date" class="inp">
+                <label>STATUS <button class="btn-add" onclick="addOpt('stat')">+</button></label><select id="o-stat" class="inp"></select>
+                <label>PRODS</label><div id="o-prods" class="h-40 overflow-y-auto border p-2 rounded bg-slate-50 text-black space-y-1"></div>
+            </div>
+            <div>
+                <label>SHADE</label><input id="o-shade" class="inp">
+                <label>QTY</label><input id="o-qty" type="number" class="inp">
+                <label>TEETH</label><div id="o-teeth" class="tooth-grid mb-4"></div>
+                <label>VOUCHER</label>
+                <div class="flex gap-1"><input id="o-v-txt" class="inp" onchange="findVouch()" placeholder="CODE"><select id="o-v-sel" class="inp w-20" onchange="selVouch()"></select></div>
+                <label>PAY</label><select id="o-pay" class="inp"><option value="CASH">CASH</option><option value="CARD">CARD</option><option value="GCASH">GCASH</option></select>
+                <div class="bg-slate-900 text-white p-4 rounded-xl text-center mt-4"><small>TOTAL</small><h1 class="text-3xl font-black text-[#189ad3]">₱<span id="o-tot">0</span></h1></div>
+            </div>
+        </div>
+        <div class="flex justify-end gap-2 mt-6"><button onclick="closeModals()" class="btn btn-red">CANCEL</button><button onclick="saveOrd()" class="btn btn-green px-8">SAVE</button></div>
+    </div></div>
+
     <script>
         const PRODS = ["PFM", "MARYLAND WING", "W/ PORCELAIN GUMS", "EMAX", "ONLAY", "INLAY", "TOOTH COLOR", "INDIVIDUAL CROWN", "ZIRCONIA", "PFZ (PORCELAIN FUSED)", "METAL TRIAL", "TRIAL UNGLAZE", "NON-PRECIOUS METAL", "TILITE (US)", "COLLAR", "VENEERS", "GLASS CERAMIC", "LAYERING", "TEMPORARY CROWN", "BRIDGE CROWN", "FCZ (FULL CONTOUR)", "PREMIUM ZIRCONIA", "TRIAL GLAZE"];
         
@@ -188,9 +237,22 @@
             msg: JSON.parse(localStorage.getItem('dap_fx_v9_msg')) || [],
             curr: null
         };
+
         PRODS.forEach(p => { if (!S.pr[p]) S.pr[p] = 1500; });
 
-        function sv() { localStorage.setItem('dap_fx_v9_u', JSON.stringify(S.u)); localStorage.setItem('dap_fx_v9_d', JSON.stringify(S.d)); localStorage.setItem('dap_fx_v9_o', JSON.stringify(S.o)); localStorage.setItem('dap_fx_v9_v', JSON.stringify(S.v)); localStorage.setItem('dap_fx_v9_pr', JSON.stringify(S.pr)); localStorage.setItem('dap_fx_v9_fol', JSON.stringify(S.fol)); localStorage.setItem('dap_fx_v9_hr', JSON.stringify(S.hr)); localStorage.setItem('dap_fx_v9_locs', JSON.stringify(S.locs)); localStorage.setItem('dap_fx_v9_stats', JSON.stringify(S.stats)); localStorage.setItem('dap_fx_v9_pstats', JSON.stringify(S.pstats)); localStorage.setItem('dap_fx_v9_msg', JSON.stringify(S.msg)); }
+        function sv() {
+            localStorage.setItem('dap_fx_v9_u', JSON.stringify(S.u));
+            localStorage.setItem('dap_fx_v9_d', JSON.stringify(S.d));
+            localStorage.setItem('dap_fx_v9_o', JSON.stringify(S.o));
+            localStorage.setItem('dap_fx_v9_v', JSON.stringify(S.v));
+            localStorage.setItem('dap_fx_v9_pr', JSON.stringify(S.pr));
+            localStorage.setItem('dap_fx_v9_fol', JSON.stringify(S.fol));
+            localStorage.setItem('dap_fx_v9_hr', JSON.stringify(S.hr));
+            localStorage.setItem('dap_fx_v9_locs', JSON.stringify(S.locs));
+            localStorage.setItem('dap_fx_v9_stats', JSON.stringify(S.stats));
+            localStorage.setItem('dap_fx_v9_pstats', JSON.stringify(S.pstats));
+            localStorage.setItem('dap_fx_v9_msg', JSON.stringify(S.msg));
+        }
 
         function login() {
             let u = document.getElementById('l-user').value.toUpperCase();
@@ -205,7 +267,7 @@
         }
         function logout() { location.reload(); }
         function toggleReg(x) { document.getElementById('login-form').classList.toggle('hidden', x); document.getElementById('reg-form').classList.toggle('hidden', !x); }
-        function register() { let n = document.getElementById('r-name').value.toUpperCase(), r = document.getElementById('r-role').value, p = document.getElementById('r-pass').value; if (!n || !p) return alert('MISSING INPUT'); S.u.push({ n, d: r, p, s: 'pending' }); sv(); alert('SENT'); toggleReg(false); }
+        function register() { let n = document.getElementById('r-name').value.toUpperCase(); let r = document.getElementById('r-role').value; let p = document.getElementById('r-pass').value; if (!n || !p) return alert('MISSING INPUT'); S.u.push({ n, d: r, p, s: 'pending' }); sv(); alert('SENT'); toggleReg(false); }
 
         function initNav() {
             let r = S.curr.d, p = [];
@@ -247,7 +309,7 @@
         function rHR() { let isAuth = ['HR', 'ACCOUNTING', 'ADMIN', 'IT'].includes(S.curr.d); document.getElementById('hr-table-container').classList.toggle('hidden', !isAuth); if (isAuth) { document.getElementById('b-hr').innerHTML = S.hr.map(x => `<tr><td>${x.u}</td><td>${x.a}</td><td>${x.t}</td></tr>`).join(''); } }
         function clock(a) { S.hr.push({ u: S.curr.n, a, t: new Date().toLocaleString() }); sv(); alert('CLOCKED ' + a); rHR(); }
 
-        // --- PDF FUNCTION (STANDARDIZED FIX) ---
+        // --- PDF FUNCTION STANDARDIZED ---
         function pdf(id) {
             try {
                 const { jsPDF } = window.jspdf;
@@ -262,12 +324,10 @@
                     styles: { fontSize: 8 },
                     headStyles: { fillColor: [0, 31, 45] },
                     didParseCell: function(data) {
-                        // Order Mode of Payment logic
                         if (id === 't-ord' && data.row.section === 'body' && data.column.index === 5) {
                             let idx = data.row.index;
                             if (S.o[idx]) { data.cell.text = [S.o[idx].tot + ' (' + (S.o[idx].pay || 'N/A') + ')']; }
                         }
-                        // Handle internal inputs/selects
                         let el = data.cell.raw;
                         if (el && el.tagName === 'TD') {
                             let s = el.querySelector('select'), i = el.querySelector('input');
@@ -281,19 +341,16 @@
                     }
                 });
                 doc.save('Report.pdf');
-            } catch (e) { alert('Error generating PDF. Check connection.'); }
+            } catch (e) { alert('Error generating PDF.'); }
         }
 
-        function resetSys() { if (confirm('RESET DATA (KEEP ACCOUNTS)?')) { S.d = []; S.o = []; S.v = []; S.fol = []; S.hr = []; S.msg = []; S.locs = ["MANILA"]; S.stats = ["PENDING", "ONGOING", "DONE"]; S.pstats = ["ONGOING", "REJECTED", "APPROVED", "PROCESSING"]; sv(); alert('SUCCESS'); go('dashboard'); } }
-        setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
-        
-        // Modal functions
         function modal(t) {
             if (t === 'den') { document.querySelectorAll('#mod-den input').forEach(i => i.value = ''); document.getElementById('d-idx').value = ''; document.getElementById('d-id').value = String(S.d.length + 1).padStart(4, '0'); popSel('d-loc', S.locs); document.getElementById('mod-den').classList.add('active'); }
             if (t === 'ord') { document.querySelectorAll('#mod-ord input').forEach(i => i.value = ''); document.getElementById('o-idx').value = ''; document.getElementById('o-id').value = String(S.o.length + 1).padStart(4, '0'); document.getElementById('o-date').value = new Date().toISOString().split('T')[0]; document.getElementById('o-den').innerHTML = '<option value="">SELECT</option>' + S.d.map(x => `<option value="${x.n}">${x.n}</option>`).join(''); popSel('o-stat', S.stats); document.getElementById('o-prods').innerHTML = PRODS.map(p => `<label class="flex items-center gap-2 font-bold text-[10px]"><input type="checkbox" class="ochk" value="${p}" onchange="calc()"> ${p}</label>`).join(''); let t_teeth = ''; for (let i = 1; i <= 32; i++) t_teeth += `<div class="tooth-btn" onclick="this.classList.toggle('active');calc()">${i}</div>`; document.getElementById('o-teeth').innerHTML = t_teeth; document.getElementById('o-v-sel').innerHTML = '<option value="0">SEL</option>' + S.v.map(v => `<option value="${v.p}">${v.c}</option>`).join(''); document.getElementById('mod-ord').classList.add('active'); }
         }
         function saveOrd() { let p = document.getElementById('o-pat').value, d = document.getElementById('o-den').value; if (!p || !d) return alert('MISSING DATA'); let pr = []; document.querySelectorAll('.ochk:checked').forEach(c => pr.push(c.value)); S.o.push({ id: document.getElementById('o-id').value, pat: p.toUpperCase(), den: d, st: document.getElementById('o-stat').value, due: document.getElementById('o-due').value, tot: document.getElementById('o-tot').innerText, prods: pr, t_due: '', asn: '', rem: '', p_st: 'ONGOING', pay: document.getElementById('o-pay').value }); sv(); rOrd(); rProd(); dash(); closeModals(); }
         function saveDen() { let n = document.getElementById('d-name').value.toUpperCase(); if (!n) return alert('MISSING NAME'); let i = document.getElementById('d-idx').value, o = { id: document.getElementById('d-id').value, ptr: document.getElementById('d-ptr').value, n, c: document.getElementById('d-clinic').value, email: document.getElementById('d-email').value, p: document.getElementById('d-phone').value, prc: document.getElementById('d-prc').value, loc: document.getElementById('d-loc').value, addr: document.getElementById('d-addr').value }; if (i === '') S.d.push(o); else S.d[i] = o; sv(); rDen(); closeModals(); }
+        function edDen(i) { let x = S.d[i]; document.getElementById('d-idx').value = i; document.getElementById('d-id').value = x.id; document.getElementById('d-name').value = x.n; document.getElementById('d-clinic').value = x.c; document.getElementById('d-phone').value = x.p; popSel('d-loc', S.locs); document.getElementById('d-loc').value = x.loc; document.getElementById('mod-den').classList.add('active'); }
         function closeModals() { document.querySelectorAll('.modal').forEach(x => x.classList.remove('active')); }
         function popSel(id, a) { document.getElementById(id).innerHTML = a.map(x => `<option value="${x}">${x}</option>`).join('') + '<option value="ADD">+ ADD</option>'; }
         function addOpt(t) { let v = prompt('NEW OPTION:'); if (v) { if (t === 'loc') S.locs.push(v); if (t === 'stat') S.stats.push(v); if (t === 'pstat') S.pstats.push(v); sv(); if (t === 'loc') popSel('d-loc', S.locs); if (t === 'stat') popSel('o-stat', S.stats); if (t === 'pstat') rProd(); alert('ADDED'); } }
@@ -302,6 +359,11 @@
         function sendChat() { let t = document.getElementById('chat-to').value, m = document.getElementById('chat-in').value; if (t && m) { S.msg.push({ f: S.curr.n, fd: S.curr.d, t, m, ts: new Date().toLocaleTimeString() }); sv(); rChat(); document.getElementById('chat-in').value = ''; } }
         function rChat() { let t = document.getElementById('chat-to').value; let c = S.msg.filter(x => { if (t === 'ALL_WITH_DEN' && x.t === 'ALL_WITH_DEN') return true; if (t === 'ALL_NO_DEN' && x.t === 'ALL_NO_DEN') { if (S.curr.d === 'DENTIST') return false; return true; } return (x.f === S.curr.n && x.t === t) || (x.f === t && x.t === S.curr.n); }); document.getElementById('chat-body').innerHTML = c.map(x => `<div class="${x.f === S.curr.n ? 'text-right' : 'text-left'}"><span class="inline-block p-2 rounded-lg ${x.f === S.curr.n ? 'bg-[#189ad3] text-white' : 'bg-white border text-black'}"><b>${x.f}:</b> ${x.m}</span></div>`).join(''); }
         function del(k, i) { if (confirm('DELETE?')) { if (k === 'f') { S.fol.splice(i, 1); rFol(); } else if (k === 'd') { S.d.splice(i, 1); rDen(); } else if (k === 'o') { S.o.splice(i, 1); rOrd(); dash(); } else if (k === 'v') { S.v.splice(i, 1); rVouch(); } else if (k === 'u') { S.u = S.u.filter(x => x.n !== i); rUsers(); } sv(); } }
+        function fillPhone() { let n = document.getElementById('o-den').value, d = S.d.find(x => x.n === n); document.getElementById('o-dphone').value = d ? d.p : ''; }
+        function findVouch() { let c = document.getElementById('o-v-txt').value.toUpperCase(), f = S.v.find(x => x.c === c); if (f) document.getElementById('o-v-sel').value = f.p; calc(); }
+        function selVouch() { calc(); }
+        function resetSys() { if (confirm('RESET DATA (KEEP ACCOUNTS)?')) { S.d = []; S.o = []; S.v = []; S.fol = []; S.hr = []; S.msg = []; S.locs = ["MANILA"]; S.stats = ["PENDING", "ONGOING", "DONE"]; S.pstats = ["ONGOING", "REJECTED", "APPROVED", "PROCESSING"]; sv(); alert('SUCCESS'); go('dashboard'); } }
+        setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
     </script>
 </body>
 </html>
