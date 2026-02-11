@@ -557,40 +557,56 @@
             }
         }
 
+        // --- PDF FUNCTION (STANDARDIZED FIX) ---
         function pdf(id) {
-            const { jsPDF } = window.jspdf;
-            let doc = new jsPDF('l', 'pt', 'a4');
-            doc.setFontSize(18);
-            doc.setTextColor(24, 154, 211);
-            doc.text('DAP HUB - OFFICIAL REPORT', 40, 40);
-            doc.setFontSize(10);
-            doc.setTextColor(100);
-            doc.text('Generated on: ' + new Date().toLocaleString(), 40, 55);
-            doc.autoTable({
-                html: '#' + id,
-                startY: 70,
-                didParseCell: function(data) {
-                    let element = data.cell.raw;
-                    if (id === 't-ord' && data.row.section === 'body' && data.column.index === 5) {
-                        let rowIndex = data.row.index;
-                        let paymentMode = S.o[rowIndex] ? S.o[rowIndex].pay : 'N/A';
-                        data.cell.text = [data.cell.text + ' (' + paymentMode + ')'];
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('l', 'pt', 'a4'); 
+                
+                doc.setFontSize(18);
+                doc.setTextColor(24, 154, 211);
+                doc.text('DAP HUB - OFFICIAL REPORT', 40, 40);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(100);
+                doc.text('Generated: ' + new Date().toLocaleString(), 40, 55);
+
+                doc.autoTable({
+                    html: '#' + id,
+                    startY: 70,
+                    theme: 'grid',
+                    styles: { fontSize: 8 },
+                    headStyles: { fillColor: [0, 31, 45] },
+                    didParseCell: function(data) {
+                        let el = data.cell.raw;
+                        // Special Case for Order Table Mode of Payment
+                        if (id === 't-ord' && data.row.section === 'body' && data.column.index === 5) {
+                            let idx = data.row.index;
+                            if(S.o[idx]) {
+                                data.cell.text = S.o[idx].tot + ' (' + (S.o[idx].pay || 'N/A') + ')';
+                            }
+                        }
+                        // Clean Up Form Elements
+                        if (el && el.tagName === 'TD') {
+                            let select = el.querySelector('select');
+                            let input = el.querySelector('input');
+                            if (select) data.cell.text = select.options[select.selectedIndex].text;
+                            else if (input) data.cell.text = input.value;
+                        }
+                    },
+                    columns: function(colIdx, colEl) {
+                        // Skip Action Column
+                        let total = document.getElementById(id).rows[0].cells.length;
+                        return colIdx < (total - 1);
                     }
-                    if (element && element.tagName === 'TD') {
-                        let select = element.querySelector('select');
-                        let input = element.querySelector('input');
-                        if (select) { data.cell.text = [select.options[select.selectedIndex].text]; }
-                        else if (input) { data.cell.text = [input.value]; }
-                    }
-                },
-                columns: function(colIndex, colElement) {
-                    let totalCols = document.getElementById(id).rows[0].cells.length;
-                    return colIndex < totalCols - 1;
-                },
-                styles: { fontSize: 8 },
-                headStyles: { fillColor: [0, 31, 45] }
-            });
-            doc.save('DAP-HUB-Report.pdf');
+                });
+
+                // FORCE DOWNLOAD
+                doc.save('DAP_HUB_Report_' + id + '.pdf');
+            } catch (err) {
+                console.error(err);
+                alert('PDF Library Error. Ensure you have internet connection.');
+            }
         }
 
         function closeModals() { document.querySelectorAll('.modal').forEach(x => x.classList.remove('active')); }
