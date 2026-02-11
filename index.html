@@ -174,11 +174,16 @@
 
     <div id="mod-den" class="modal"><div class="modal-box">
         <h2 class="text-xl font-black mb-4">DENTIST</h2>
-        <input type="hidden" id="d-idx"><div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><label>ID</label><input id="d-id" class="inp bg-slate-200" readonly></div><div><label>PTR</label><input id="d-ptr" class="inp" type="number"></div>
-            <div><label>NAME</label><input id="d-name" class="inp"></div><div><label>EMAIL</label><input id="d-email" class="inp"></div>
-            <div><label>PHONE</label><input id="d-phone" class="inp"></div><div><label>CLINIC</label><input id="d-clinic" class="inp"></div>
-            <div><label>PRC</label><input id="d-prc" class="inp" type="number"></div><div><label>LOC <button class="btn-add" onclick="addOpt('loc')">+</button></label><select id="d-loc" class="inp"></select></div>
+        <input type="hidden" id="d-idx">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div><label>ID</label><input id="d-id" class="inp bg-slate-200" readonly></div>
+            <div><label>PTR</label><input id="d-ptr" class="inp" type="number"></div>
+            <div><label>NAME</label><input id="d-name" class="inp"></div>
+            <div><label>EMAIL</label><input id="d-email" class="inp"></div>
+            <div><label>PHONE</label><input id="d-phone" class="inp"></div>
+            <div><label>CLINIC</label><input id="d-clinic" class="inp"></div>
+            <div><label>PRC</label><input id="d-prc" class="inp" type="number"></div>
+            <div><label>LOC <button class="btn-add" onclick="addOpt('loc')">+</button></label><select id="d-loc" class="inp"></select></div>
             <div class="col-span-2"><label>ADDR</label><input id="d-addr" class="inp"></div>
         </div>
         <div class="flex justify-end gap-2 mt-6"><button onclick="closeModals()" class="btn btn-red">CANCEL</button><button onclick="saveDen()" class="btn btn-green">SAVE</button></div>
@@ -186,108 +191,384 @@
 
     <div id="mod-ord" class="modal"><div class="modal-box">
         <h2 class="text-xl font-black mb-4 text-[#189ad3]">NEW ORDER</h2>
-        <input type="hidden" id="o-idx"><div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div><label>ID</label><input id="o-id" class="inp bg-slate-200" readonly><label>DENTIST</label><select id="o-den" class="inp" onchange="fillPhone()"></select><label>PHONE</label><input id="o-dphone" class="inp bg-slate-200" readonly><label>PATIENT</label><input id="o-pat" class="inp"><label>CASE #</label><input id="o-case" class="inp" type="number"><label>SEX</label><div class="flex gap-2"><label><input type="radio" name="sex" value="M"> M</label><label><input type="radio" name="sex" value="F"> F</label></div></div>
-            <div><label>DATE</label><input id="o-date" type="date" class="inp"><label>DUE</label><input id="o-due" type="date" class="inp"><label>STATUS <button class="btn-add" onclick="addOpt('stat')">+</button></label><select id="o-stat" class="inp"></select><label>PRODS</label><div id="o-prods" class="h-40 overflow-y-auto border p-2 rounded bg-slate-50 text-black space-y-1"></div></div>
-            <div><label>SHADE</label><input id="o-shade" class="inp"><label>QTY</label><input id="o-qty" type="number" class="inp"><label>TEETH</label><div id="o-teeth" class="tooth-grid mb-4"></div><label>VOUCHER</label><div class="flex gap-1"><input id="o-v-txt" class="inp" onchange="findVouch()" placeholder="CODE"><select id="o-v-sel" class="inp w-20" onchange="selVouch()"></select></div><label>PAY</label><select id="o-pay" class="inp"><option value="CASH">CASH</option><option value="CARD">CARD</option><option value="GCASH">GCASH</option></select><div class="bg-slate-900 text-white p-4 rounded-xl text-center mt-4"><small>TOTAL</small><h1 class="text-3xl font-black text-[#189ad3]">₱<span id="o-tot">0</span></h1></div></div>
+        <input type="hidden" id="o-idx">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label>ID</label><input id="o-id" class="inp bg-slate-200" readonly>
+                <label>DENTIST</label><select id="o-den" class="inp" onchange="fillPhone()"></select>
+                <label>PHONE</label><input id="o-dphone" class="inp bg-slate-200" readonly>
+                <label>PATIENT</label><input id="o-pat" class="inp">
+                <label>CASE #</label><input id="o-case" class="inp" type="number">
+                <label>SEX</label><div class="flex gap-2"><label><input type="radio" name="sex" value="M"> M</label><label><input type="radio" name="sex" value="F"> F</label></div>
+            </div>
+            <div>
+                <label>DATE</label><input id="o-date" type="date" class="inp">
+                <label>DUE</label><input id="o-due" type="date" class="inp">
+                <label>STATUS <button class="btn-add" onclick="addOpt('stat')">+</button></label><select id="o-stat" class="inp"></select>
+                <label>PRODS</label><div id="o-prods" class="h-40 overflow-y-auto border p-2 rounded bg-slate-50 text-black space-y-1"></div>
+            </div>
+            <div>
+                <label>SHADE</label><input id="o-shade" class="inp">
+                <label>QTY</label><input id="o-qty" type="number" class="inp">
+                <label>TEETH</label><div id="o-teeth" class="tooth-grid mb-4"></div>
+                <label>VOUCHER</label>
+                <div class="flex gap-1"><input id="o-v-txt" class="inp" onchange="findVouch()" placeholder="CODE"><select id="o-v-sel" class="inp w-20" onchange="selVouch()"></select></div>
+                <label>PAY</label><select id="o-pay" class="inp"><option value="CASH">CASH</option><option value="CARD">CARD</option><option value="GCASH">GCASH</option></select>
+                <div class="bg-slate-900 text-white p-4 rounded-xl text-center mt-4"><small>TOTAL</small><h1 class="text-3xl font-black text-[#189ad3]">₱<span id="o-tot">0</span></h1></div>
+            </div>
         </div>
         <div class="flex justify-end gap-2 mt-6"><button onclick="closeModals()" class="btn btn-red">CANCEL</button><button onclick="saveOrd()" class="btn btn-green px-8">SAVE</button></div>
     </div></div>
 
     <script>
-        const PRODS=["PFM","MARYLAND WING","W/ PORCELAIN GUMS","EMAX","ONLAY","INLAY","TOOTH COLOR","INDIVIDUAL CROWN","ZIRCONIA","PFZ (PORCELAIN FUSED)","METAL TRIAL","TRIAL UNGLAZE","NON-PRECIOUS METAL","TILITE (US)","COLLAR","VENEERS","GLASS CERAMIC","LAYERING","TEMPORARY CROWN","BRIDGE CROWN","FCZ (FULL CONTOUR)","PREMIUM ZIRCONIA","TRIAL GLAZE"];
+        const PRODS = ["PFM", "MARYLAND WING", "W/ PORCELAIN GUMS", "EMAX", "ONLAY", "INLAY", "TOOTH COLOR", "INDIVIDUAL CROWN", "ZIRCONIA", "PFZ (PORCELAIN FUSED)", "METAL TRIAL", "TRIAL UNGLAZE", "NON-PRECIOUS METAL", "TILITE (US)", "COLLAR", "VENEERS", "GLASS CERAMIC", "LAYERING", "TEMPORARY CROWN", "BRIDGE CROWN", "FCZ (FULL CONTOUR)", "PREMIUM ZIRCONIA", "TRIAL GLAZE"];
         
-        let S={ u:JSON.parse(localStorage.getItem('dap_fx_v9_u'))||[{n:'ADMIN',p:'123',d:'IT',s:'active'}], d:JSON.parse(localStorage.getItem('dap_fx_v9_d'))||[], o:JSON.parse(localStorage.getItem('dap_fx_v9_o'))||[], v:JSON.parse(localStorage.getItem('dap_fx_v9_v'))||[], pr:JSON.parse(localStorage.getItem('dap_fx_v9_pr'))||{}, fol:JSON.parse(localStorage.getItem('dap_fx_v9_fol'))||[], hr:JSON.parse(localStorage.getItem('dap_fx_v9_hr'))||[], locs:JSON.parse(localStorage.getItem('dap_fx_v9_locs'))||["MANILA"], stats:JSON.parse(localStorage.getItem('dap_fx_v9_stats'))||["PENDING","ONGOING","DONE"], pstats:JSON.parse(localStorage.getItem('dap_fx_v9_pstats'))||["ONGOING","REJECTED","APPROVED","PROCESSING"], msg:JSON.parse(localStorage.getItem('dap_fx_v9_msg'))||[], curr:null };
-        PRODS.forEach(p=>{if(!S.pr[p])S.pr[p]=1500;});
+        let S = {
+            u: JSON.parse(localStorage.getItem('dap_fx_v9_u')) || [{ n: 'ADMIN', p: '123', d: 'IT', s: 'active' }],
+            d: JSON.parse(localStorage.getItem('dap_fx_v9_d')) || [],
+            o: JSON.parse(localStorage.getItem('dap_fx_v9_o')) || [],
+            v: JSON.parse(localStorage.getItem('dap_fx_v9_v')) || [],
+            pr: JSON.parse(localStorage.getItem('dap_fx_v9_pr')) || {},
+            fol: JSON.parse(localStorage.getItem('dap_fx_v9_fol')) || [],
+            hr: JSON.parse(localStorage.getItem('dap_fx_v9_hr')) || [],
+            locs: JSON.parse(localStorage.getItem('dap_fx_v9_locs')) || ["MANILA"],
+            stats: JSON.parse(localStorage.getItem('dap_fx_v9_stats')) || ["PENDING", "ONGOING", "DONE"],
+            pstats: JSON.parse(localStorage.getItem('dap_fx_v9_pstats')) || ["ONGOING", "REJECTED", "APPROVED", "PROCESSING"],
+            msg: JSON.parse(localStorage.getItem('dap_fx_v9_msg')) || [],
+            curr: null
+        };
 
-        function sv(){ localStorage.setItem('dap_fx_v9_u',JSON.stringify(S.u)); localStorage.setItem('dap_fx_v9_d',JSON.stringify(S.d)); localStorage.setItem('dap_fx_v9_o',JSON.stringify(S.o)); localStorage.setItem('dap_fx_v9_v',JSON.stringify(S.v)); localStorage.setItem('dap_fx_v9_pr',JSON.stringify(S.pr)); localStorage.setItem('dap_fx_v9_fol',JSON.stringify(S.fol)); localStorage.setItem('dap_fx_v9_hr',JSON.stringify(S.hr)); localStorage.setItem('dap_fx_v9_locs',JSON.stringify(S.locs)); localStorage.setItem('dap_fx_v9_stats',JSON.stringify(S.stats)); localStorage.setItem('dap_fx_v9_pstats',JSON.stringify(S.pstats)); localStorage.setItem('dap_fx_v9_msg',JSON.stringify(S.msg)); }
+        PRODS.forEach(p => { if (!S.pr[p]) S.pr[p] = 1500; });
 
-        function login(){let u=document.getElementById('l-user').value.toUpperCase(),p=document.getElementById('l-pass').value,acc=S.u.find(x=>x.n===u&&x.p===p);if(!acc)return alert('INVALID');if(acc.s!=='active')return alert('LOCKED');S.curr=acc;document.getElementById('auth-layer').classList.add('hidden');document.getElementById('app-shell').classList.remove('hidden');initNav();initChat();}
-        function logout(){location.reload();}
-        function register(){let n=document.getElementById('r-name').value.toUpperCase(),r=document.getElementById('r-role').value,p=document.getElementById('r-pass').value;if(!n||!p)return alert('MISSING INPUT');S.u.push({n,d:r,p,s:'pending'});sv();alert('SENT');toggleReg(false);}
-        function toggleReg(x){document.getElementById('login-form').classList.toggle('hidden',x);document.getElementById('reg-form').classList.toggle('hidden',!x);}
+        function sv() {
+            localStorage.setItem('dap_fx_v9_u', JSON.stringify(S.u));
+            localStorage.setItem('dap_fx_v9_d', JSON.stringify(S.d));
+            localStorage.setItem('dap_fx_v9_o', JSON.stringify(S.o));
+            localStorage.setItem('dap_fx_v9_v', JSON.stringify(S.v));
+            localStorage.setItem('dap_fx_v9_pr', JSON.stringify(S.pr));
+            localStorage.setItem('dap_fx_v9_fol', JSON.stringify(S.fol));
+            localStorage.setItem('dap_fx_v9_hr', JSON.stringify(S.hr));
+            localStorage.setItem('dap_fx_v9_locs', JSON.stringify(S.locs));
+            localStorage.setItem('dap_fx_v9_stats', JSON.stringify(S.stats));
+            localStorage.setItem('dap_fx_v9_pstats', JSON.stringify(S.pstats));
+            localStorage.setItem('dap_fx_v9_msg', JSON.stringify(S.msg));
+        }
 
-        function initNav(){
-            let r=S.curr.d,p=[];
-            if(r==='DENTIST')p=['dentist','order','product'];
-            else if(r==='ACCOUNTING')p=['dashboard','accounting','voucher','excel','settings']; 
-            else if(r==='HR')p=['dashboard','hr','excel','settings']; 
-            else p=['dashboard','dentist','order','product','accounting','voucher','excel','hr','users','settings'];
-            document.getElementById('nav-list').innerHTML=p.map(x=>`<div onclick="go('${x}')" id="nav-${x}" class="nav-item">${x}</div>`).join('');
+        function login() {
+            let u = document.getElementById('l-user').value.toUpperCase();
+            let p = document.getElementById('l-pass').value;
+            let acc = S.u.find(x => x.n === u && x.p === p);
+            if (!acc) return alert('INVALID');
+            if (acc.s !== 'active') return alert('LOCKED');
+            S.curr = acc;
+            document.getElementById('auth-layer').classList.add('hidden');
+            document.getElementById('app-shell').classList.remove('hidden');
+            initNav();
+            initChat();
+        }
+
+        function logout() { location.reload(); }
+
+        function toggleReg(x) {
+            document.getElementById('login-form').classList.toggle('hidden', x);
+            document.getElementById('reg-form').classList.toggle('hidden', !x);
+        }
+
+        function register() {
+            let n = document.getElementById('r-name').value.toUpperCase();
+            let r = document.getElementById('r-role').value;
+            let p = document.getElementById('r-pass').value;
+            if (!n || !p) return alert('MISSING INPUT');
+            S.u.push({ n, d: r, p, s: 'pending' });
+            sv();
+            alert('SENT');
+            toggleReg(false);
+        }
+
+        function initNav() {
+            let r = S.curr.d, p = [];
+            if (r === 'DENTIST') p = ['dentist', 'order', 'product'];
+            else if (r === 'ACCOUNTING') p = ['dashboard', 'accounting', 'voucher', 'excel', 'settings'];
+            else if (r === 'HR') p = ['dashboard', 'hr', 'excel', 'settings'];
+            else p = ['dashboard', 'dentist', 'order', 'product', 'accounting', 'voucher', 'excel', 'hr', 'users', 'settings'];
+            document.getElementById('nav-list').innerHTML = p.map(x => `<div onclick="go('${x}')" id="nav-${x}" class="nav-item">${x}</div>`).join('');
             go(p[0]);
         }
-        function go(id){
-            document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(e=>e.classList.remove('active'));
-            document.getElementById('p-'+id).classList.add('active');if(document.getElementById('nav-'+id))document.getElementById('nav-'+id).classList.add('active');
-            if(id==='dashboard')dash();if(id==='dentist')rDen();if(id==='order')rOrd();if(id==='product')rProd();if(id==='accounting')rAcc();if(id==='voucher')rVouch();if(id==='excel')rFol();if(id==='hr')rHR();if(id==='users')rUsers();
+
+        function go(id) {
+            document.querySelectorAll('.page').forEach(e => e.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
+            document.getElementById('p-' + id).classList.add('active');
+            if (document.getElementById('nav-' + id)) document.getElementById('nav-' + id).classList.add('active');
+            if (id === 'dashboard') dash();
+            if (id === 'dentist') rDen();
+            if (id === 'order') rOrd();
+            if (id === 'product') rProd();
+            if (id === 'accounting') rAcc();
+            if (id === 'voucher') rVouch();
+            if (id === 'excel') rFol();
+            if (id === 'hr') rHR();
+            if (id === 'users') rUsers();
         }
 
-        function dash(){
-            document.getElementById('stats-grid').innerHTML=`<div class="card border-l-4 border-[#189ad3]"><b>ORDERS</b><h2 class="text-2xl">${S.o.length}</h2></div><div class="card border-l-4 border-green-500"><b>REVENUE</b><h2 class="text-2xl">₱${S.o.reduce((a,b)=>a+parseInt(b.tot.replace(/,/g,'')||0),0).toLocaleString()}</h2></div><div class="card border-l-4 border-orange-500"><b>DENTISTS</b><h2 class="text-2xl">${S.d.length}</h2></div><div class="card border-l-4 border-purple-500"><b>STAFF</b><h2 class="text-2xl">${S.u.length}</h2></div>`;
-            if(window.C1)window.C1.destroy();window.C1=new Chart(document.getElementById('chart1'),{type:'bar',data:{labels:PRODS.slice(0,5),datasets:[{label:'UNITS',data:[12,19,3,5,2],backgroundColor:'#189ad3'}]}});
-            if(window.C2)window.C2.destroy();
-            let dCount = S.o.filter(x=>x.st==='DONE').length, pCount = S.o.filter(x=>x.st==='PENDING').length, oCount = S.o.filter(x=>x.st==='ONGOING').length;
-            window.C2=new Chart(document.getElementById('chartPie'),{type:'pie',data:{labels:['Done','Pending','Ongoing'],datasets:[{data:[dCount, pCount, oCount],backgroundColor:['#10b981','#94a3b8','#189ad3']}]}});
+        function dash() {
+            document.getElementById('stats-grid').innerHTML = `
+                <div class="card border-l-4 border-[#189ad3]"><b>ORDERS</b><h2 class="text-2xl">${S.o.length}</h2></div>
+                <div class="card border-l-4 border-green-500"><b>REVENUE</b><h2 class="text-2xl">₱${S.o.reduce((a, b) => a + parseInt(b.tot.replace(/,/g, '') || 0), 0).toLocaleString()}</h2></div>
+                <div class="card border-l-4 border-orange-500"><b>DENTISTS</b><h2 class="text-2xl">${S.d.length}</h2></div>
+                <div class="card border-l-4 border-purple-500"><b>STAFF</b><h2 class="text-2xl">${S.u.length}</h2></div>`;
+            if (window.C1) window.C1.destroy();
+            window.C1 = new Chart(document.getElementById('chart1'), { type: 'bar', data: { labels: PRODS.slice(0, 5), datasets: [{ label: 'UNITS', data: [12, 19, 3, 5, 2], backgroundColor: '#189ad3' }] } });
+            if (window.C2) window.C2.destroy();
+            let dCount = S.o.filter(x => x.st === 'DONE').length;
+            let pCount = S.o.filter(x => x.st === 'PENDING').length;
+            let oCount = S.o.filter(x => x.st === 'ONGOING').length;
+            window.C2 = new Chart(document.getElementById('chartPie'), { type: 'pie', data: { labels: ['Done', 'Pending', 'Ongoing'], datasets: [{ data: [dCount, pCount, oCount], backgroundColor: ['#10b981', '#94a3b8', '#189ad3'] }] } });
         }
 
-        function rDen(){let adm=(S.curr.d==='IT'||S.curr.d==='ADMIN');document.getElementById('b-den').innerHTML=S.d.map((x,i)=>`<tr><td>${x.id}</td><td>${x.n}</td><td>${x.c}</td><td>${x.p}</td><td>${x.prc}</td><td>${x.loc}</td><td><button onclick="edDen(${i})" class="text-blue-500 font-bold">EDIT</button>${adm?`<button onclick="del('d',${i})" class="text-red-500 font-bold ml-2">DEL</button>`:''}</td></tr>`).join('');}
-        function edDen(i){let x=S.d[i];document.getElementById('d-idx').value=i;document.getElementById('d-id').value=x.id;document.getElementById('d-name').value=x.n;document.getElementById('d-clinic').value=x.c;document.getElementById('d-phone').value=x.p;popSel('d-loc',S.locs);document.getElementById('d-loc').value=x.loc;document.getElementById('mod-den').classList.add('active');}
-        function saveDen(){ let n=document.getElementById('d-name').value.toUpperCase(); if(!n)return alert('MISSING NAME'); let i=document.getElementById('d-idx').value; let o={id:document.getElementById('d-id').value,ptr:document.getElementById('d-ptr').value,n,c:document.getElementById('d-clinic').value,email:document.getElementById('d-email').value,p:document.getElementById('d-phone').value,prc:document.getElementById('d-prc').value,loc:document.getElementById('d-loc').value,addr:document.getElementById('d-addr').value}; if(i==='') S.d.push(o); else S.d[i]=o; sv(); rDen(); closeModals(); }
+        function rDen() {
+            let adm = (S.curr.d === 'IT' || S.curr.d === 'ADMIN');
+            document.getElementById('b-den').innerHTML = S.d.map((x, i) => `<tr><td>${x.id}</td><td>${x.n}</td><td>${x.c}</td><td>${x.p}</td><td>${x.prc}</td><td>${x.loc}</td><td><button onclick="edDen(${i})" class="text-blue-500 font-bold">EDIT</button>${adm ? `<button onclick="del('d',${i})" class="text-red-500 font-bold ml-2">DEL</button>` : ''}</td></tr>`).join('');
+        }
 
-        function modal(t){
-            if(t==='den'){document.querySelectorAll('#mod-den input').forEach(i=>i.value='');document.getElementById('d-idx').value='';document.getElementById('d-id').value=String(S.d.length+1).padStart(4,'0');popSel('d-loc',S.locs);document.getElementById('mod-den').classList.add('active');}
-            if(t==='ord'){
-                document.querySelectorAll('#mod-ord input').forEach(i=>i.value=''); document.getElementById('o-idx').value=''; document.getElementById('o-id').value=String(S.o.length+1).padStart(4,'0');
-                document.getElementById('o-date').value = new Date().toISOString().split('T')[0]; // AUTO TODAY
-                document.getElementById('o-den').innerHTML='<option value="">SELECT</option>'+S.d.map(x=>`<option value="${x.n}">${x.n}</option>`).join('');
-                popSel('o-stat',S.stats); document.getElementById('o-prods').innerHTML=PRODS.map(p=>`<label class="flex items-center gap-2 font-bold text-[10px]"><input type="checkbox" class="ochk" value="${p}" onchange="calc()"> ${p}</label>`).join('');
-                let t='';for(let i=1;i<=32;i++)t+=`<div class="tooth-btn" onclick="this.classList.toggle('active');calc()">${i}</div>`; document.getElementById('o-teeth').innerHTML=t;
-                document.getElementById('o-v-sel').innerHTML='<option value="0">SEL</option>'+S.v.map(v=>`<option value="${v.p}">${v.c}</option>`).join('');
+        function modal(t) {
+            if (t === 'den') {
+                document.querySelectorAll('#mod-den input').forEach(i => i.value = '');
+                document.getElementById('d-idx').value = '';
+                document.getElementById('d-id').value = String(S.d.length + 1).padStart(4, '0');
+                popSel('d-loc', S.locs);
+                document.getElementById('mod-den').classList.add('active');
+            }
+            if (t === 'ord') {
+                document.querySelectorAll('#mod-ord input').forEach(i => i.value = '');
+                document.getElementById('o-idx').value = '';
+                document.getElementById('o-id').value = String(S.o.length + 1).padStart(4, '0');
+                document.getElementById('o-date').value = new Date().toISOString().split('T')[0];
+                document.getElementById('o-den').innerHTML = '<option value="">SELECT</option>' + S.d.map(x => `<option value="${x.n}">${x.n}</option>`).join('');
+                popSel('o-stat', S.stats);
+                document.getElementById('o-prods').innerHTML = PRODS.map(p => `<label class="flex items-center gap-2 font-bold text-[10px]"><input type="checkbox" class="ochk" value="${p}" onchange="calc()"> ${p}</label>`).join('');
+                let t_teeth = ''; for (let i = 1; i <= 32; i++) t_teeth += `<div class="tooth-btn" onclick="this.classList.toggle('active');calc()">${i}</div>`;
+                document.getElementById('o-teeth').innerHTML = t_teeth;
+                document.getElementById('o-v-sel').innerHTML = '<option value="0">SEL</option>' + S.v.map(v => `<option value="${v.p}">${v.c}</option>`).join('');
                 document.getElementById('mod-ord').classList.add('active');
             }
         }
 
-        function fillPhone(){let n=document.getElementById('o-den').value,d=S.d.find(x=>x.n===n);document.getElementById('o-dphone').value=d?d.p:'';}
-        function findVouch(){let c=document.getElementById('o-v-txt').value.toUpperCase(),f=S.v.find(x=>x.c===c);if(f)document.getElementById('o-v-sel').value=f.p;calc();}
-        function selVouch(){calc();}
-        function calc(){let s=0;document.querySelectorAll('.ochk:checked').forEach(c=>s+=S.pr[c.value]);let m=document.querySelectorAll('.tooth-btn.active').length||1,d=parseInt(document.getElementById('o-v-sel').value)||0;document.getElementById('o-tot').innerText=((s*m)*(1-d/100)).toLocaleString();}
-        function saveOrd(){ let p=document.getElementById('o-pat').value,d=document.getElementById('o-den').value; if(!p||!d)return alert('MISSING DATA'); let pr=[];document.querySelectorAll('.ochk:checked').forEach(c=>pr.push(c.value)); S.o.push({id:document.getElementById('o-id').value,pat:p.toUpperCase(),den:d,st:document.getElementById('o-stat').value,due:document.getElementById('o-due').value,tot:document.getElementById('o-tot').innerText,prods:pr,t_due:'',asn:'',rem:'',p_st:'ONGOING', pay:document.getElementById('o-pay').value}); sv(); rOrd(); rProd(); dash(); closeModals(); }
+        function saveDen() {
+            let n = document.getElementById('d-name').value.toUpperCase();
+            if (!n) return alert('MISSING NAME');
+            let i = document.getElementById('d-idx').value;
+            let o = { id: document.getElementById('d-id').value, ptr: document.getElementById('d-ptr').value, n, c: document.getElementById('d-clinic').value, email: document.getElementById('d-email').value, p: document.getElementById('d-phone').value, prc: document.getElementById('d-prc').value, loc: document.getElementById('d-loc').value, addr: document.getElementById('d-addr').value };
+            if (i === '') S.d.push(o); else S.d[i] = o;
+            sv(); rDen(); closeModals();
+        }
 
-        function rOrd(){let adm=(S.curr.d==='IT'||S.curr.d==='ADMIN');document.getElementById('b-ord').innerHTML=S.o.map((x,i)=>`<tr><td>${x.id}</td><td>${x.pat}</td><td>${x.den}</td><td>${x.st}</td><td>${x.due}</td><td>₱${x.tot}</td><td>${adm?`<button onclick="del('o',${i})" class="text-red-500 font-bold">DEL</button>`:`<span class="text-gray-400 italic">LOCKED</span>`}</td></tr>`).join('');}
-        function rProd(){let ed=(S.curr.d==='IT'||S.curr.d==='ADMIN');let ops=S.pstats.map(s=>`<option value="${s}">${s}</option>`).join('');document.getElementById('b-prod').innerHTML=S.o.map((x,i)=>`<tr><td>${x.id}</td><td><input class="inp !p-1 !w-24" type="date" value="${x.t_due}" ${!ed?'disabled':''} onchange="upP(${i},'t_due',this.value)"></td><td><select class="inp !p-1 !w-24" ${!ed?'disabled':''} onchange="upP(${i},'p_st',this.value)"><option value="${x.p_st}" selected>${x.p_st}</option>${ops}<option value="ADD">Add...</option></select></td><td><input class="inp !p-1 !w-20" value="${x.asn}" ${!ed?'disabled':''} onchange="upP(${i},'asn',this.value)"></td><td><input class="inp !p-1 !w-24" value="${x.rem}" ${!ed?'disabled':''} onchange="upP(${i},'rem',this.value)"></td><td>${ed?`<button onclick="del('o',${i})" class="text-red-500 font-bold">DEL</button>`:''}</td></tr>`).join('');}
-        function upP(i,f,v){if(f==='p_st'&&v==='ADD'){addOpt('pstat');return;}S.o[i][f]=v;sv();rProd();}
-        
-        function rAcc(){document.getElementById('price-grid').innerHTML=PRODS.map(p=>`<div class="card !p-2 text-center"><b class="text-[9px]">${p}</b><input class="inp text-center p-in" data-p="${p}" value="${S.pr[p]}"></div>`).join('');}
-        function savePrices(){document.querySelectorAll('.p-in').forEach(i=>S.pr[i.dataset.p]=parseInt(i.value));sv();alert('PRICES SAVED');}
-        
-        function addVouch(){let c=document.getElementById('v-code').value.toUpperCase(), p=document.getElementById('v-pct').value, e=document.getElementById('v-exp').value;if(c&&p){S.v.push({c,p,e});sv();rVouch();}}
-        function rVouch(){ let canSetExp = (['IT','ADMIN','ACCOUNTING'].includes(S.curr.d)); document.getElementById('v-exp-div').classList.toggle('hidden', !canSetExp); document.getElementById('v-list').innerHTML=S.v.map((v,i)=>{ let isExp = v.e && new Date(v.e) < new Date(); return `<div class="card !p-2 flex justify-between items-center ${isExp?'opacity-50 bg-red-100':''}"><div><b>${v.c} (-${v.p}%)</b><div class="text-[9px] text-gray-500">EXP: ${v.e || 'NONE'} ${isExp?'(EXPIRED)':''}</div></div>${(['IT','ADMIN'].includes(S.curr.d)) ? `<button onclick="del('v',${i})" class="text-red-500">×</button>` : ''}</div>` }).join(''); }
+        function edDen(i) {
+            let x = S.d[i];
+            document.getElementById('d-idx').value = i;
+            document.getElementById('d-id').value = x.id;
+            document.getElementById('d-name').value = x.n;
+            document.getElementById('d-clinic').value = x.c;
+            document.getElementById('d-phone').value = x.p;
+            popSel('d-loc', S.locs);
+            document.getElementById('d-loc').value = x.loc;
+            document.getElementById('mod-den').classList.add('active');
+        }
 
-        function rHR(){let isAuth = (['HR','ACCOUNTING','ADMIN','IT'].includes(S.curr.d)); document.getElementById('hr-table-container').classList.toggle('hidden', !isAuth); if(isAuth){document.getElementById('b-hr').innerHTML=S.hr.map(x=>`<tr><td>${x.u}</td><td>${x.a}</td><td>${x.t}</td></tr>`).join('');}}
-        function clock(a){S.hr.push({u:S.curr.n, a, t:new Date().toLocaleString()});sv();alert('CLOCKED ' + a); rHR();}
+        function fillPhone() {
+            let n = document.getElementById('o-den').value;
+            let d = S.d.find(x => x.n === n);
+            document.getElementById('o-dphone').value = d ? d.p : '';
+        }
 
-        function rFol(){ let adm=(['IT','ADMIN'].includes(S.curr.d)); if(adm) document.getElementById('admin-excel').classList.remove('hidden'); else document.getElementById('admin-excel').classList.add('hidden'); document.getElementById('fol-list').innerHTML=S.fol.map((f,i)=>`<div class="card text-center"><h3 class="font-bold text-[#189ad3]">📂 ${f.n}</h3><button onclick="viewFol(${i})" class="text-xs font-bold mt-2 text-green-600">VIEW FILES</button>${adm ? `<button onclick="upFile(${i})" class="text-xs font-bold text-blue-500 ml-2">UPLOAD</button><button onclick="del('f',${i})" class="text-xs font-bold text-red-500 ml-2">DEL</button>` : ''}</div>`).join(''); }
-        function addFol(){let n=document.getElementById('fol-name').value;if(n){S.fol.push({n:n.toUpperCase(),files:[]});sv();rFol();}}
-        function viewFol(i){let w=window.open('','_blank');w.document.write(`<h1>Folder: ${S.fol[i].n}</h1><ul>${S.fol[i].files.length ? S.fol[i].files.map(x=>`<li>📄 ${x.n}</li>`).join('') : '<li>Empty</li>'}</ul>`);}
-        function upFile(i){let f=document.createElement('input');f.type='file';f.onchange=e=>{S.fol[i].files.push({n:e.target.files[0].name});sv();alert('UPLOAD SUCCESS');rFol();};f.click();}
+        function findVouch() {
+            let c = document.getElementById('o-v-txt').value.toUpperCase();
+            let f = S.v.find(x => x.c === c);
+            if (f) document.getElementById('o-v-sel').value = f.p;
+            calc();
+        }
 
-        function rUsers(){document.getElementById('u-pen').innerHTML=S.u.filter(x=>x.s==='pending').map(x=>`<div class="flex justify-between border-b p-2"><span>${x.n} (${x.d})</span><button onclick="uAct('${x.n}','active')" class="text-green-500 font-bold">OK</button></div>`).join('');document.getElementById('u-act').innerHTML=S.u.filter(x=>x.s!=='pending').map(x=>`<div class="flex justify-between border-b p-2 text-xs"><span>${x.n} [${x.d}]</span><div><button onclick="uAct('${x.n}','locked')" class="text-orange-500 mr-2">LOCK</button>${(x.d!=='ADMIN'&&x.d!=='IT')?`<button onclick="del('u','${x.n}')" class="text-red-500">DEL</button>`:''}</div></div>`).join('');}
-        function uAct(n,s){S.u.find(x=>x.n===n).s=s;sv();rUsers();}
+        function selVouch() { calc(); }
 
-        function initChat(){ let r=S.curr.d, opts=`<option value="">SELECT RECIPIENT</option><option value="ALL_WITH_DEN">📢 EVERYONE (WITH DENTISTS)</option>`; if(r!=='DENTIST') opts+=`<option value="ALL_NO_DEN">👥 EVERYONE (STAFF ONLY)</option>`; let list = S.u.filter(x=>{ if(r==='DENTIST') return ['ADMIN','IT','ACCOUNTING','HR'].includes(x.d); return x.n!==S.curr.n; }); document.getElementById('chat-to').innerHTML=opts+list.map(x=>`<option value="${x.n}">${x.n} (${x.d})</option>`).join(''); }
-        function toggleChat(){let b=document.getElementById('chat-box');b.style.display=b.style.display==='flex'?'none':'flex';rChat();}
-        function sendChat(){let t=document.getElementById('chat-to').value,m=document.getElementById('chat-in').value;if(t&&m){S.msg.push({f:S.curr.n, fd:S.curr.d, t, m, ts:new Date().toLocaleTimeString()});sv();rChat();document.getElementById('chat-in').value='';}}
-        function rChat(){ let t=document.getElementById('chat-to').value; let c=S.msg.filter(x=>{ if(t === 'ALL_WITH_DEN' && x.t === 'ALL_WITH_DEN') return true; if(t === 'ALL_NO_DEN' && x.t === 'ALL_NO_DEN') { if(S.curr.d === 'DENTIST') return false; return true; } return (x.f===S.curr.n&&x.t===t)||(x.f===t&&x.t===S.curr.n); }); document.getElementById('chat-body').innerHTML=c.map(x=>`<div class="${x.f===S.curr.n?'text-right':'text-left'}"><span class="inline-block p-2 rounded-lg ${x.f===S.curr.n?'bg-[#189ad3] text-white':'bg-white border text-black'}"><b>${x.f}:</b> ${x.m}</span></div>`).join(''); }
+        function calc() {
+            let s = 0;
+            document.querySelectorAll('.ochk:checked').forEach(c => s += S.pr[c.value]);
+            let m = document.querySelectorAll('.tooth-btn.active').length || 1;
+            let d = parseInt(document.getElementById('o-v-sel').value) || 0;
+            document.getElementById('o-tot').innerText = ((s * m) * (1 - d / 100)).toLocaleString();
+        }
 
-        function del(k,i){ if(confirm('DELETE?')){ if(k==='f'){ S.fol.splice(i,1); rFol(); } else if(k==='d'){ S.d.splice(i,1); rDen(); } else if(k==='o'){ S.o.splice(i,1); rOrd(); dash(); } else if(k==='v'){ S.v.splice(i,1); rVouch(); } else if(k==='u'){ S.u=S.u.filter(x=>x.n!==i); rUsers(); } sv(); } }
+        function saveOrd() {
+            let p = document.getElementById('o-pat').value;
+            let d = document.getElementById('o-den').value;
+            if (!p || !d) return alert('MISSING DATA');
+            let pr = [];
+            document.querySelectorAll('.ochk:checked').forEach(c => pr.push(c.value));
+            S.o.push({
+                id: document.getElementById('o-id').value,
+                pat: p.toUpperCase(),
+                den: d,
+                st: document.getElementById('o-stat').value,
+                due: document.getElementById('o-due').value,
+                tot: document.getElementById('o-tot').innerText,
+                prods: pr,
+                t_due: '', asn: '', rem: '', p_st: 'ONGOING',
+                pay: document.getElementById('o-pay').value
+            });
+            sv(); rOrd(); rProd(); dash(); closeModals();
+        }
+
+        function rOrd() {
+            let adm = (S.curr.d === 'IT' || S.curr.d === 'ADMIN');
+            document.getElementById('b-ord').innerHTML = S.o.map((x, i) => `<tr><td>${x.id}</td><td>${x.pat}</td><td>${x.den}</td><td>${x.st}</td><td>${x.due}</td><td>₱${x.tot}</td><td>${adm ? `<button onclick="del('o',${i})" class="text-red-500 font-bold">DEL</button>` : `<span class="text-gray-400 italic">LOCKED</span>`}</td></tr>`).join('');
+        }
+
+        function rProd() {
+            let ed = (S.curr.d === 'IT' || S.curr.d === 'ADMIN');
+            let ops = S.pstats.map(s => `<option value="${s}">${s}</option>`).join('');
+            document.getElementById('b-prod').innerHTML = S.o.map((x, i) => `
+                <tr>
+                    <td>${x.id}</td>
+                    <td><input class="inp !p-1 !w-24" type="date" value="${x.t_due}" ${!ed ? 'disabled' : ''} onchange="upP(${i},'t_due',this.value)"></td>
+                    <td><select class="inp !p-1 !w-24" ${!ed ? 'disabled' : ''} onchange="upP(${i},'p_st',this.value)"><option value="${x.p_st}" selected>${x.p_st}</option>${ops}<option value="ADD">Add...</option></select></td>
+                    <td><input class="inp !p-1 !w-20" value="${x.asn}" ${!ed ? 'disabled' : ''} onchange="upP(${i},'asn',this.value)"></td>
+                    <td><input class="inp !p-1 !w-24" value="${x.rem}" ${!ed ? 'disabled' : ''} onchange="upP(${i},'rem',this.value)"></td>
+                    <td>${ed ? `<button onclick="del('o',${i})" class="text-red-500 font-bold">DEL</button>` : ''}</td>
+                </tr>`).join('');
+        }
+
+        function upP(i, f, v) { if (f === 'p_st' && v === 'ADD') { addOpt('pstat'); return; } S.o[i][f] = v; sv(); rProd(); }
+
+        function rAcc() {
+            document.getElementById('price-grid').innerHTML = PRODS.map(p => `
+                <div class="card !p-2 text-center"><b class="text-[9px]">${p}</b><input class="inp text-center p-in" data-p="${p}" value="${S.pr[p]}"></div>`).join('');
+        }
+
+        function savePrices() {
+            document.querySelectorAll('.p-in').forEach(i => S.pr[i.dataset.p] = parseInt(i.value));
+            sv(); alert('PRICES SAVED');
+        }
+
+        function addVouch() {
+            let c = document.getElementById('v-code').value.toUpperCase();
+            let p = document.getElementById('v-pct').value;
+            let e = document.getElementById('v-exp').value;
+            if (c && p) { S.v.push({ c, p, e }); sv(); rVouch(); }
+        }
+
+        function rVouch() {
+            let canSetExp = ['IT', 'ADMIN', 'ACCOUNTING'].includes(S.curr.d);
+            document.getElementById('v-exp-div').classList.toggle('hidden', !canSetExp);
+            document.getElementById('v-list').innerHTML = S.v.map((v, i) => {
+                let isExp = v.e && new Date(v.e) < new Date();
+                return `
+                <div class="card !p-2 flex justify-between items-center ${isExp ? 'opacity-50 bg-red-100' : ''}">
+                    <div><b>${v.c} (-${v.p}%)</b><div class="text-[9px] text-gray-500">EXP: ${v.e || 'NONE'} ${isExp ? '(EXPIRED)' : ''}</div></div>
+                    ${(['IT', 'ADMIN'].includes(S.curr.d)) ? `<button onclick="del('v',${i})" class="text-red-500">×</button>` : ''}
+                </div>`;
+            }).join('');
+        }
+
+        function clock(a) {
+            S.hr.push({ u: S.curr.n, a, t: new Date().toLocaleString() });
+            sv(); alert('CLOCKED ' + a);
+            rHR();
+        }
+
+        function rHR() {
+            let isAuth = ['HR', 'ACCOUNTING', 'ADMIN', 'IT'].includes(S.curr.d);
+            document.getElementById('hr-table-container').classList.toggle('hidden', !isAuth);
+            if (isAuth) {
+                document.getElementById('b-hr').innerHTML = S.hr.map(x => `<tr><td>${x.u}</td><td>${x.a}</td><td>${x.t}</td></tr>`).join('');
+            }
+        }
+
+        function rFol() {
+            let adm = ['IT', 'ADMIN'].includes(S.curr.d);
+            if (adm) document.getElementById('admin-excel').classList.remove('hidden');
+            else document.getElementById('admin-excel').classList.add('hidden');
+            document.getElementById('fol-list').innerHTML = S.fol.map((f, i) => `
+                <div class="card text-center"><h3 class="font-bold text-[#189ad3]">📂 ${f.n}</h3><button onclick="viewFol(${i})" class="text-xs font-bold mt-2 text-green-600">VIEW FILES</button>${adm ? `<button onclick="upFile(${i})" class="text-xs font-bold text-blue-500 ml-2">UPLOAD</button><button onclick="del('f',${i})" class="text-xs font-bold text-red-500 ml-2">DEL</button>` : ''}</div>`).join('');
+        }
+
+        function addFol() {
+            let n = document.getElementById('fol-name').value;
+            if (n) { S.fol.push({ n: n.toUpperCase(), files: [] }); sv(); rFol(); }
+        }
+
+        function viewFol(i) {
+            let w = window.open('', '_blank');
+            w.document.write(`<h1>Folder: ${S.fol[i].n}</h1><ul>${S.fol[i].files.length ? S.fol[i].files.map(x => `<li>📄 ${x.n}</li>`).join('') : '<li>Empty</li>'}</ul>`);
+        }
+
+        function upFile(i) {
+            let f = document.createElement('input');
+            f.type = 'file';
+            f.onchange = e => { S.fol[i].files.push({ n: e.target.files[0].name }); sv(); alert('UPLOAD SUCCESS'); rFol(); };
+            f.click();
+        }
+
+        function rUsers() {
+            document.getElementById('u-pen').innerHTML = S.u.filter(x => x.s === 'pending').map(x => `<div class="flex justify-between border-b p-2"><span>${x.n} (${x.d})</span><button onclick="uAct('${x.n}','active')" class="text-green-500 font-bold">OK</button></div>`).join('');
+            document.getElementById('u-act').innerHTML = S.u.filter(x => x.s !== 'pending').map(x => `<div class="flex justify-between border-b p-2 text-xs"><span>${x.n} [${x.d}]</span><div><button onclick="uAct('${x.n}','locked')" class="text-orange-500 mr-2">LOCK</button>${(x.d !== 'ADMIN' && x.d !== 'IT') ? `<button onclick="del('u','${x.n}')" class="text-red-500">DEL</button>` : ''}</div></div>`).join('');
+        }
+
+        function uAct(n, s) { S.u.find(x => x.n === n).s = s; sv(); rUsers(); }
+
+        function initChat() {
+            let r = S.curr.d, opts = `<option value="">SELECT RECIPIENT</option><option value="ALL_WITH_DEN">📢 EVERYONE (WITH DENTISTS)</option>`;
+            if (r !== 'DENTIST') opts += `<option value="ALL_NO_DEN">👥 EVERYONE (STAFF ONLY)</option>`;
+            let list = S.u.filter(x => {
+                if (r === 'DENTIST') return ['ADMIN', 'IT', 'ACCOUNTING', 'HR'].includes(x.d);
+                return x.n !== S.curr.n;
+            });
+            document.getElementById('chat-to').innerHTML = opts + list.map(x => `<option value="${x.n}">${x.n} (${x.d})</option>`).join('');
+        }
+
+        function toggleChat() {
+            let b = document.getElementById('chat-box');
+            b.style.display = b.style.display === 'flex' ? 'none' : 'flex';
+            rChat();
+        }
+
+        function sendChat() {
+            let t = document.getElementById('chat-to').value, m = document.getElementById('chat-in').value;
+            if (t && m) { S.msg.push({ f: S.curr.n, fd: S.curr.d, t, m, ts: new Date().toLocaleTimeString() }); sv(); rChat(); document.getElementById('chat-in').value = ''; }
+        }
+
+        function rChat() {
+            let t = document.getElementById('chat-to').value;
+            let c = S.msg.filter(x => {
+                if (t === 'ALL_WITH_DEN' && x.t === 'ALL_WITH_DEN') return true;
+                if (t === 'ALL_NO_DEN' && x.t === 'ALL_NO_DEN') { if (S.curr.d === 'DENTIST') return false; return true; }
+                return (x.f === S.curr.n && x.t === t) || (x.f === t && x.t === S.curr.n);
+            });
+            document.getElementById('chat-body').innerHTML = c.map(x => `<div class="${x.f === S.curr.n ? 'text-right' : 'text-left'}"><span class="inline-block p-2 rounded-lg ${x.f === S.curr.n ? 'bg-[#189ad3] text-white' : 'bg-white border text-black'}"><b>${x.f}:</b> ${x.m}</span></div>`).join('');
+        }
+
+        function del(k, i) {
+            if (confirm('DELETE?')) {
+                if (k === 'f') { S.fol.splice(i, 1); rFol(); }
+                else if (k === 'd') { S.d.splice(i, 1); rDen(); }
+                else if (k === 'o') { S.o.splice(i, 1); rOrd(); dash(); }
+                else if (k === 'v') { S.v.splice(i, 1); rVouch(); }
+                else if (k === 'u') { S.u = S.u.filter(x => x.n !== i); rUsers(); }
+                sv();
+            }
+        }
 
         function pdf(id) {
             const { jsPDF } = window.jspdf;
-            let doc = new jsPDF('l', 'pt', 'a4'); 
-            doc.setFontSize(18); doc.setTextColor(24, 154, 211); doc.text('DAP HUB - OFFICIAL REPORT', 40, 40);
-            doc.setFontSize(10); doc.setTextColor(100); doc.text('Generated on: ' + new Date().toLocaleString(), 40, 55);
+            let doc = new jsPDF('l', 'pt', 'a4');
+            doc.setFontSize(18);
+            doc.setTextColor(24, 154, 211);
+            doc.text('DAP HUB - OFFICIAL REPORT', 40, 40);
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text('Generated on: ' + new Date().toLocaleString(), 40, 55);
             doc.autoTable({
-                html: '#' + id, startY: 70,
+                html: '#' + id,
+                startY: 70,
                 didParseCell: function(data) {
                     let element = data.cell.raw;
                     if (id === 't-ord' && data.row.section === 'body' && data.column.index === 5) {
@@ -296,22 +577,52 @@
                         data.cell.text = [data.cell.text + ' (' + paymentMode + ')'];
                     }
                     if (element && element.tagName === 'TD') {
-                        let select = element.querySelector('select'), input = element.querySelector('input');
-                        if (select) data.cell.text = [select.options[select.selectedIndex].text];
-                        else if (input) data.cell.text = [input.value];
+                        let select = element.querySelector('select');
+                        let input = element.querySelector('input');
+                        if (select) { data.cell.text = [select.options[select.selectedIndex].text]; }
+                        else if (input) { data.cell.text = [input.value]; }
                     }
                 },
-                columns: function(colIndex, colElement) { let totalCols = document.getElementById(id).rows[0].cells.length; return colIndex < totalCols - 1; },
-                styles: { fontSize: 8 }, headStyles: { fillColor: [0, 31, 45] }
+                columns: function(colIndex, colElement) {
+                    let totalCols = document.getElementById(id).rows[0].cells.length;
+                    return colIndex < totalCols - 1;
+                },
+                styles: { fontSize: 8 },
+                headStyles: { fillColor: [0, 31, 45] }
             });
             doc.save('DAP-HUB-Report.pdf');
         }
 
-        function closeModals(){document.querySelectorAll('.modal').forEach(x=>x.classList.remove('active'));}
-        function popSel(id,a){document.getElementById(id).innerHTML=a.map(x=>`<option value="${x}">${x}</option>`).join('')+'<option value="ADD">+ ADD</option>';}
-        function addOpt(t){ let v=prompt('NEW OPTION:'); if(v){ if(t==='loc') S.locs.push(v); if(t==='stat') S.stats.push(v); if(t==='pstat') S.pstats.push(v); sv(); if(t==='loc') popSel('d-loc', S.locs); if(t==='stat') popSel('o-stat', S.stats); if(t==='pstat') rProd(); alert('ADDED'); } }
-        function resetSys(){ if(confirm('RESET DATA (KEEP ACCOUNTS)?')){ S.d=[]; S.o=[]; S.v=[]; S.fol=[]; S.hr=[]; S.msg=[]; S.locs=["MANILA"]; S.stats=["PENDING","ONGOING","DONE"]; S.pstats=["ONGOING","REJECTED","APPROVED","PROCESSING"]; sv(); alert('SUCCESS'); go('dashboard'); } }
-        setInterval(()=>document.getElementById('clock').innerText=new Date().toLocaleTimeString(),1000);
+        function closeModals() { document.querySelectorAll('.modal').forEach(x => x.classList.remove('active')); }
+
+        function popSel(id, a) {
+            document.getElementById(id).innerHTML = a.map(x => `<option value="${x}">${x}</option>`).join('') + '<option value="ADD">+ ADD</option>';
+        }
+
+        function addOpt(t) {
+            let v = prompt('NEW OPTION:');
+            if (v) {
+                if (t === 'loc') S.locs.push(v);
+                if (t === 'stat') S.stats.push(v);
+                if (t === 'pstat') S.pstats.push(v);
+                sv();
+                if (t === 'loc') popSel('d-loc', S.locs);
+                if (t === 'stat') popSel('o-stat', S.stats);
+                if (t === 'pstat') rProd();
+                alert('ADDED');
+            }
+        }
+
+        function resetSys() {
+            if (confirm('RESET DATA (KEEP ACCOUNTS)?')) {
+                S.d = []; S.o = []; S.v = []; S.fol = []; S.hr = []; S.msg = []; S.locs = ["MANILA"];
+                S.stats = ["PENDING", "ONGOING", "DONE"];
+                S.pstats = ["ONGOING", "REJECTED", "APPROVED", "PROCESSING"];
+                sv(); alert('SUCCESS'); go('dashboard');
+            }
+        }
+
+        setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
     </script>
 </body>
 </html>
