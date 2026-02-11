@@ -314,21 +314,7 @@
         function rUsers(){document.getElementById('u-pen').innerHTML=S.u.filter(x=>x.s==='pending').map(x=>`<div class="flex justify-between border-b p-2"><span>${x.n} (${x.d})</span><button onclick="uAct('${x.n}','active')" class="text-green-500 font-bold">OK</button></div>`).join('');document.getElementById('u-act').innerHTML=S.u.filter(x=>x.s!=='pending').map(x=>`<div class="flex justify-between border-b p-2 text-xs"><span>${x.n} [${x.d}]</span><div><button onclick="uAct('${x.n}','locked')" class="text-orange-500 mr-2">LOCK</button>${(x.d!=='ADMIN'&&x.d!=='IT')?`<button onclick="del('u','${x.n}')" class="text-red-500">DEL</button>`:''}</div></div>`).join('');}
         function uAct(n,s){S.u.find(x=>x.n===n).s=s;sv();rUsers();}
         
-        function initChat(){
-            let r=S.curr.d, opts=`<option value="">SELECT RECIPIENT</option><option value="ALL_WITH_DEN">📢 EVERYONE (WITH DENTISTS)</option>`;
-            if(r!=='DENTIST') opts+=`<option value="ALL_NO_DEN">👥 EVERYONE (STAFF ONLY)</option>`;
-            
-            let list = S.u.filter(x=>{
-                if(r==='DENTIST'){
-                    // Dentists can only see Admin, IT, Accounting, and HR
-                    return ['ADMIN','IT','ACCOUNTING','HR'].includes(x.d);
-                }
-                return x.n!==S.curr.n; // Everyone else sees all except self
-            });
-            
-            document.getElementById('chat-to').innerHTML=opts+list.map(x=>`<option value="${x.n}">${x.n} (${x.d})</option>`).join('');
-        }
-
+        function initChat(){document.getElementById('chat-to').innerHTML=`<option value="">SELECT RECIPIENT</option><option value="ALL_WITH_DEN">📢 EVERYONE (WITH DENTISTS)</option><option value="ALL_NO_DEN">👥 EVERYONE (STAFF ONLY)</option>` + S.u.map(x=>`<option value="${x.n}">${x.n} (${x.d})</option>`).join('');}
         function toggleChat(){let b=document.getElementById('chat-box');b.style.display=b.style.display==='flex'?'none':'flex';rChat();}
         function sendChat(){let t=document.getElementById('chat-to').value,m=document.getElementById('chat-in').value;if(t&&m){S.msg.push({f:S.curr.n, fd:S.curr.d, t, m, ts:new Date().toLocaleTimeString()});sv();rChat();document.getElementById('chat-in').value='';}}
         function rChat(){
@@ -392,6 +378,7 @@
         function closeModals(){document.querySelectorAll('.modal').forEach(x=>x.classList.remove('active'));}
         function popSel(id,a){document.getElementById(id).innerHTML=a.map(x=>`<option value="${x}">${x}</option>`).join('')+'<option value="ADD">+ ADD</option>';}
         
+        // NO FORCED LOGOUT FIX (REMOVED location.reload)
         function addOpt(t){
             let v=prompt('NEW OPTION:');
             if(v){
@@ -399,6 +386,7 @@
                 if(t==='stat') S.stats.push(v);
                 if(t==='pstat') S.pstats.push(v);
                 sv();
+                // Update dropdowns manually without reloading the page
                 if(t==='loc') popSel('d-loc', S.locs);
                 if(t==='stat') popSel('o-stat', S.stats);
                 if(t==='pstat') rProd(); 
@@ -406,10 +394,22 @@
             }
         }
 
+        // SMART FACTORY RESET (KEEPS USERS/ACCOUNTS)
         function resetSys(){
             if(confirm('This will DELETE all Orders, Dentists, Vouchers, Folders, and Logs BUT keep all User Accounts. Proceed?')){
-                S.d = []; S.o = []; S.v = []; S.fol = []; S.hr = []; S.msg = []; S.locs = ["MANILA"]; S.stats = ["PENDING","ONGOING","DONE"]; S.pstats = ["ONGOING","REJECTED","APPROVED","PROCESSING"];
-                sv(); alert('System Data Reset Success! All accounts are preserved.'); go('dashboard');
+                S.d = [];
+                S.o = [];
+                S.v = [];
+                S.fol = [];
+                S.hr = [];
+                S.msg = [];
+                S.locs = ["MANILA"];
+                S.stats = ["PENDING","ONGOING","DONE"];
+                S.pstats = ["ONGOING","REJECTED","APPROVED","PROCESSING"];
+                // Keep S.u as is (Users)
+                sv();
+                alert('System Data Reset Success! All accounts are preserved.');
+                go('dashboard'); // Redirect to dashboard instead of logout
             }
         }
         
