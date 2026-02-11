@@ -51,6 +51,7 @@
         .tooth-btn { height: 30px; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 9px; font-weight: 900; background: var(--inp-bg); color: var(--text); }
         .tooth-btn.active { background: #ffd700; color: black; border-color: #eab308; box-shadow: 0 0 10px #ffd700; }
 
+        /* SCROLL FIX FOR ACCOUNTING */
         #acc-scroll-box { max-height: 60vh; overflow-y: auto; margin-bottom: 1rem; border: 1px solid var(--border); padding: 10px; border-radius: 8px; }
     </style>
 </head>
@@ -84,6 +85,7 @@
         </div>
 
         <main class="flex-1 relative">
+            
             <section id="p-dashboard" class="page">
                 <h1 class="text-2xl font-black uppercase mb-6">Command Center</h1>
                 <div id="stats-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6"></div>
@@ -159,7 +161,7 @@
             <section id="p-settings" class="page">
                 <h1 class="text-2xl font-black mb-6">Settings</h1>
                 <button onclick="document.body.classList.toggle('dark-mode')" class="btn btn-blue w-full py-4 mb-4">TOGGLE DARK MODE</button>
-                <button onclick="resetSys()" class="btn btn-red w-full py-4">FACTORY RESET (KEEP ACCOUNTS)</button>
+                <button onclick="resetSys()" class="btn btn-red w-full py-4">FACTORY RESET</button>
             </section>
         </main>
     </div>
@@ -197,35 +199,10 @@
     <script>
         const PRODS=["PFM","MARYLAND WING","W/ PORCELAIN GUMS","EMAX","ONLAY","INLAY","TOOTH COLOR","INDIVIDUAL CROWN","ZIRCONIA","PFZ (PORCELAIN FUSED)","METAL TRIAL","TRIAL UNGLAZE","NON-PRECIOUS METAL","TILITE (US)","COLLAR","VENEERS","GLASS CERAMIC","LAYERING","TEMPORARY CROWN","BRIDGE CROWN","FCZ (FULL CONTOUR)","PREMIUM ZIRCONIA","TRIAL GLAZE"];
         
-        let S={
-            u:JSON.parse(localStorage.getItem('dap_fx_v9_u'))||[{n:'ADMIN',p:'123',d:'IT',s:'active'}],
-            d:JSON.parse(localStorage.getItem('dap_fx_v9_d'))||[],
-            o:JSON.parse(localStorage.getItem('dap_fx_v9_o'))||[],
-            v:JSON.parse(localStorage.getItem('dap_fx_v9_v'))||[],
-            pr:JSON.parse(localStorage.getItem('dap_fx_v9_pr'))||{},
-            fol:JSON.parse(localStorage.getItem('dap_fx_v9_fol'))||[],
-            hr:JSON.parse(localStorage.getItem('dap_fx_v9_hr'))||[],
-            locs:JSON.parse(localStorage.getItem('dap_fx_v9_locs'))||["MANILA"],
-            stats:JSON.parse(localStorage.getItem('dap_fx_v9_stats'))||["PENDING","ONGOING","DONE"],
-            pstats:JSON.parse(localStorage.getItem('dap_fx_v9_pstats'))||["ONGOING","REJECTED","APPROVED","PROCESSING"],
-            msg:JSON.parse(localStorage.getItem('dap_fx_v9_msg'))||[],
-            curr:null
-        };
+        let S={u:JSON.parse(localStorage.getItem('dap_fx_v9_u'))||[{n:'ADMIN',p:'123',d:'IT',s:'active'}],d:JSON.parse(localStorage.getItem('dap_fx_v9_d'))||[],o:JSON.parse(localStorage.getItem('dap_fx_v9_o'))||[],v:JSON.parse(localStorage.getItem('dap_fx_v9_v'))||[],pr:JSON.parse(localStorage.getItem('dap_fx_v9_pr'))||{},fol:JSON.parse(localStorage.getItem('dap_fx_v9_fol'))||[],hr:JSON.parse(localStorage.getItem('dap_fx_v9_hr'))||[],locs:JSON.parse(localStorage.getItem('dap_fx_v9_locs'))||["MANILA"],stats:JSON.parse(localStorage.getItem('dap_fx_v9_stats'))||["PENDING","ONGOING","DONE"],pstats:JSON.parse(localStorage.getItem('dap_fx_v9_pstats'))||["ONGOING","REJECTED","APPROVED","PROCESSING"],msg:JSON.parse(localStorage.getItem('dap_fx_v9_msg'))||[],curr:null};
         PRODS.forEach(p=>{if(!S.pr[p])S.pr[p]=1500;});
 
-        function sv(){
-            localStorage.setItem('dap_fx_v9_u',JSON.stringify(S.u));
-            localStorage.setItem('dap_fx_v9_d',JSON.stringify(S.d));
-            localStorage.setItem('dap_fx_v9_o',JSON.stringify(S.o));
-            localStorage.setItem('dap_fx_v9_v',JSON.stringify(S.v));
-            localStorage.setItem('dap_fx_v9_pr',JSON.stringify(S.pr));
-            localStorage.setItem('dap_fx_v9_fol',JSON.stringify(S.fol));
-            localStorage.setItem('dap_fx_v9_hr',JSON.stringify(S.hr));
-            localStorage.setItem('dap_fx_v9_locs',JSON.stringify(S.locs));
-            localStorage.setItem('dap_fx_v9_stats',JSON.stringify(S.stats));
-            localStorage.setItem('dap_fx_v9_pstats',JSON.stringify(S.pstats));
-            localStorage.setItem('dap_fx_v9_msg',JSON.stringify(S.msg));
-        }
+        function sv(){localStorage.setItem('dap_fx_v9_u',JSON.stringify(S.u));localStorage.setItem('dap_fx_v9_d',JSON.stringify(S.d));localStorage.setItem('dap_fx_v9_o',JSON.stringify(S.o));localStorage.setItem('dap_fx_v9_v',JSON.stringify(S.v));localStorage.setItem('dap_fx_v9_pr',JSON.stringify(S.pr));localStorage.setItem('dap_fx_v9_fol',JSON.stringify(S.fol));localStorage.setItem('dap_fx_v9_hr',JSON.stringify(S.hr));localStorage.setItem('dap_fx_v9_locs',JSON.stringify(S.locs));localStorage.setItem('dap_fx_v9_stats',JSON.stringify(S.stats));localStorage.setItem('dap_fx_v9_pstats',JSON.stringify(S.pstats));localStorage.setItem('dap_fx_v9_msg',JSON.stringify(S.msg));}
 
         function toggleReg(x){document.getElementById('login-form').classList.toggle('hidden',x);document.getElementById('reg-form').classList.toggle('hidden',!x);}
         function logout(){location.reload();}
@@ -281,7 +258,7 @@
         function saveOrd(){
             let p=document.getElementById('o-pat').value,d=document.getElementById('o-den').value; if(!p||!d)return alert('PLEASE INPUT ITEM');
             let pr=[];document.querySelectorAll('.ochk:checked').forEach(c=>pr.push(c.value));
-            S.o.push({id:document.getElementById('o-id').value,pat:p.toUpperCase(),den:d,st:document.getElementById('o-stat').value,due:document.getElementById('o-due').value,tot:document.getElementById('o-tot').innerText,prods:pr,t_due:'',asn:'',rem:'',p_st:'ONGOING', pay:document.getElementById('o-pay').value});
+            S.o.push({id:document.getElementById('o-id').value,pat:p.toUpperCase(),den:d,st:document.getElementById('o-stat').value,due:document.getElementById('o-due').value,tot:document.getElementById('o-tot').innerText,prods:pr,t_due:'',asn:'',rem:'',p_st:'ONGOING'});
             sv(); rOrd(); rProd(); dash(); closeModals();
         }
 
@@ -338,26 +315,14 @@
             }
         }
 
+        // UPDATED PDF FUNCTION (NO ACTION COLUMN & CLEAN PRODUCT STATUS)
         function pdf(id) {
             const { jsPDF } = window.jspdf;
             let doc = new jsPDF('l', 'pt', 'a4'); 
-            doc.setFontSize(18);
-            doc.setTextColor(24, 154, 211);
-            doc.text('DAP HUB - OFFICIAL REPORT', 40, 40);
-            doc.setFontSize(10);
-            doc.setTextColor(100);
-            doc.text('Generated on: ' + new Date().toLocaleString(), 40, 55);
-
             doc.autoTable({
                 html: '#' + id,
-                startY: 70,
                 didParseCell: function(data) {
                     let element = data.cell.raw;
-                    if (id === 't-ord' && data.row.section === 'body' && data.column.dataKey === 5) {
-                        let rowIndex = data.row.index;
-                        let paymentMode = S.o[rowIndex] ? S.o[rowIndex].pay : 'N/A';
-                        data.cell.text = [data.cell.text + ' (' + paymentMode + ')'];
-                    }
                     if (element && element.tagName === 'TD') {
                         let select = element.querySelector('select');
                         let input = element.querySelector('input');
@@ -377,42 +342,8 @@
 
         function closeModals(){document.querySelectorAll('.modal').forEach(x=>x.classList.remove('active'));}
         function popSel(id,a){document.getElementById(id).innerHTML=a.map(x=>`<option value="${x}">${x}</option>`).join('')+'<option value="ADD">+ ADD</option>';}
-        
-        // NO FORCED LOGOUT FIX (REMOVED location.reload)
-        function addOpt(t){
-            let v=prompt('NEW OPTION:');
-            if(v){
-                if(t==='loc') S.locs.push(v);
-                if(t==='stat') S.stats.push(v);
-                if(t==='pstat') S.pstats.push(v);
-                sv();
-                // Update dropdowns manually without reloading the page
-                if(t==='loc') popSel('d-loc', S.locs);
-                if(t==='stat') popSel('o-stat', S.stats);
-                if(t==='pstat') rProd(); 
-                alert('NEW OPTION ADDED SUCCESSFULLY');
-            }
-        }
-
-        // SMART FACTORY RESET (KEEPS USERS/ACCOUNTS)
-        function resetSys(){
-            if(confirm('This will DELETE all Orders, Dentists, Vouchers, Folders, and Logs BUT keep all User Accounts. Proceed?')){
-                S.d = [];
-                S.o = [];
-                S.v = [];
-                S.fol = [];
-                S.hr = [];
-                S.msg = [];
-                S.locs = ["MANILA"];
-                S.stats = ["PENDING","ONGOING","DONE"];
-                S.pstats = ["ONGOING","REJECTED","APPROVED","PROCESSING"];
-                // Keep S.u as is (Users)
-                sv();
-                alert('System Data Reset Success! All accounts are preserved.');
-                go('dashboard'); // Redirect to dashboard instead of logout
-            }
-        }
-        
+        function addOpt(t){let v=prompt('NEW OPTION:');if(v){if(t==='loc')S.locs.push(v);if(t==='stat')S.stats.push(v);if(t==='pstat')S.pstats.push(v);sv();location.reload();}}
+        function resetSys(){if(confirm('RESET ALL?')){localStorage.clear();location.reload();}}
         setInterval(()=>document.getElementById('clock').innerText=new Date().toLocaleTimeString(),1000);
     </script>
 </body>
