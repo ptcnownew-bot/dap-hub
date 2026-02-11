@@ -51,11 +51,10 @@
         .tooth-btn { height: 30px; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 9px; font-weight: 900; background: var(--inp-bg); color: var(--text); }
         .tooth-btn.active { background: #ffd700; color: black; border-color: #eab308; box-shadow: 0 0 10px #ffd700; }
 
-        /* PRINT STYLE */
         @media print {
             body * { visibility: hidden; }
-            .print-area, .print-area * { visibility: visible; }
-            .print-area { position: absolute; left: 0; top: 0; width: 100%; }
+            .table-wrap, .table-wrap * { visibility: visible; }
+            .table-wrap { position: absolute; left: 0; top: 0; width: 100%; }
             th:last-child, td:last-child { display: none !important; }
         }
     </style>
@@ -65,17 +64,22 @@
     <div id="auth-layer" class="fixed inset-0 bg-[#001f2d] z-[9999] flex items-center justify-center p-4">
         <div class="bg-white p-8 rounded-3xl w-full max-w-md text-center border-b-8 border-[#189ad3]">
             <h1 class="text-5xl font-black text-[#189ad3] italic mb-2">DAP HUB</h1>
-            <p class="text-[10px] font-bold text-gray-400 tracking-widest mb-6">Dental Assist PH</p>
             <div id="login-form">
-                <input id="l-user" class="inp text-center uppercase !bg-gray-100 !text-black" placeholder="USERNAME">
-                <input id="l-pass" type="password" class="inp text-center !bg-gray-100 !text-black" placeholder="PASSWORD">
+                <input id="l-user" class="inp text-center uppercase" placeholder="USERNAME">
+                <input id="l-pass" type="password" class="inp text-center" placeholder="PASSWORD">
                 <button onclick="login()" class="btn btn-blue w-full py-3 text-sm mt-2 shadow-lg">LOGIN SYSTEM</button>
                 <p onclick="toggleReg(true)" class="mt-4 text-xs font-bold text-gray-400 cursor-pointer">REQUEST ACCOUNT</p>
             </div>
             <div id="reg-form" class="hidden">
-                <input id="r-name" class="inp text-center uppercase !bg-gray-100 !text-black" placeholder="FULL NAME">
-                <select id="r-role" class="inp text-center font-bold !bg-gray-100 !text-black"><option value="DENTIST">DENTIST</option><option value="ACCOUNTING">ACCOUNTING</option><option value="HR">HR</option><option value="IT">IT</option><option value="ADMIN">ADMIN</option></select>
-                <input id="r-pass" type="password" class="inp text-center !bg-gray-100 !text-black" placeholder="PASSWORD">
+                <input id="r-name" class="inp text-center uppercase" placeholder="FULL NAME">
+                <select id="r-role" class="inp text-center font-bold">
+                    <option value="DENTIST">DENTIST</option>
+                    <option value="ACCOUNTING">ACCOUNTING</option>
+                    <option value="HR">HR</option>
+                    <option value="IT">IT</option>
+                    <option value="ADMIN">ADMIN</option>
+                </select>
+                <input id="r-pass" type="password" class="inp text-center" placeholder="PASSWORD">
                 <button onclick="register()" class="btn btn-green w-full py-3 text-sm mt-2">SUBMIT</button>
                 <p onclick="toggleReg(false)" class="mt-4 text-xs font-bold text-gray-400 cursor-pointer">BACK TO LOGIN</p>
             </div>
@@ -91,79 +95,55 @@
 
         <main class="flex-1 relative">
             <section id="p-dashboard" class="page">
-                <h1 class="text-2xl font-black uppercase mb-6">Command Center</h1>
+                <h1 class="text-2xl font-black uppercase mb-6">Dashboard</h1>
                 <div id="stats-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6"></div>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div class="card"><h4 class="font-bold mb-4">Production</h4><canvas id="chart1"></canvas></div>
-                    <div class="card flex flex-col items-center">
-                        <h4 class="font-bold mb-4">Status Ratio</h4>
-                        <div style="width: 100%; overflow-x: auto;">
-                            <div class="w-64 h-64 mx-auto"><canvas id="chartPie"></canvas></div>
-                        </div>
-                    </div>
+                    <div class="card"><h4 class="font-bold mb-4">Status Ratio</h4><canvas id="chartPie"></canvas></div>
                 </div>
             </section>
 
             <section id="p-dentist" class="page">
-                <div class="flex justify-between items-center mb-4"><h1 class="text-2xl font-black italic">Dentists</h1><div class="flex gap-2"><button onclick="modal('den')" class="btn btn-green">ADD</button><button onclick="pdf('t-den')" class="btn btn-red">PRINT/PDF</button></div></div>
-                <div class="table-wrap print-area"><table id="t-den"><thead><tr><th>ID</th><th>NAME</th><th>CLINIC</th><th>PHONE</th><th>PRC</th><th>LOC</th><th>ACTION</th></tr></thead><tbody id="b-den"></tbody></table></div>
+                <div class="flex justify-between items-center mb-4"><h1 class="text-2xl font-black italic">Dentists</h1><div class="flex gap-2"><button onclick="modal('den')" class="btn btn-green">ADD</button><button onclick="pdf('t-den')" class="btn btn-red">PDF</button></div></div>
+                <div class="table-wrap"><table id="t-den"><thead><tr><th>ID</th><th>NAME</th><th>CLINIC</th><th>PHONE</th><th>PRC</th><th>LOC</th><th>ACTION</th></tr></thead><tbody id="b-den"></tbody></table></div>
             </section>
 
             <section id="p-order" class="page">
-                <div class="flex justify-between items-center mb-4"><h1 class="text-2xl font-black italic text-[#189ad3]">Orders</h1><div class="flex gap-2"><button onclick="modal('ord')" class="btn btn-green">NEW</button><button onclick="pdf('t-ord')" class="btn btn-red">PRINT/PDF</button></div></div>
-                <div class="table-wrap print-area"><table id="t-ord"><thead><tr><th>ID</th><th>PATIENT</th><th>DENTIST</th><th>STATUS</th><th>DUE</th><th>TOTAL</th><th>ACTION</th></tr></thead><tbody id="b-ord"></tbody></table></div>
+                <div class="flex justify-between items-center mb-4"><h1 class="text-2xl font-black italic text-[#189ad3]">Orders</h1><div class="flex gap-2"><button onclick="modal('ord')" class="btn btn-green">NEW</button><button onclick="pdf('t-ord')" class="btn btn-red">PDF</button></div></div>
+                <div class="table-wrap"><table id="t-ord"><thead><tr><th>ID</th><th>PATIENT</th><th>DENTIST</th><th>STATUS</th><th>DUE</th><th>TOTAL</th><th>ACTION</th></tr></thead><tbody id="b-ord"></tbody></table></div>
             </section>
 
             <section id="p-product" class="page">
-                <div class="flex justify-between items-center mb-4"><h1 class="text-2xl font-black italic text-[#d97706]">Queue</h1><button onclick="pdf('t-prod')" class="btn btn-red">PRINT/PDF</button></div>
-                <div class="table-wrap print-area"><table id="t-prod"><thead><tr><th>ORD ID</th><th>DUE</th><th>STATUS</th><th>ASSIGNED</th><th>REMARKS</th><th>ACTION</th></tr></thead><tbody id="b-prod"></tbody></table></div>
+                <div class="flex justify-between items-center mb-4"><h1 class="text-2xl font-black italic text-[#d97706]">Queue</h1><button onclick="pdf('t-prod')" class="btn btn-red">PDF</button></div>
+                <div class="table-wrap"><table id="t-prod"><thead><tr><th>ORD ID</th><th>DUE</th><th>STATUS</th><th>ASSIGNED</th><th>REMARKS</th><th>ACTION</th></tr></thead><tbody id="b-prod"></tbody></table></div>
             </section>
 
             <section id="p-accounting" class="page">
                 <h1 class="text-2xl font-black mb-6">Pricing</h1>
-                <div id="acc-scroll-box">
-                    <div id="price-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-                </div>
-                <button onclick="savePrices()" class="btn btn-blue w-full py-4 sticky bottom-0">UPDATE PRICES</button>
+                <div id="price-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+                <button onclick="savePrices()" class="btn btn-blue w-full py-4 mt-4">UPDATE PRICES</button>
             </section>
 
             <section id="p-voucher" class="page">
-                <h1 class="text-2xl font-black mb-6 text-purple-600">Vouchers</h1>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="card">
+                <h1 class="text-2xl font-black mb-6">Vouchers</h1>
+                <div class="card">
+                    <div id="v-exp-div" class="hidden">
                         <label>CODE</label><input id="v-code" class="inp uppercase">
                         <label>DISCOUNT %</label><input id="v-pct" type="number" class="inp">
-                        <div id="v-exp-div" class="hidden">
-                            <label>EXPIRY DATE</label><input id="v-exp" type="date" class="inp">
-                        </div>
+                        <label>EXPIRY DATE</label><input id="v-exp" type="date" class="inp">
                         <button onclick="addVouch()" class="btn btn-blue w-full mt-2">ADD</button>
                     </div>
-                    <div id="v-list" class="space-y-2"></div>
                 </div>
-            </section>
-
-            <section id="p-excel" class="page">
-                <h1 class="text-2xl font-black mb-6 text-green-700">Migration</h1>
-                <div id="fol-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
-            </section>
-
-            <section id="p-hr" class="page">
-                <h1 class="text-2xl font-black mb-6">HR</h1>
-                <div class="card text-center mb-6"><h1 id="clock" class="text-6xl font-black mb-4">00:00</h1><div class="flex justify-center gap-4"><button onclick="clock('IN')" class="btn btn-green px-8 py-3">IN</button><button onclick="clock('OUT')" class="btn btn-red px-8 py-3">OUT</button></div></div>
-                <div id="hr-table-container" class="hidden">
-                    <button onclick="pdf('t-hr')" class="btn btn-blue mb-4">PRINT LOGS</button>
-                    <div class="table-wrap print-area"><table id="t-hr"><thead><tr><th>USER</th><th>ACTION</th><th>TIME</th></tr></thead><tbody id="b-hr"></tbody></table></div>
-                </div>
+                <div id="v-list" class="space-y-2 mt-4"></div>
             </section>
 
             <section id="p-users" class="page">
-                <h1 class="text-2xl font-black mb-6">Gatekeeper</h1>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div class="card"><h3 class="font-bold text-red-500 mb-4">PENDING</h3><div id="u-pen"></div></div><div class="card"><h3 class="font-bold text-blue-500 mb-4">ACTIVE</h3><div id="u-act"></div></div></div>
+                <h1 class="text-2xl font-black mb-6">Users</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div class="card"><h3>PENDING</h3><div id="u-pen"></div></div><div class="card"><h3>ACTIVE</h3><div id="u-act"></div></div></div>
             </section>
 
             <section id="p-settings" class="page">
                 <h1 class="text-2xl font-black mb-6">Settings</h1>
-                <button onclick="document.body.classList.toggle('dark-mode')" class="btn btn-blue w-full py-4 mb-4">TOGGLE DARK MODE</button>
                 <button onclick="resetSys()" class="btn btn-red w-full py-4">FACTORY RESET (KEEP ACCOUNTS)</button>
             </section>
         </main>
@@ -171,154 +151,117 @@
 
     <div id="chat-box">
         <div class="bg-[#189ad3] p-3 text-white font-bold flex justify-between rounded-t-xl"><span>CHAT</span><button onclick="toggleChat()">X</button></div>
-        <div class="p-2 border-b bg-white"><select id="chat-to" class="inp mb-0 !bg-white !text-black" onchange="rChat()"></select></div>
-        <div id="chat-body" class="flex-1 p-3 overflow-y-auto bg-slate-100 text-xs space-y-2 text-black"></div>
-        <div class="p-2 border-t bg-white flex gap-2"><input id="chat-in" class="inp mb-0 !bg-white !text-black" placeholder="Type..."><button onclick="sendChat()" class="btn btn-blue">></button></div>
+        <div class="p-2 border-b bg-white"><select id="chat-to" class="inp mb-0" onchange="rChat()"></select></div>
+        <div id="chat-body" class="flex-1 p-3 overflow-y-auto bg-slate-100 text-xs space-y-2"></div>
+        <div class="p-2 border-t bg-white flex gap-2"><input id="chat-in" class="inp mb-0" placeholder="Type..."><button onclick="sendChat()" class="btn btn-blue">></button></div>
     </div>
     <div id="chat-bubble" onclick="toggleChat()">💬</div>
 
-    <div id="mod-den" class="modal"><div class="modal-box">
-        <h2 class="text-xl font-black mb-4">DENTIST</h2>
-        <input type="hidden" id="d-idx">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><label>ID</label><input id="d-id" class="inp bg-slate-200" readonly></div>
-            <div><label>PTR</label><input id="d-ptr" class="inp" type="number"></div>
-            <div><label>NAME</label><input id="d-name" class="inp"></div>
-            <div><label>EMAIL</label><input id="d-email" class="inp"></div>
-            <div><label>PHONE</label><input id="d-phone" class="inp"></div>
-            <div><label>CLINIC</label><input id="d-clinic" class="inp"></div>
-            <div><label>PRC</label><input id="d-prc" class="inp" type="number"></div>
-            <div><label>LOC <button class="btn-add" onclick="addOpt('loc')">+</button></label><select id="d-loc" class="inp"></select></div>
-            <div class="col-span-2"><label>ADDR</label><input id="d-addr" class="inp"></div>
-        </div>
-        <div class="flex justify-end gap-2 mt-6"><button onclick="closeModals()" class="btn btn-red">CANCEL</button><button onclick="saveDen()" class="btn btn-green">SAVE</button></div>
-    </div></div>
+    <div id="mod-den" class="modal"><div class="modal-box"><h2>DENTIST</h2><input type="hidden" id="d-idx"><input id="d-id" class="inp" readonly><input id="d-name" class="inp" placeholder="NAME"><input id="d-clinic" class="inp" placeholder="CLINIC"><input id="d-phone" class="inp" placeholder="PHONE"><select id="d-loc" class="inp"></select><div class="flex justify-end gap-2 mt-4"><button onclick="closeModals()" class="btn btn-red">CANCEL</button><button onclick="saveDen()" class="btn btn-green">SAVE</button></div></div></div>
 
-    <div id="mod-ord" class="modal"><div class="modal-box">
-        <h2 class="text-xl font-black mb-4 text-[#189ad3]">NEW ORDER</h2>
-        <input type="hidden" id="o-idx">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-                <label>ID</label><input id="o-id" class="inp bg-slate-200" readonly>
-                <label>DENTIST</label><select id="o-den" class="inp" onchange="fillPhone()"></select>
-                <label>PHONE</label><input id="o-dphone" class="inp bg-slate-200" readonly>
-                <label>PATIENT</label><input id="o-pat" class="inp">
-                <label>CASE #</label><input id="o-case" class="inp" type="number">
-                <label>SEX</label><div class="flex gap-2"><label><input type="radio" name="sex" value="M"> M</label><label><input type="radio" name="sex" value="F"> F</label></div>
-            </div>
-            <div>
-                <label>DATE</label><input id="o-date" type="date" class="inp">
-                <label>DUE</label><input id="o-due" type="date" class="inp">
-                <label>STATUS <button class="btn-add" onclick="addOpt('stat')">+</button></label><select id="o-stat" class="inp"></select>
-                <label>PRODS</label><div id="o-prods" class="h-40 overflow-y-auto border p-2 rounded bg-slate-50 text-black space-y-1"></div>
-            </div>
-            <div>
-                <label>SHADE</label><input id="o-shade" class="inp">
-                <label>QTY</label><input id="o-qty" type="number" class="inp">
-                <label>TEETH</label><div id="o-teeth" class="tooth-grid mb-4"></div>
-                <label>VOUCHER</label>
-                <div class="flex gap-1"><input id="o-v-txt" class="inp" onchange="findVouch()" placeholder="CODE"><select id="o-v-sel" class="inp w-20" onchange="selVouch()"></select></div>
-                <label>PAY</label><select id="o-pay" class="inp"><option value="CASH">CASH</option><option value="CARD">CARD</option><option value="GCASH">GCASH</option></select>
-                <div class="bg-slate-900 text-white p-4 rounded-xl text-center mt-4"><small>TOTAL</small><h1 class="text-3xl font-black text-[#189ad3]">₱<span id="o-tot">0</span></h1></div>
-            </div>
-        </div>
-        <div class="flex justify-end gap-2 mt-6"><button onclick="closeModals()" class="btn btn-red">CANCEL</button><button onclick="saveOrd()" class="btn btn-green px-8">SAVE</button></div>
-    </div></div>
+    <div id="mod-ord" class="modal"><div class="modal-box"><h2>ORDER</h2><input type="hidden" id="o-idx"><input id="o-id" class="inp" readonly><select id="o-den" class="inp" onchange="fillPhone()"></select><input id="o-pat" class="inp" placeholder="PATIENT"><input id="o-date" type="date" class="inp"><input id="o-due" type="date" class="inp"><select id="o-pay" class="inp"><option value="CASH">CASH</option><option value="CARD">CARD</option><option value="GCASH">GCASH</option></select><div id="o-prods" class="h-32 border overflow-y-auto p-2 mb-2"></div><div id="o-tot" class="p-4 bg-black text-white text-center font-bold">TOTAL: ₱0</div><div class="flex justify-end gap-2 mt-4"><button onclick="closeModals()" class="btn btn-red">CANCEL</button><button onclick="saveOrd()" class="btn btn-green">SAVE</button></div></div></div>
 
     <script>
-        const PRODS=["PFM","MARYLAND WING","W/ PORCELAIN GUMS","EMAX","ONLAY","INLAY","TOOTH COLOR","INDIVIDUAL CROWN","ZIRCONIA","PFZ (PORCELAIN FUSED)","METAL TRIAL","TRIAL UNGLAZE","NON-PRECIOUS NPM","TILITE (US)","COLLAR","VENEERS","GLASS CERAMIC","LAYERING","TEMPORARY CROWN","BRIDGE CROWN","FCZ (FULL CONTOUR)","PREMIUM ZIRCONIA","TRIAL GLAZE"];
-        
-        let S={
-            u: JSON.parse(localStorage.getItem('dap_fx_v9_u'))||[{n:'ADMIN',p:'123',d:'IT',s:'active'}],
-            d: JSON.parse(localStorage.getItem('dap_fx_v9_d'))||[],
-            o: JSON.parse(localStorage.getItem('dap_fx_v9_o'))||[],
-            v: JSON.parse(localStorage.getItem('dap_fx_v9_v'))||[],
-            pr: JSON.parse(localStorage.getItem('dap_fx_v9_pr'))||{},
-            fol: JSON.parse(localStorage.getItem('dap_fx_v9_fol'))||[],
-            hr: JSON.parse(localStorage.getItem('dap_fx_v9_hr'))||[],
-            locs: JSON.parse(localStorage.getItem('dap_fx_v9_locs'))||["MANILA"],
-            stats: JSON.parse(localStorage.getItem('dap_fx_v9_stats'))||["PENDING","ONGOING","DONE"],
-            pstats: JSON.parse(localStorage.getItem('dap_fx_v9_pstats'))||["ONGOING","REJECTED","APPROVED","PROCESSING"],
-            msg: JSON.parse(localStorage.getItem('dap_fx_v9_msg'))||[],
+        const PRODS = ["PFM", "EMAX", "ZIRCONIA", "VENEERS", "TEMPORARY"];
+        let S = {
+            u: JSON.parse(localStorage.getItem('dap_fx_v9_u')) || [{ n: 'ADMIN', p: '123', d: 'IT', s: 'active' }],
+            d: JSON.parse(localStorage.getItem('dap_fx_v9_d')) || [],
+            o: JSON.parse(localStorage.getItem('dap_fx_v9_o')) || [],
+            v: JSON.parse(localStorage.getItem('dap_fx_v9_v')) || [],
+            pr: JSON.parse(localStorage.getItem('dap_fx_v9_pr')) || {},
+            hr: JSON.parse(localStorage.getItem('dap_fx_v9_hr')) || [],
+            locs: JSON.parse(localStorage.getItem('dap_fx_v9_locs')) || ["MANILA"],
+            stats: ["PENDING", "ONGOING", "DONE"],
+            pstats: ["ONGOING", "REJECTED", "APPROVED"],
+            msg: JSON.parse(localStorage.getItem('dap_fx_v9_msg')) || [],
             curr: null
         };
-        PRODS.forEach(p=>{if(!S.pr[p])S.pr[p]=1500;});
+        PRODS.forEach(p => { if (!S.pr[p]) S.pr[p] = 1500; });
 
-        function sv(){ localStorage.setItem('dap_fx_v9_u',JSON.stringify(S.u)); localStorage.setItem('dap_fx_v9_d',JSON.stringify(S.d)); localStorage.setItem('dap_fx_v9_o',JSON.stringify(S.o)); localStorage.setItem('dap_fx_v9_v',JSON.stringify(S.v)); localStorage.setItem('dap_fx_v9_pr',JSON.stringify(S.pr)); localStorage.setItem('dap_fx_v9_fol',JSON.stringify(S.fol)); localStorage.setItem('dap_fx_v9_hr',JSON.stringify(S.hr)); localStorage.setItem('dap_fx_v9_locs',JSON.stringify(S.locs)); localStorage.setItem('dap_fx_v9_stats',JSON.stringify(S.stats)); localStorage.setItem('dap_fx_v9_pstats',JSON.stringify(S.pstats)); localStorage.setItem('dap_fx_v9_msg',JSON.stringify(S.msg)); }
+        function sv() { localStorage.setItem('dap_fx_v9_u', JSON.stringify(S.u)); localStorage.setItem('dap_fx_v9_d', JSON.stringify(S.d)); localStorage.setItem('dap_fx_v9_o', JSON.stringify(S.o)); localStorage.setItem('dap_fx_v9_v', JSON.stringify(S.v)); localStorage.setItem('dap_fx_v9_pr', JSON.stringify(S.pr)); localStorage.setItem('dap_fx_v9_msg', JSON.stringify(S.msg)); localStorage.setItem('dap_fx_v9_hr', JSON.stringify(S.hr)); }
 
-        function login(){
-            let u=document.getElementById('l-user').value.toUpperCase();
-            let p=document.getElementById('l-pass').value;
-            let acc=S.u.find(x=>x.n===u&&x.p===p);
-            if(!acc) return alert('INVALID'); if(acc.s!=='active') return alert('LOCKED');
-            S.curr=acc; document.getElementById('auth-layer').classList.add('hidden'); document.getElementById('app-shell').classList.remove('hidden');
+        function login() {
+            let u = document.getElementById('l-user').value.toUpperCase(), p = document.getElementById('l-pass').value;
+            let acc = S.u.find(x => x.n === u && x.p === p);
+            if (!acc) return alert('INVALID'); S.curr = acc;
+            document.getElementById('auth-layer').classList.add('hidden'); document.getElementById('app-shell').classList.remove('hidden');
             initNav(); initChat();
         }
+        function logout() { location.reload(); }
+        function toggleReg(x) { document.getElementById('login-form').classList.toggle('hidden', x); document.getElementById('reg-form').classList.toggle('hidden', !x); }
+        function register() { let n = document.getElementById('r-name').value.toUpperCase(), r = document.getElementById('r-role').value, p = document.getElementById('r-pass').value; if (!n || !p) return alert('MISSING INPUT'); S.u.push({ n, d: r, p, s: 'pending' }); sv(); alert('SENT'); toggleReg(false); }
 
-        function logout(){location.reload();}
-        function toggleReg(x){ document.getElementById('login-form').classList.toggle('hidden',x); document.getElementById('reg-form').classList.toggle('hidden',!x); }
-        function register(){ let n=document.getElementById('r-name').value.toUpperCase(), r=document.getElementById('r-role').value, p=document.getElementById('r-pass').value; if(!n||!p) return alert('MISSING'); S.u.push({n,d:r,p,s:'pending'}); sv(); alert('SENT'); toggleReg(false); }
-
-        function initNav(){
-            let r=S.curr.d, p=[];
-            if(r==='DENTIST') p=['dentist','order','product'];
-            else if(r==='ACCOUNTING') p=['dashboard','accounting','voucher','excel','settings'];
-            else if(r==='HR') p=['dashboard','hr','excel','settings'];
-            else p=['dashboard','dentist','order','product','accounting','voucher','excel','hr','users','settings'];
-            document.getElementById('nav-list').innerHTML=p.map(x=>`<div onclick="go('${x}')" id="nav-${x}" class="nav-item">${x}</div>`).join('');
+        function initNav() {
+            let r = S.curr.d, p = [];
+            if (r === 'DENTIST') p = ['dentist', 'order', 'product'];
+            else if (r === 'ACCOUNTING') p = ['dashboard', 'accounting', 'voucher', 'settings'];
+            else p = ['dashboard', 'dentist', 'order', 'product', 'accounting', 'voucher', 'users', 'settings'];
+            document.getElementById('nav-list').innerHTML = p.map(x => `<div onclick="go('${x}')" id="nav-${x}" class="nav-item">${x}</div>`).join('');
             go(p[0]);
         }
-        function go(id){
-            document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
-            document.getElementById('p-'+id).classList.add('active');
-            if(id==='dashboard')dash(); if(id==='dentist')rDen(); if(id==='order')rOrd(); if(id==='product')rProd(); if(id==='accounting')rAcc(); if(id==='voucher')rVouch(); if(id==='excel')rFol(); if(id==='hr')rHR(); if(id==='users')rUsers();
+        function go(id) {
+            document.querySelectorAll('.page').forEach(e => e.classList.remove('active')); document.getElementById('p-' + id).classList.add('active');
+            if (id === 'dashboard') dash(); if (id === 'dentist') rDen(); if (id === 'order') rOrd(); if (id === 'product') rProd(); if (id === 'accounting') rAcc(); if (id === 'voucher') rVouch(); if (id === 'users') rUsers();
         }
 
-        function dash(){
-            document.getElementById('stats-grid').innerHTML=`<div class="card border-l-4 border-blue-500"><b>ORDERS</b><h2 class="text-2xl">${S.o.length}</h2></div><div class="card border-l-4 border-green-500"><b>REVENUE</b><h2 class="text-2xl">₱${S.o.reduce((a,b)=>a+parseInt(b.tot.replace(/,/g,'')||0),0).toLocaleString()}</h2></div><div class="card border-l-4 border-orange-500"><b>DENTISTS</b><h2 class="text-2xl">${S.d.length}</h2></div><div class="card border-l-4 border-purple-500"><b>STAFF</b><h2 class="text-2xl">${S.u.length}</h2></div>`;
-            if(window.C1)window.C1.destroy(); window.C1=new Chart(document.getElementById('chart1'),{type:'bar',data:{labels:PRODS.slice(0,5),datasets:[{label:'UNITS',data:[12,19,3,5,2],backgroundColor:'#189ad3'}]}});
-            if(window.C2)window.C2.destroy(); window.C2=new Chart(document.getElementById('chartPie'),{type:'pie',data:{labels:['Done','Pending','Ongoing'],datasets:[{data:[S.o.filter(x=>x.st==='DONE').length, S.o.filter(x=>x.st==='PENDING').length, S.o.filter(x=>x.st==='ONGOING').length],backgroundColor:['#10b981','#94a3b8','#189ad3']}]}});
+        function dash() {
+            document.getElementById('stats-grid').innerHTML = `<div class="card"><b>ORDERS</b><h2>${S.o.length}</h2></div><div class="card"><b>REVENUE</b><h2>₱${S.o.reduce((a, b) => a + parseInt(b.tot.replace(/,/g, '') || 0), 0).toLocaleString()}</h2></div>`;
         }
 
-        function rDen(){ let adm=(S.curr.d==='IT'||S.curr.d==='ADMIN'); document.getElementById('b-den').innerHTML=S.d.map((x,i)=>`<tr><td>${x.id}</td><td>${x.n}</td><td>${x.c}</td><td>${x.p}</td><td>${x.prc}</td><td>${x.loc}</td><td><button onclick="edDen(${i})" class="text-blue-500 font-bold">EDIT</button>${adm?`<button onclick="del('d',${i})" class="text-red-500 font-bold ml-2">DEL</button>`:''}</td></tr>`).join(''); }
-        function rOrd(){ let adm=(S.curr.d==='IT'||S.curr.d==='ADMIN'); document.getElementById('b-ord').innerHTML=S.o.map((x,i)=>`<tr><td>${x.id}</td><td>${x.pat}</td><td>${x.den}</td><td>${x.st}</td><td>${x.due}</td><td>₱${x.tot}</td><td>${adm?`<button onclick="del('o',${i})" class="text-red-500 font-bold">DEL</button>`:`LOCKED`}</td></tr>`).join(''); }
-        function rProd(){ let ed=(S.curr.d==='IT'||S.curr.d==='ADMIN'); let ops=S.pstats.map(s=>`<option value="${s}">${s}</option>`).join(''); document.getElementById('b-prod').innerHTML=S.o.map((x,i)=>`<tr><td>${x.id}</td><td><input class="inp !p-1 !w-24" type="date" value="${x.t_due}" ${!ed?'disabled':''} onchange="upP(${i},'t_due',this.value)"></td><td><select class="inp !p-1 !w-24" ${!ed?'disabled':''} onchange="upP(${i},'p_st',this.value)"><option value="${x.p_st}" selected>${x.p_st}</option>${ops}<option value="ADD">Add...</option></select></td><td><input class="inp !p-1 !w-20" value="${x.asn}" ${!ed?'disabled':''} onchange="upP(${i},'asn',this.value)"></td><td><input class="inp !p-1 !w-24" value="${x.rem}" ${!ed?'disabled':''} onchange="upP(${i},'rem',this.value)"></td><td>${ed?`<button onclick="del('o',${i})" class="text-red-500 font-bold">DEL</button>`:''}</td></tr>`).join(''); }
-        function upP(i,f,v){ if(f==='p_st'&&v==='ADD'){addOpt('pstat');return;} S.o[i][f]=v; sv(); rProd(); }
-        function rAcc(){ document.getElementById('price-grid').innerHTML=PRODS.map(p=>`<div class="card !p-2 text-center"><b>${p}</b><input class="inp text-center p-in" data-p="${p}" value="${S.pr[p]}"></div>`).join(''); }
-        function savePrices(){ document.querySelectorAll('.p-in').forEach(i=>S.pr[i.dataset.p]=parseInt(i.value)); sv(); alert('SAVED'); }
-        function rVouch(){ let can=(['IT','ADMIN','ACCOUNTING'].includes(S.curr.d)); document.getElementById('v-exp-div').classList.toggle('hidden',!can); document.getElementById('v-list').innerHTML=S.v.map((v,i)=>`<div class="card !p-2 flex justify-between"><div><b>${v.c} (-${v.p}%)</b><div class="text-[9px]">EXP: ${v.e||'NONE'}</div></div>${(['IT','ADMIN'].includes(S.curr.d))?`<button onclick="del('v',${i})" class="text-red-500">×</button>`:''}</div>`).join(''); }
-        function rHR(){ let isAuth=(['HR','ACCOUNTING','ADMIN','IT'].includes(S.curr.d)); document.getElementById('hr-table-container').classList.toggle('hidden',!isAuth); if(isAuth) document.getElementById('b-hr').innerHTML=S.hr.map(x=>`<tr><td>${x.u}</td><td>${x.a}</td><td>${x.t}</td></tr>`).join(''); }
-        function clock(a){ S.hr.push({u:S.curr.n, a, t:new Date().toLocaleString()}); sv(); alert(a); rHR(); }
+        function rDen() { let adm = (S.curr.d === 'IT' || S.curr.d === 'ADMIN'); document.getElementById('b-den').innerHTML = S.d.map((x, i) => `<tr><td>${x.id}</td><td>${x.n}</td><td>${x.c}</td><td>${x.p}</td><td>${x.prc || ''}</td><td>${x.loc}</td><td><button onclick="edDen(${i})">EDIT</button></td></tr>`).join(''); }
+        function rOrd() { document.getElementById('b-ord').innerHTML = S.o.map((x, i) => `<tr><td>${x.id}</td><td>${x.pat}</td><td>${x.den}</td><td>${x.st}</td><td>${x.due}</td><td>₱${x.tot}</td><td><button onclick="del('o',${i})">DEL</button></td></tr>`).join(''); }
+        function rProd() { document.getElementById('b-prod').innerHTML = S.o.map((x, i) => `<tr><td>${x.id}</td><td>${x.due}</td><td>${x.p_st || 'ONGOING'}</td><td>${x.asn || ''}</td><td>${x.rem || ''}</td><td><button onclick="upP(${i},'p_st','DONE')">DONE</button></td></tr>`).join(''); }
+        function upP(i, f, v) { S.o[i][f] = v; sv(); rProd(); }
+        function rAcc() { document.getElementById('price-grid').innerHTML = PRODS.map(p => `<div class="card"><b>${p}</b><input class="inp p-in" data-p="${p}" value="${S.pr[p]}"></div>`).join(''); }
+        function savePrices() { document.querySelectorAll('.p-in').forEach(i => S.pr[i.dataset.p] = parseInt(i.value)); sv(); alert('SAVED'); }
+        
+        function rVouch() { 
+            let can = (['IT', 'ADMIN', 'ACCOUNTING'].includes(S.curr.d)); 
+            document.getElementById('v-exp-div').classList.toggle('hidden', !can);
+            document.getElementById('v-list').innerHTML = S.v.map(v => `<div class="card"><b>${v.c} (-${v.p}%)</b><br><small>EXP: ${v.e || 'NONE'}</small></div>`).join('');
+        }
 
-        // --- NEW OTHER WAY AROUND PDF FIX ---
+        function rUsers() { document.getElementById('u-pen').innerHTML = S.u.filter(x => x.s === 'pending').map(x => `<div>${x.n} <button onclick="uAct('${x.n}','active')">OK</button></div>`).join(''); document.getElementById('u-act').innerHTML = S.u.filter(x => x.s === 'active').map(x => `<div>${x.n} [${x.d}]</div>`).join(''); }
+        function uAct(n, s) { S.u.find(x => x.n === n).s = s; sv(); rUsers(); }
+
+        // --- FINAL PDF LOGIC ---
         function pdf(id) {
-            // Gumamit ng window.print logic pero i-save as PDF
-            // Dahil ayaw mag-load ng jspdf sa browser mo, ito ang pinaka-safe
-            window.print();
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'pt', 'a4');
+            doc.text("DAP HUB REPORT", 40, 40);
+            doc.autoTable({
+                html: '#' + id,
+                startY: 60,
+                didParseCell: function(data) {
+                    if (id === 't-ord' && data.row.section === 'body' && data.column.index === 5) {
+                        let idx = data.row.index;
+                        if(S.o[idx]) data.cell.text = [S.o[idx].tot + ' (' + (S.o[idx].pay || 'CASH') + ')'];
+                    }
+                    let el = data.cell.raw;
+                    if (el && el.tagName === 'TD') {
+                        let s = el.querySelector('select'), i = el.querySelector('input');
+                        if (s) data.cell.text = [s.options[s.selectedIndex].text];
+                        else if (i) data.cell.text = [i.value];
+                    }
+                },
+                columns: function(colIdx) { return colIdx < (document.getElementById(id).rows[0].cells.length - 1); }
+            });
+            doc.save('Report.pdf');
         }
 
         function modal(t) {
-            if (t === 'den') { document.querySelectorAll('#mod-den input').forEach(i => i.value = ''); document.getElementById('d-idx').value = ''; document.getElementById('d-id').value = String(S.d.length + 1).padStart(4, '0'); popSel('d-loc', S.locs); document.getElementById('mod-den').classList.add('active'); }
-            if (t === 'ord') { document.querySelectorAll('#mod-ord input').forEach(i => i.value = ''); document.getElementById('o-idx').value = ''; document.getElementById('o-id').value = String(S.o.length + 1).padStart(4, '0'); document.getElementById('o-date').value = new Date().toISOString().split('T')[0]; document.getElementById('o-den').innerHTML = '<option value="">SELECT</option>' + S.d.map(x => `<option value="${x.n}">${x.n}</option>`).join(''); popSel('o-stat', S.stats); document.getElementById('o-prods').innerHTML = PRODS.map(p => `<label class="flex items-center gap-2 font-bold text-[10px]"><input type="checkbox" class="ochk" value="${p}" onchange="calc()"> ${p}</label>`).join(''); let t_teeth = ''; for (let i = 1; i <= 32; i++) t_teeth += `<div class="tooth-btn" onclick="this.classList.toggle('active');calc()">${i}</div>`; document.getElementById('o-teeth').innerHTML = t_teeth; document.getElementById('o-v-sel').innerHTML = '<option value="0">SEL</option>' + S.v.map(v => `<option value="${v.p}">${v.c}</option>`).join(''); document.getElementById('mod-ord').classList.add('active'); }
+            if (t === 'ord') { document.getElementById('o-date').value = new Date().toISOString().split('T')[0]; document.getElementById('o-den').innerHTML = S.d.map(x => `<option>${x.n}</option>`).join(''); document.getElementById('mod-ord').classList.add('active'); }
+            if (t === 'den') { popSel('d-loc', S.locs); document.getElementById('mod-den').classList.add('active'); }
         }
-        function saveOrd() { let p = document.getElementById('o-pat').value, d = document.getElementById('o-den').value; if (!p || !d) return alert('MISSING DATA'); let pr = []; document.querySelectorAll('.ochk:checked').forEach(c => pr.push(c.value)); S.o.push({ id: document.getElementById('o-id').value, pat: p.toUpperCase(), den: d, st: document.getElementById('o-stat').value, due: document.getElementById('o-due').value, tot: document.getElementById('o-tot').innerText, prods: pr, t_due: '', asn: '', rem: '', p_st: 'ONGOING', pay: document.getElementById('o-pay').value }); sv(); rOrd(); rProd(); dash(); closeModals(); }
-        function saveDen() { let n = document.getElementById('d-name').value.toUpperCase(); if (!n) return alert('MISSING NAME'); let i = document.getElementById('d-idx').value, o = { id: document.getElementById('d-id').value, ptr: document.getElementById('d-ptr').value, n, c: document.getElementById('d-clinic').value, email: document.getElementById('d-email').value, p: document.getElementById('d-phone').value, prc: document.getElementById('d-prc').value, loc: document.getElementById('d-loc').value, addr: document.getElementById('d-addr').value }; if (i === '') S.d.push(o); else S.d[i] = o; sv(); rDen(); closeModals(); }
-        function edDen(i) { let x = S.d[i]; document.getElementById('d-idx').value = i; document.getElementById('d-id').value = x.id; document.getElementById('d-name').value = x.n; document.getElementById('d-clinic').value = x.c; document.getElementById('d-phone').value = x.p; popSel('d-loc', S.locs); document.getElementById('d-loc').value = x.loc; document.getElementById('mod-den').classList.add('active'); }
+        function saveOrd() { let p = document.getElementById('o-pat').value, d = document.getElementById('o-den').value; S.o.push({ id: 'ORD-' + (S.o.length + 1), pat: p.toUpperCase(), den: d, st: 'PENDING', due: document.getElementById('o-due').value, tot: '0', pay: document.getElementById('o-pay').value }); sv(); rOrd(); closeModals(); }
+        function saveDen() { S.d.push({ id: 'D-' + (S.d.length + 1), n: document.getElementById('d-name').value.toUpperCase(), c: document.getElementById('d-clinic').value, p: document.getElementById('d-phone').value, loc: document.getElementById('d-loc').value }); sv(); rDen(); closeModals(); }
         function closeModals() { document.querySelectorAll('.modal').forEach(x => x.classList.remove('active')); }
         function popSel(id, a) { document.getElementById(id).innerHTML = a.map(x => `<option value="${x}">${x}</option>`).join('') + '<option value="ADD">+ ADD</option>'; }
-        function addOpt(t) { let v = prompt('NEW OPTION:'); if (v) { if (t === 'loc') S.locs.push(v); if (t === 'stat') S.stats.push(v); if (t === 'pstat') S.pstats.push(v); sv(); if (t === 'loc') popSel('d-loc', S.locs); if (t === 'stat') popSel('o-stat', S.stats); if (t === 'pstat') rProd(); alert('ADDED'); } }
-        function resetSys() { if (confirm('RESET DATA (KEEP ACCOUNTS)?')) { S.d = []; S.o = []; S.v = []; S.fol = []; S.hr = []; S.msg = []; S.locs = ["MANILA"]; S.stats = ["PENDING", "ONGOING", "DONE"]; S.pstats = ["ONGOING", "REJECTED", "APPROVED", "PROCESSING"]; sv(); alert('SUCCESS'); go('dashboard'); } }
-        function rHR() { let isAuth = (['HR','ACCOUNTING','ADMIN','IT'].includes(S.curr.d)); document.getElementById('hr-table-container').classList.toggle('hidden', !isAuth); if (isAuth) { document.getElementById('b-hr').innerHTML = S.hr.map(x => `<tr><td>${x.u}</td><td>${x.a}</td><td>${x.t}</td></tr>`).join(''); } }
-        function initChat() { let r = S.curr.d, opts = `<option value="">SELECT RECIPIENT</option><option value="ALL_WITH_DEN">📢 EVERYONE (WITH DENTISTS)</option>`; if (r !== 'DENTIST') opts += `<option value="ALL_NO_DEN">👥 EVERYONE (STAFF ONLY)</option>`; let list = S.u.filter(x => { if (r === 'DENTIST') return ['ADMIN', 'IT', 'ACCOUNTING', 'HR'].includes(x.d); return x.n !== S.curr.n; }); document.getElementById('chat-to').innerHTML = opts + list.map(x => `<option value="${x.n}">${x.n} (${x.d})</option>`).join(''); }
-        function toggleChat() { let b = document.getElementById('chat-box'); b.style.display = b.style.display === 'flex' ? 'none' : 'flex'; rChat(); }
-        function sendChat() { let t = document.getElementById('chat-to').value, m = document.getElementById('chat-in').value; if (t && m) { S.msg.push({ f: S.curr.n, fd: S.curr.d, t, m, ts: new Date().toLocaleTimeString() }); sv(); rChat(); document.getElementById('chat-in').value = ''; } }
-        function rChat() { let t = document.getElementById('chat-to').value; let c = S.msg.filter(x => { if (t === 'ALL_WITH_DEN' && x.t === 'ALL_WITH_DEN') return true; if (t === 'ALL_NO_DEN' && x.t === 'ALL_NO_DEN') { if (S.curr.d === 'DENTIST') return false; return true; } return (x.f === S.curr.n && x.t === t) || (x.f === t && x.t === S.curr.n); }); document.getElementById('chat-body').innerHTML = c.map(x => `<div class="${x.f === S.curr.n ? 'text-right' : 'text-left'}"><span class="inline-block p-2 rounded-lg ${x.f === S.curr.n ? 'bg-[#189ad3] text-white' : 'bg-white border text-black'}"><b>${x.f}:</b> ${x.m}</span></div>`).join(''); }
-        function del(k, i) { if (confirm('DELETE?')) { if (k === 'f') { S.fol.splice(i, 1); rFol(); } else if (k === 'd') { S.d.splice(i, 1); rDen(); } else if (k === 'o') { S.o.splice(i, 1); rOrd(); dash(); } else if (k === 'v') { S.v.splice(i, 1); rVouch(); } else if (k === 'u') { S.u = S.u.filter(x => x.n !== i); rUsers(); } sv(); } }
-        function fillPhone() { let n = document.getElementById('o-den').value, d = S.d.find(x => x.n === n); document.getElementById('o-dphone').value = d ? d.p : ''; }
-        function findVouch() { let c = document.getElementById('o-v-txt').value.toUpperCase(), f = S.v.find(x => x.c === c); if (f) document.getElementById('o-v-sel').value = f.p; calc(); }
-        function selVouch() { calc(); }
-        function rHR() { let isAuth = (['HR','ACCOUNTING','ADMIN','IT'].includes(S.curr.d)); document.getElementById('hr-table-container').classList.toggle('hidden', !isAuth); if (isAuth) { document.getElementById('b-hr').innerHTML = S.hr.map(x => `<tr><td>${x.u}</td><td>${x.a}</td><td>${x.t}</td></tr>`).join(''); } }
-        setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
+        function addOpt(t) { let v = prompt('NEW:'); if (v) { if (t === 'loc') S.locs.push(v); sv(); popSel('d-loc', S.locs); } }
+        function initChat() { let r = S.curr.d; let list = S.u.filter(x => { if (r === 'DENTIST') return ['ADMIN', 'IT', 'ACCOUNTING', 'HR'].includes(x.d); return x.n !== S.curr.n; }); document.getElementById('chat-to').innerHTML = `<option value="">SELECT</option>` + list.map(x => `<option value="${x.n}">${x.n}</option>`).join(''); }
+        function toggleChat() { let b = document.getElementById('chat-box'); b.style.display = b.style.display === 'flex' ? 'none' : 'flex'; }
+        function resetSys() { if (confirm('RESET?')) { S.d = []; S.o = []; S.v = []; sv(); location.reload(); } }
+        setInterval(() => { if(document.getElementById('clock')) document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
     </script>
 </body>
 </html>
