@@ -17,13 +17,13 @@
         :root { --primary: #002b3d; --secondary: #189ad3; --accent: #10b981; --danger: #dc2626; --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --border: #e2e8f0; --font-main: 'Inter'; }
         .dark-mode { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --border: #334155; }
         
-        body { font-family: var(--font-main), sans-serif; background: var(--bg); color: var(--text); margin: 0; overflow: hidden; height: 100vh; transition: 0.3s; }
+        body { font-family: var(--font-main), sans-serif; background: var(--bg); color: var(--text); margin: 0; overflow: hidden; height: 100dvh; transition: 0.3s; }
         
         .nav-item { padding: 12px 14px; border-radius: 8px; font-weight: 700; color: #94a3b8; font-size: 11px; text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: 0.2s; }
         .nav-item.active { background: var(--secondary) !important; color: white !important; box-shadow: 0 4px 12px rgba(24, 154, 211, 0.4); }
         .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
         
-        .page { display: none; width: 100%; padding-bottom: 50px; }
+        .page { display: none; width: 100%; padding-bottom: 120px; }
         .page.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -49,7 +49,7 @@
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 10px; }
         .modal.active { display: flex; animation: fadeMod 0.2s; }
         @keyframes fadeMod { from { opacity: 0; } to { opacity: 1; } }
-        .modal-box { background: var(--card); width: 100%; max-width: 1100px; max-height: 95vh; overflow-y: auto; padding: 25px; border-radius: 16px; border-top: 6px solid var(--secondary); position: relative; color: var(--text); }
+        .modal-box { background: var(--card); width: 100%; max-width: 1100px; max-height: 95vh; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 25px; border-radius: 16px; border-top: 6px solid var(--secondary); position: relative; color: var(--text); }
         
         .img-box { width: 80px; height: 80px; border: 2px dashed var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; background: #f1f5f9; overflow: hidden; cursor: pointer; }
         .img-box img { width: 100%; height: 100%; object-fit: cover; }
@@ -65,16 +65,19 @@
         .tooth-btn { height: 35px; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 9px; font-weight: 900; background: #eee; color: #000; transition: 0.2s; }
         .tooth-btn.active { color: white; border-color: #000; }
         
-        /* Custom Scrollbar for better look */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
         /* Calendar customizations */
-        .fc-toolbar-title { font-size: 1.2rem !important; font-weight: 900 !important; color: var(--secondary) !important; text-transform: uppercase; }
-        .fc-button-primary { background-color: var(--secondary) !important; border: none !important; font-weight: bold !important; text-transform: uppercase !important; font-size: 10px !important;}
+        .fc-toolbar-title { font-size: 1.1rem !important; font-weight: 900 !important; color: var(--secondary) !important; text-transform: uppercase; }
+        .fc-button-primary { background-color: var(--secondary) !important; border: none !important; font-weight: bold !important; text-transform: uppercase !important; font-size: 9px !important;}
         .fc-button-active { background-color: #001f2d !important; }
+        
+        /* Calendar explicit container fix */
+        #calendar-container { background: var(--card); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
@@ -101,7 +104,7 @@
         </div>
     </div>
 
-    <div id="app-shell" class="hidden flex-col h-screen w-full">
+    <div id="app-shell" class="hidden flex-col h-[100dvh] w-full overflow-hidden">
         
         <header class="bg-[#001f2d] text-white p-3 flex items-center justify-between shadow-lg z-40 shrink-0">
             <div class="flex items-center gap-4">
@@ -111,7 +114,7 @@
             <div class="text-[10px] font-bold text-gray-300 hidden sm:block">DENTAL ASSIST PH</div>
         </header>
 
-        <div class="flex flex-1 relative overflow-hidden">
+        <div class="flex flex-1 relative overflow-hidden min-h-0 w-full">
             
             <div id="sidebar" class="fixed inset-y-0 left-0 bg-[#001f2d] w-[260px] transform -translate-x-full transition-transform duration-300 z-50 flex flex-col p-4 shadow-2xl h-full border-r-4 border-[#189ad3]">
                 <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
@@ -124,7 +127,7 @@
 
             <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 hidden z-40 backdrop-blur-sm transition-opacity"></div>
 
-            <main id="main-content" class="flex-1 overflow-y-auto w-full p-4 lg:p-8 relative bg-[var(--bg)] scroll-smooth">
+            <main id="main-content" class="flex-1 overflow-y-auto overflow-x-hidden w-full p-4 lg:p-8 relative bg-[var(--bg)] scroll-smooth min-h-0" style="-webkit-overflow-scrolling: touch;">
                 
                 <section id="p-dashboard" class="page">
                     <h1 class="text-3xl font-black uppercase mb-6">Command Center</h1>
@@ -140,7 +143,7 @@
                         </div>
                         <div class="card bg-slate-900 text-white flex flex-col" style="height: 450px;">
                             <h4 class="font-bold mb-4 uppercase text-blue-400 text-[10px] tracking-widest text-center italic">Upcoming Deliveries</h4>
-                            <div id="dash-snap-list" class="flex-1 overflow-y-auto space-y-2 pr-2 custom-scroll"></div>
+                            <div id="dash-snap-list" class="flex-1 overflow-y-auto space-y-2 pr-2 custom-scroll" style="-webkit-overflow-scrolling: touch;"></div>
                             <button onclick="go('calendar')" class="btn btn-blue w-full mt-4 !text-[8px] uppercase">View Full Workspace</button>
                         </div>
                     </div>
@@ -179,7 +182,7 @@
                     <div class="table-wrap"><table id="t-prod"><thead><tr><th>CASE ID</th><th>DUE</th><th>STATUS</th><th>ASSIGNED</th><th>REMARKS</th><th>ACTION</th></tr></thead><tbody id="b-prod"></tbody></table></div>
                 </section>
 
-                <section id="p-calendar" class="page"><div class="card h-[750px]"><div id="calendar" class="h-full"></div></div></section>
+                <section id="p-calendar" class="page"><div id="calendar-container"><div id="calendar" class="w-full"></div></div></section>
 
                 <section id="p-accounting" class="page">
                     <h1 class="text-2xl font-black mb-6 uppercase">Pricing & Product Catalog</h1>
@@ -250,13 +253,13 @@
 
     <div id="mod-excel-view" class="modal"><div class="modal-box !max-w-5xl">
         <h2 class="text-xl font-black mb-4 uppercase text-[#10b981]">Data Preview</h2>
-        <div id="excel-viewer-area" class="overflow-auto border p-2 bg-white max-h-[70vh]"></div>
+        <div id="excel-viewer-area" class="overflow-auto border p-2 bg-white max-h-[70vh]" style="-webkit-overflow-scrolling: touch;"></div>
         <div class="flex justify-end gap-2 mt-4"><button onclick="closeModals()" class="btn btn-red w-full sm:w-auto">CLOSE</button></div>
     </div></div>
 
     <div id="mod-user-mods" class="modal"><div class="modal-box !max-w-md">
         <h2 class="text-xl font-black mb-4 uppercase">Module Permissions</h2>
-        <div id="mods-check-list" class="space-y-1 mb-4 max-h-[50vh] overflow-y-auto"></div>
+        <div id="mods-check-list" class="space-y-1 mb-4 max-h-[50vh] overflow-y-auto" style="-webkit-overflow-scrolling: touch;"></div>
         <input type="hidden" id="mod-target-idx">
         <button onclick="saveUserMods()" class="btn btn-blue w-full py-3">UPDATE ACCESS</button>
     </div></div>
@@ -308,7 +311,7 @@
                 <label>DUE DATE</label><input id="o-due" type="date" class="inp">
                 <label>RETURN DATE</label><input id="o-ret" type="date" class="inp">
                 <label>STATUS <button type="button" onclick="addOpt('stat')" class="bg-black text-white px-1 rounded">+</button></label><select id="o-stat" class="inp"></select>
-                <label>PRODUCTS</label><div id="o-prods" class="h-64 overflow-y-auto border p-2 bg-white rounded space-y-1"></div>
+                <label>PRODUCTS</label><div id="o-prods" class="h-64 overflow-y-auto border p-2 bg-white rounded space-y-1" style="-webkit-overflow-scrolling: touch;"></div>
             </div>
             <div class="space-y-2 md:col-span-2 xl:col-span-1">
                 <label>SHADE</label><input id="o-shade" class="inp">
@@ -330,7 +333,7 @@
     <div id="chat-box">
         <div class="bg-[#189ad3] p-3 text-white font-bold flex justify-between items-center"><span>MESSENGER</span><button onclick="toggleChat()" class="text-lg">✕</button></div>
         <div class="p-2 border-b"><select id="chat-to" class="inp mb-0" onchange="rChat()"></select></div>
-        <div id="chat-body" class="flex-1 p-3 overflow-y-auto bg-slate-50 space-y-2 text-xs"></div>
+        <div id="chat-body" class="flex-1 p-3 overflow-y-auto bg-slate-50 space-y-2 text-xs" style="-webkit-overflow-scrolling: touch;"></div>
         <div class="p-2 border-t flex gap-2"><input id="chat-in" class="inp mb-0" placeholder="Type message..."><button onclick="sendChat()" class="btn btn-blue px-4">▶</button></div>
     </div>
     <div id="chat-bubble" onclick="toggleChat()">💬</div>
@@ -421,7 +424,7 @@
             if(!sb.classList.contains('-translate-x-full')) toggleSidebar();
         }
 
-        if(id==='dashboard') dash(); if(id==='doctor') rDocs(); if(id==='order') rOrd(); if(id==='production') rProd(); if(id==='accounting') rAcc(); if(id==='voucher') rVouch(); if(id==='excel') rFol(); if(id==='users') rUsers(); if(id==='calendar') initFullCal(); if(id==='settings') popSel('ui-font', S.fonts);
+        if(id==='dashboard') dash(); if(id==='doctor') rDocs(); if(id==='order') rOrd(); if(id==='production') rProd(); if(id==='accounting') rAcc(); if(id==='voucher') rVouch(); if(id==='excel') rFol(); if(id==='users') rUsers(); if(id==='calendar') { setTimeout(() => initFullCal(), 100); } if(id==='settings') popSel('ui-font', S.fonts);
         
         // Scroll top smoothly
         document.getElementById('main-content').scrollTo(0,0);
@@ -669,11 +672,13 @@
     }
     
     function updateMap(){ let a = document.getElementById('d-addr').value; if(a) document.getElementById('doc-map').src = `https://maps.google.com/maps?q=${encodeURIComponent(a)}&output=embed`; }
+    
     function onTypeChange(clicked){ 
         let t=document.getElementById('o-ctype').value; 
         document.getElementById('o-id').value=`${t}0${1655+S.o.length}`; 
         if(clicked && t) alert(`YOU HAVE CHANGED TO ${t}`); 
     }
+    
     function fillDocInfo(){ let d=S.d.find(x=>x.n===document.getElementById('o-doc').value); if(d){ document.getElementById('o-pic').value=d.phone; }}
     function toggleQR(){ document.getElementById('qr-box').classList.toggle('hidden', document.getElementById('o-pay').value==='CASH'); }
     function closeModals(){ document.querySelectorAll('.modal').forEach(m=>m.classList.remove('active')); }
@@ -707,20 +712,24 @@
 
     // CALENDAR
     function initFullCal(){
-        let cal = new FullCalendar.Calendar(document.getElementById('calendar'), {
-            initialView:'dayGridMonth',
+        let calEl = document.getElementById('calendar');
+        if(window.fullCal) { window.fullCal.destroy(); }
+        window.fullCal = new FullCalendar.Calendar(calEl, {
+            initialView: window.innerWidth < 768 ? 'timeGridDay' : 'dayGridMonth',
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
+            height: window.innerWidth < 768 ? 650 : 800, // <--- TINAKDA ANG HEIGHT PARA DI MAYUPI
             events: S.o.map(x=>({ title: `${x.id} - ${x.pat}`, start: x.due, extendedProps:{caseObj:x} })),
             eventClick: info => {
                 let c = info.event.extendedProps.caseObj;
                 let n = prompt(`Case: ${c.id}\nPatient: ${c.pat}\n\nEdit/Add Note:`, c.rem);
                 if(n!==null){ let idx=S.o.findIndex(o=>o.id===c.id); S.o[idx].rem=n; sv(); initFullCal(); }
             }
-        }); cal.render();
+        }); 
+        window.fullCal.render();
     }
 
     // ACCOUNTING
