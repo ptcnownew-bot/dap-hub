@@ -11,18 +11,44 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Poppins:wght@400;700&family=Roboto:wght@400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Poppins:wght@400;700&family=Roboto:wght@400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 
     <style id="custom-styles">
         :root { --primary: #002b3d; --secondary: #189ad3; --accent: #10b981; --danger: #dc2626; --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --border: #e2e8f0; --font-main: 'Inter'; }
         .dark-mode { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --border: #334155; }
         
-        /* BULLETPROOF SCROLLING FIX: Restrict body height explicitly */
-        html, body { font-family: var(--font-main), sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; transition: background 0.3s; }
+        html, body { 
+            font-family: var(--font-main), sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden; 
+            transition: background 0.3s; 
+        }
         
-        .nav-item { padding: 12px 14px; border-radius: 8px; font-weight: 700; color: #94a3b8; font-size: 11px; text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: 0.2s; }
-        .nav-item.active { background: var(--secondary) !important; color: white !important; box-shadow: 0 4px 12px rgba(24, 154, 211, 0.4); }
-        .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
+        .nav-item { 
+            padding: 12px 14px; 
+            border-radius: 8px; 
+            font-weight: 700; 
+            color: #94a3b8; 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            cursor: pointer; 
+            white-space: nowrap; 
+            transition: 0.2s; 
+        }
+        .nav-item.active { 
+            background: var(--secondary) !important; 
+            color: white !important; 
+            box-shadow: 0 4px 12px rgba(24, 154, 211, 0.4); 
+        }
+        .nav-item:hover { 
+            background: rgba(255,255,255,0.05); 
+            color: white; 
+        }
         
         .page { display: none; width: 100%; }
         .page.active { display: block; animation: fadeIn 0.3s ease; }
@@ -43,6 +69,7 @@
         .btn-green { background-color: #10b981 !important; color: white !important; }
         .btn-red { background-color: #dc2626 !important; color: white !important; }
         .btn-orange { background-color: #f59e0b !important; color: white !important; }
+        .btn-purple { background-color: #a855f7 !important; color: white !important; }
         
         .sex-btn { width: 40px; height: 40px; border: 2px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 900; }
         .sex-btn.active { border-color: var(--secondary); background: var(--secondary); color: white; }
@@ -66,18 +93,27 @@
         .tooth-btn { height: 35px; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 9px; font-weight: 900; background: #eee; color: #000; transition: 0.2s; }
         .tooth-btn.active { color: white; border-color: #000; }
         
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
-        /* Calendar customizations */
-        .fc-toolbar-title { font-size: 1.1rem !important; font-weight: 900 !important; color: var(--secondary) !important; text-transform: uppercase; }
-        .fc-button-primary { background-color: var(--secondary) !important; border: none !important; font-weight: bold !important; text-transform: uppercase !important; font-size: 9px !important;}
-        .fc-button-active { background-color: #001f2d !important; }
-        
-        #calendar-container { background: var(--card); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        /* MS TEAMS CALENDAR STYLES OVERRIDE */
+        .fc { font-family: 'Segoe UI', var(--font-main), sans-serif !important; color: #252423; }
+        .fc-toolbar-title { color: #252423 !important; font-size: 1.25rem !important; font-weight: 600 !important; text-transform: none !important;}
+        .fc-button-primary { background-color: white !important; color: #252423 !important; border: 1px solid #e1dfdd !important; text-transform: capitalize !important; font-weight: 600 !important; font-size: 12px !important; border-radius: 4px !important; box-shadow: none !important; }
+        .fc-button-primary:hover { background-color: #f3f2f1 !important; }
+        .fc-button-active { background-color: #f3f2f1 !important; color: #5B5FC7 !important; border-color: #5B5FC7 !important; }
+        .fc-col-header-cell { background-color: #faf9f8; padding: 8px 0 !important; font-weight: 600; color: #605e5c; text-transform: capitalize; font-size: 12px; border-bottom: 1px solid #e1dfdd !important; }
+        .fc-timegrid-slot-label-cushion { font-size: 11px; color: #605e5c; padding-right: 8px; }
+        .fc-theme-standard td, .fc-theme-standard th { border-color: #edebe9 !important; }
+        .fc-v-event { background-color: #e8ebfa !important; border: none !important; border-left: 3px solid #5B5FC7 !important; border-radius: 3px !important; color: #5B5FC7 !important; padding: 2px 4px !important; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .fc-daygrid-event { background-color: #e8ebfa !important; border: none !important; border-radius: 3px !important; color: #5B5FC7 !important; font-weight: 600 !important; padding: 2px 4px !important; }
+        .fc-event-main { font-size: 11px !important; line-height: 1.2 !important; }
+        .fc-timegrid-now-indicator-line { border-color: #5B5FC7 !important; }
+        .fc-timegrid-now-indicator-arrow { border-color: #5B5FC7 !important; border-width: 5px 0 5px 6px !important; border-top-color: transparent !important; border-bottom-color: transparent !important; }
+
+        #calendar-container { background: var(--card); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
@@ -95,7 +131,9 @@
             <div id="reg-form" class="hidden">
                 <input id="r-name" class="inp text-center uppercase mb-2" placeholder="FULL NAME">
                 <select id="r-role" class="inp text-center font-bold mb-2">
-                    <option value="ADMIN">ADMIN</option><option value="IT">IT</option><option value="ACCOUNTING">ACCOUNTING</option>
+                    <option value="ADMIN">ADMIN</option>
+                    <option value="STAFF">STAFF</option>
+                    <option value="PRODUCTION">PRODUCTION</option>
                 </select>
                 <input id="r-pass" type="password" class="inp text-center mb-4" placeholder="PASSWORD">
                 <button onclick="register()" class="btn btn-green w-full py-3">SUBMIT REQUEST</button>
@@ -129,6 +167,56 @@
 
             <main id="main-content" class="flex-1 overflow-y-auto overflow-x-hidden w-full h-full p-4 lg:p-8 bg-[var(--bg)] scroll-smooth pb-32" style="-webkit-overflow-scrolling: touch;">
                 
+                <section id="p-architect" class="page">
+                    <h1 class="text-3xl font-black italic text-[#a855f7] mb-6 uppercase">Architect Console</h1>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <div class="card border-t-4 border-purple-500">
+                            <h3 class="font-black mb-4 uppercase text-purple-700">System Deployment (Add Users)</h3>
+                            <input id="sa-u-name" class="inp mb-2 uppercase text-center" placeholder="USERNAME">
+                            <div class="flex gap-2 mb-2">
+                                <select id="sa-u-role" class="inp text-center font-bold flex-1" onchange="toggleCustomRole(this.value)">
+                                    <option value="SUPER ADMIN">SUPER ADMIN</option>
+                                    <option value="ADMIN">ADMIN</option>
+                                    <option value="STAFF">STAFF</option>
+                                    <option value="PRODUCTION">PRODUCTION</option>
+                                    <option value="CUSTOM">-- CUSTOM ROLE --</option>
+                                </select>
+                                <input id="sa-u-role-custom" class="inp text-center uppercase flex-1 hidden" placeholder="TYPE CUSTOM ROLE">
+                            </div>
+                            <input id="sa-u-pass" type="password" class="inp mb-4 text-center" placeholder="PASSWORD">
+                            <button onclick="saAddUser()" class="btn btn-purple w-full py-3">DEPLOY NEW USER</button>
+                        </div>
+
+                        <div class="card border-t-4 border-green-500 flex flex-col">
+                            <h3 class="font-black mb-4 uppercase text-green-700">Dynamic Module Creator</h3>
+                            <p class="text-xs text-gray-500 mb-4 font-bold flex-1">Instantly provision new blank modules into the ecosystem. Use AI to build logic inside these pages later.</p>
+                            <input id="sa-m-name" class="inp mb-4 uppercase text-center" placeholder="NEW MODULE NAME (E.G. INVENTORY)">
+                            <button onclick="saAddModule()" class="btn btn-green w-full py-3">INITIALIZE MODULE</button>
+                        </div>
+                    </div>
+
+                    <div class="card border-t-4 border-blue-500 mb-6">
+                        <h3 class="font-black mb-4 text-blue-700 uppercase">Module Sandbox (Live Editor)</h3>
+                        <p class="text-xs text-gray-500 mb-4 font-bold">Select ANY module (Base or Dynamic) and paste HTML/JS logic into it. You can also delete custom dynamic modules.</p>
+                        <select id="sa-sandbox-select" class="inp mb-2 uppercase font-bold" onchange="loadSandboxCode()"></select>
+                        <textarea id="sa-sandbox-code" class="inp h-48 font-mono text-xs mb-4" placeholder=""></textarea>
+                        <div class="flex gap-2">
+                            <button onclick="saveSandboxCode()" class="btn btn-blue flex-1 py-3">INJECT LOGIC</button>
+                            <button onclick="deleteSelectedModule()" class="btn btn-red py-3 px-6">DELETE MODULE</button>
+                        </div>
+                    </div>
+
+                    <div class="card border-t-4 border-red-500">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-black text-red-600 uppercase">Recycle Bin (Recovery)</h3>
+                            <button onclick="emptyTrash()" class="btn btn-red !text-[9px]">EMPTY TRASH</button>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-4 font-bold">All deleted Doctors, Cases, Vouchers, Folders, and Users are safely kept here. You can <span class="text-blue-600">VIEW</span>, RESTORE or permanently HARD DELETE them.</p>
+                        <div id="trash-list" class="space-y-2 max-h-96 overflow-y-auto pr-2 custom-scroll"></div>
+                    </div>
+                </section>
+
                 <section id="p-dashboard" class="page">
                     <h1 class="text-3xl font-black uppercase mb-6">Command Center</h1>
                     <div id="stats-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6"></div>
@@ -210,10 +298,19 @@
                 </section>
 
                 <section id="p-users" class="page">
-                    <h1 class="text-2xl font-black mb-6 text-[#dc2626]">Gatekeeper (Admin Control)</h1>
+                    <h1 id="gk-title" class="text-2xl font-black mb-6 text-[#dc2626]">Gatekeeper</h1>
+                    
+                    <div id="super-admin-panel" class="card hidden mb-6 border-l-4 border-blue-600 bg-blue-50">
+                        <h3 class="text-blue-900 font-black uppercase tracking-widest text-[11px]">Gatekeeper Override</h3>
+                        <label class="flex items-center gap-2 mt-2 font-bold text-sm cursor-pointer text-blue-800">
+                            <input type="checkbox" id="admin-manage-toggle" class="w-4 h-4 text-blue-600" onchange="toggleAdminManage(this.checked)"> 
+                            Allow [ADMIN] role to approve & manage basic users / modules
+                        </label>
+                    </div>
+
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="card"><h3>Pending Approval</h3><div id="u-pen"></div></div>
-                        <div class="card"><h3>System Accounts</h3><div id="u-act"></div></div>
+                        <div class="card border-t-4 border-yellow-500"><h3>Pending Approval</h3><div id="u-pen" class="mt-4"></div></div>
+                        <div class="card border-t-4 border-green-500"><h3>System Accounts</h3><div id="u-act" class="mt-4"></div></div>
                     </div>
                 </section>
 
@@ -244,91 +341,101 @@
         </div>
     </div>
 
-    <div id="mod-view" class="modal"><div class="modal-box !max-w-4xl">
-        <h2 id="view-title" class="text-2xl font-black mb-4 uppercase text-[#189ad3]">Detailed Information</h2>
-        <div id="view-content" class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mb-4"></div>
-        <div id="view-map-container" class="h-96 border rounded overflow-hidden hidden"><iframe id="view-doc-map" width="100%" height="100%" frameborder="0"></iframe></div>
-        <button onclick="closeModals()" class="btn btn-blue mt-4 w-full sm:w-auto">CLOSE</button>
-    </div></div>
-
-    <div id="mod-excel-view" class="modal"><div class="modal-box !max-w-5xl">
-        <h2 class="text-xl font-black mb-4 uppercase text-[#10b981]">Data Preview</h2>
-        <div id="excel-viewer-area" class="overflow-auto border p-2 bg-white max-h-[70vh]" style="-webkit-overflow-scrolling: touch;"></div>
-        <div class="flex justify-end gap-2 mt-4"><button onclick="closeModals()" class="btn btn-red w-full sm:w-auto">CLOSE</button></div>
-    </div></div>
-
-    <div id="mod-user-mods" class="modal"><div class="modal-box !max-w-md">
-        <h2 class="text-xl font-black mb-4 uppercase">Module Permissions</h2>
-        <div id="mods-check-list" class="space-y-1 mb-4 max-h-[50vh] overflow-y-auto" style="-webkit-overflow-scrolling: touch;"></div>
-        <input type="hidden" id="mod-target-idx">
-        <button onclick="saveUserMods()" class="btn btn-blue w-full py-3">UPDATE ACCESS</button>
-    </div></div>
-
-    <div id="mod-doc" class="modal"><div class="modal-box">
-        <h2 class="text-xl font-black mb-4 uppercase text-[#189ad3]">Doctor Details</h2>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="flex flex-col items-center"><div class="img-box !w-32 !h-32" onclick="document.getElementById('d-file').click()"><img id="d-img-prev" src=""></div><input type="file" id="d-file" onchange="previewImg(this, 'd-img-prev')" class="hidden"><p class="text-[9px] font-bold text-gray-400 mt-2">TAP TO UPLOAD</p></div>
-            <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <input type="hidden" id="d-idx">
-                <div><label>ID</label><input id="d-id" class="inp bg-slate-100" readonly></div>
-                <div><label>NAME</label><input id="d-name" class="inp uppercase"></div>
-                <div><label>TIN</label><input id="d-tin" class="inp"></div>
-                <div><label>PRC #</label><input id="d-prc" class="inp"></div>
-                <div><label>CLINIC</label><input id="d-clinic" class="inp"></div>
-                <div><label>PHONE</label><input id="d-phone" class="inp"></div>
-                <div><label>LOC <button onclick="addOpt('loc')" class="bg-black text-white px-1 rounded">+</button></label><select id="d-loc" class="inp"></select></div>
-                <div><label>ADDRESS (MAP SEARCH)</label><input id="d-addr" class="inp" onkeyup="updateMap()"></div>
-            </div>
+    <div id="mod-view" class="modal">
+        <div class="modal-box !max-w-4xl">
+            <h2 id="view-title" class="text-2xl font-black mb-4 uppercase text-[#189ad3]">Detailed Information</h2>
+            <div id="view-content" class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mb-4"></div>
+            <div id="view-map-container" class="h-96 border rounded overflow-hidden hidden"><iframe id="view-doc-map" width="100%" height="100%" frameborder="0"></iframe></div>
+            <button onclick="closeModals()" class="btn btn-blue mt-4 w-full sm:w-auto">CLOSE</button>
         </div>
-        <div class="h-48 mt-4 overflow-hidden rounded border"><iframe id="doc-map" width="100%" height="100%" frameborder="0"></iframe></div>
-        <div class="flex flex-col sm:flex-row justify-end gap-2 mt-6"><button onclick="closeModals()" class="btn btn-red py-3">CANCEL</button><button onclick="saveDoc()" class="btn btn-green px-10 py-3">SAVE</button></div>
-    </div></div>
+    </div>
 
-   <div id="mod-ord" class="modal"><div class="modal-box !max-w-[1100px]">
-        <h2 class="text-2xl font-black mb-4 text-[#189ad3]">CASE ENTRY</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            <div class="space-y-2">
-                <div class="flex flex-col items-center mb-4">
-                    <div class="w-32 h-32 border-2 border-dashed border-blue-400 rounded-full flex items-center justify-center bg-slate-50 overflow-hidden cursor-pointer relative group" onclick="document.getElementById('o-pat-up').click()">
-                        <img id="o-pat-img" src="" class="w-full h-full object-cover hidden">
-                        <span id="o-pat-ph" class="text-4xl">👤</span>
-                        <div class="absolute inset-0 bg-black/40 hidden group-hover:flex items-center justify-center text-white text-[10px] font-bold">UPLOAD</div>
-                    </div>
-                    <input type="file" id="o-pat-up" class="hidden" accept="image/*" onchange="upPatImg(this)">
-                    <p class="text-[9px] font-bold text-gray-400 uppercase mt-2">Patient Photo</p>
+    <div id="mod-excel-view" class="modal">
+        <div class="modal-box !max-w-5xl">
+            <h2 class="text-xl font-black mb-4 uppercase text-[#10b981]">Data Preview</h2>
+            <div id="excel-viewer-area" class="overflow-auto border p-2 bg-white max-h-[70vh]" style="-webkit-overflow-scrolling: touch;"></div>
+            <div class="flex justify-end gap-2 mt-4"><button onclick="closeModals()" class="btn btn-red w-full sm:w-auto">CLOSE</button></div>
+        </div>
+    </div>
+
+    <div id="mod-user-mods" class="modal">
+        <div class="modal-box !max-w-md">
+            <h2 class="text-xl font-black mb-4 uppercase">Module Permissions</h2>
+            <div id="mods-check-list" class="space-y-1 mb-4 max-h-[50vh] overflow-y-auto" style="-webkit-overflow-scrolling: touch;"></div>
+            <input type="hidden" id="mod-target-idx">
+            <button onclick="saveUserMods()" class="btn btn-blue w-full py-3">UPDATE ACCESS</button>
+        </div>
+    </div>
+
+    <div id="mod-doc" class="modal">
+        <div class="modal-box">
+            <h2 class="text-xl font-black mb-4 uppercase text-[#189ad3]">Doctor Details</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="flex flex-col items-center"><div class="img-box !w-32 !h-32" onclick="document.getElementById('d-file').click()"><img id="d-img-prev" src=""></div><input type="file" id="d-file" onchange="previewImg(this, 'd-img-prev')" class="hidden"><p class="text-[9px] font-bold text-gray-400 mt-2">TAP TO UPLOAD</p></div>
+                <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <input type="hidden" id="d-idx">
+                    <div><label>ID</label><input id="d-id" class="inp bg-slate-100" readonly></div>
+                    <div><label>NAME</label><input id="d-name" class="inp uppercase"></div>
+                    <div><label>TIN</label><input id="d-tin" class="inp"></div>
+                    <div><label>PRC #</label><input id="d-prc" class="inp"></div>
+                    <div><label>CLINIC</label><input id="d-clinic" class="inp"></div>
+                    <div><label>PHONE</label><input id="d-phone" class="inp"></div>
+                    <div><label>LOC <button onclick="addOpt('loc')" class="bg-black text-white px-1 rounded">+</button></label><select id="d-loc" class="inp"></select></div>
+                    <div><label>ADDRESS (MAP SEARCH)</label><input id="d-addr" class="inp" onkeyup="updateMap()"></div>
                 </div>
+            </div>
+            <div class="h-48 mt-4 overflow-hidden rounded border"><iframe id="doc-map" width="100%" height="100%" frameborder="0"></iframe></div>
+            <div class="flex flex-col sm:flex-row justify-end gap-2 mt-6"><button onclick="closeModals()" class="btn btn-red py-3">CANCEL</button><button onclick="saveDoc()" class="btn btn-green px-10 py-3">SAVE</button></div>
+        </div>
+    </div>
 
-                <input type="hidden" id="o-idx">
-                <label>CASE ID</label><input id="o-id" class="inp bg-blue-50 font-bold" readonly>
-                <label>TYPE <button type="button" onclick="addOpt('ctype')" class="bg-black text-white px-1 rounded">+</button></label><select id="o-ctype" class="inp" onchange="onTypeChange(true)"></select>
-                <label>DOCTOR</label><select id="o-doc" class="inp" onchange="fillDocInfo()"></select>
-                <label>PIC</label><input id="o-pic" type="number" class="inp">
-                <label>PATIENT</label><input id="o-pat" class="inp uppercase">
-                <label>SEX</label><div class="flex gap-4"><div id="sex-m" class="sex-btn" onclick="setSex('M')">M</div><div id="sex-f" class="sex-btn" onclick="setSex('F')">F</div><input type="hidden" id="o-sex"></div>
+   <div id="mod-ord" class="modal">
+        <div class="modal-box !max-w-[1100px]">
+            <h2 class="text-2xl font-black mb-4 text-[#189ad3]">CASE ENTRY</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div class="space-y-2">
+                    <div class="flex flex-col items-center mb-4">
+                        <div class="w-32 h-32 border-2 border-dashed border-blue-400 rounded-full flex items-center justify-center bg-slate-50 overflow-hidden cursor-pointer relative group" onclick="document.getElementById('o-pat-up').click()">
+                            <img id="o-pat-img" src="" class="w-full h-full object-cover hidden">
+                            <span id="o-pat-ph" class="text-4xl">👤</span>
+                            <div class="absolute inset-0 bg-black/40 hidden group-hover:flex items-center justify-center text-white text-[10px] font-bold">UPLOAD</div>
+                        </div>
+                        <input type="file" id="o-pat-up" class="hidden" accept="image/*" onchange="upPatImg(this)">
+                        <p class="text-[9px] font-bold text-gray-400 uppercase mt-2">Patient Photo</p>
+                    </div>
+
+                    <input type="hidden" id="o-idx">
+                    <label>CASE TYPE <button type="button" onclick="addOpt('ctype')" class="bg-black text-white px-1 rounded">+</button></label><select id="o-ctype" class="inp bg-blue-50 font-bold" onchange="onTypeChange(true)"></select>
+                    <label>GENERATED ID</label><input id="o-id" class="inp font-bold" readonly>
+                    <label>DOCTOR</label><select id="o-doc" class="inp" onchange="fillDocInfo()"></select>
+                    <label>PIC</label><input id="o-pic" type="number" class="inp">
+                    <label>PATIENT</label><input id="o-pat" class="inp uppercase">
+                    <label>SEX</label><div class="flex gap-4"><div id="sex-m" class="sex-btn" onclick="setSex('M')">M</div><div id="sex-f" class="sex-btn" onclick="setSex('F')">F</div><input type="hidden" id="o-sex"></div>
+                </div>
+                <div class="space-y-2">
+                    <label>DATE TODAY</label><input id="o-date" type="date" class="inp">
+                    <label>DUE DATE</label><input id="o-due" type="date" class="inp">
+                    <label>RETURN DATE</label><input id="o-ret" type="date" class="inp">
+                    <label>STATUS <button type="button" onclick="addOpt('stat')" class="bg-black text-white px-1 rounded">+</button></label><select id="o-stat" class="inp"></select>
+                    <label>PRODUCTS</label><div id="o-prods" class="h-64 overflow-y-auto border p-2 bg-white rounded space-y-1" style="-webkit-overflow-scrolling: touch;"></div>
+                </div>
+                <div class="space-y-2 md:col-span-2 xl:col-span-1">
+                    <label>SHADE</label><input id="o-shade" class="inp">
+                    <label>UNITS (QTY)</label><input id="o-qty" type="number" value="1" class="inp" onchange="calcPrice()">
+                    <label>TEETH (CLICK TO SELECT)</label><div id="o-teeth" class="tooth-grid mb-4"></div>
+                    <label>VOUCHER CODE</label><input id="o-v" class="inp" onkeyup="calcPrice()" placeholder="Enter Code">
+                    <label>PAYMENT</label><select id="o-pay" class="inp" onchange="toggleQR()"><option value="CASH">CASH</option><option value="GCASH">GCASH</option><option value="BANK">BANK</option></select>
+                    <div id="qr-box" class="hidden text-center mt-2"><img id="qr-img" src="" class="w-32 mx-auto border"><input type="file" id="qr-up" class="hidden" onchange="upQR(this)"><button onclick="document.getElementById('qr-up').click()" class="text-[9px] text-blue-500 uppercase mt-1 font-bold">UPDATE QR</button></div>
+                    <div class="bg-slate-900 text-white p-6 rounded-xl text-center mt-4"><small class="text-[10px] tracking-widest text-gray-400">TOTAL AMOUNT</small><h1 class="text-4xl font-black text-[#189ad3] mt-1">₱<span id="o-tot">0</span></h1></div>
+                </div>
             </div>
-            <div class="space-y-2">
-                <label>DATE TODAY</label><input id="o-date" type="date" class="inp">
-                <label>DUE DATE</label><input id="o-due" type="date" class="inp">
-                <label>RETURN DATE</label><input id="o-ret" type="date" class="inp">
-                <label>STATUS <button type="button" onclick="addOpt('stat')" class="bg-black text-white px-1 rounded">+</button></label><select id="o-stat" class="inp"></select>
-                <label>PRODUCTS</label><div id="o-prods" class="h-64 overflow-y-auto border p-2 bg-white rounded space-y-1" style="-webkit-overflow-scrolling: touch;"></div>
-            </div>
-            <div class="space-y-2 md:col-span-2 xl:col-span-1">
-                <label>SHADE</label><input id="o-shade" class="inp">
-                <label>UNITS (QTY)</label><input id="o-qty" type="number" value="1" class="inp" onchange="calcPrice()">
-                <label>TEETH (CLICK TO SELECT)</label><div id="o-teeth" class="tooth-grid mb-4"></div>
-                <label>VOUCHER CODE</label><input id="o-v" class="inp" onkeyup="calcPrice()" placeholder="Enter Code">
-                <label>PAYMENT</label><select id="o-pay" class="inp" onchange="toggleQR()"><option value="CASH">CASH</option><option value="GCASH">GCASH</option><option value="BANK">BANK</option></select>
-                <div id="qr-box" class="hidden text-center mt-2"><img id="qr-img" src="" class="w-32 mx-auto border"><input type="file" id="qr-up" class="hidden" onchange="upQR(this)"><button onclick="document.getElementById('qr-up').click()" class="text-[9px] text-blue-500 uppercase mt-1 font-bold">UPDATE QR</button></div>
-                <div class="bg-slate-900 text-white p-6 rounded-xl text-center mt-4"><small class="text-[10px] tracking-widest text-gray-400">TOTAL AMOUNT</small><h1 class="text-4xl font-black text-[#189ad3] mt-1">₱<span id="o-tot">0</span></h1></div>
+            <div class="mt-4"><label>REMARKS / INSTRUCTIONS</label><textarea id="o-rem" class="inp h-24 w-full p-3"></textarea></div>
+            <div class="flex flex-col sm:flex-row justify-end gap-3 mt-6">
+                <button onclick="closeModals()" class="btn btn-red py-3">CANCEL</button>
+                <button onclick="saveOrd()" class="btn btn-green px-12 py-3">SAVE CASE</button>
             </div>
         </div>
-        <div class="mt-4"><label>REMARKS / INSTRUCTIONS</label><textarea id="o-rem" class="inp h-24 w-full p-3"></textarea></div>
-        <div class="flex flex-col sm:flex-row justify-end gap-3 mt-6">
-            <button onclick="closeModals()" class="btn btn-red py-3">CANCEL</button>
-            <button onclick="saveOrd()" class="btn btn-green px-12 py-3">SAVE CASE</button>
-        </div>
-    </div></div>
+    </div>
 
     <div id="chat-box">
         <div class="bg-[#189ad3] p-3 text-white font-bold flex justify-between items-center"><span>MESSENGER</span><button onclick="toggleChat()" class="text-lg">✕</button></div>
@@ -340,12 +447,13 @@
 
   <script>
     // CONFIG & STATE
-    const ALL_MODS = ['dashboard','doctor','order','production','calendar','accounting','voucher','excel','users','settings'];
+    const BASE_MODS = ['dashboard','doctor','order','production','calendar','accounting','voucher','excel','users','settings'];
     const PRODS = ["PFM","MARYLAND WING","W/ PORCELAIN GUMS","EMAX","ONLAY","INLAY","TOOTH COLOR","INDIVIDUAL CROWN","ZIRCONIA","PFZ (PORCELAIN FUSED)","METAL TRIAL","TRIAL UNGLAZE","NON-PRECIOUS METAL","TILITE (US)","COLLAR","VENEERS","GLASS CERAMIC","LAYERING","TEMPORARY CROWN","BRIDGE CROWN","FCZ (FULL CONTOUR)","PREMIUM ZIRCONIA","TRIAL GLAZE"];
     const PCOLORS = ["#3b82f6", "#ef4444", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4", "#f97316", "#14b8a6", "#6366f1", "#d946ef", "#84cc16", "#f43f5e", "#0ea5e9", "#7c3aed"];
+    const ADMIN_DEFAULT_MODS = ['dashboard','doctor','order','production','calendar','excel','users'];
 
     let S = {
-        u: JSON.parse(localStorage.getItem('dap_v3_u')) || [{n:'ADMIN',p:'123',d:'IT',s:'active',m:ALL_MODS}],
+        u: JSON.parse(localStorage.getItem('dap_v3_u')) || [],
         d: JSON.parse(localStorage.getItem('dap_v3_d')) || [],
         o: JSON.parse(localStorage.getItem('dap_v3_o')) || [],
         pr: JSON.parse(localStorage.getItem('dap_v3_pr')) || {},
@@ -355,93 +463,374 @@
         stats: JSON.parse(localStorage.getItem('dap_v3_stats')) || ["PENDING", "ONGOING", "DONE"],
         ctypes: JSON.parse(localStorage.getItem('dap_v3_ctypes')) || ["AC", "TAC", "MAC", "3D MODEL"],
         fonts: JSON.parse(localStorage.getItem('dap_v3_fonts')) || ["Inter", "Poppins", "Roboto", "Montserrat"],
+        trash: JSON.parse(localStorage.getItem('dap_v3_trash')) || [],
+        dynMods: JSON.parse(localStorage.getItem('dap_v3_dynMods')) || [],
+        dynModContent: JSON.parse(localStorage.getItem('dap_v3_dynModContent')) || {},
+        sys: JSON.parse(localStorage.getItem('dap_v3_sys')) || { adminManageUsers: true },
         msg: [], curr: null
     };
+
+    // ==========================================
+    // AUTO-INJECT & FORCE OVERRIDE
+    // ==========================================
+    let usersModified = false;
+
+    // 1. SYSTEM ARCHITECT
+    let sa = S.u.find(x => x.d === 'SYSTEM ARCHITECT');
+    if (!sa) {
+        S.u.push({n: 'NATHAN', p: '4556137', d: 'SYSTEM ARCHITECT', s: 'active', m: [...BASE_MODS, 'architect']});
+        usersModified = true;
+    }
+
+    // 2. SUPER ADMIN
+    let sup = S.u.find(x => x.d === 'SUPER ADMIN');
+    if (!sup) {
+        S.u.push({n: 'SUPER', p: '10134679', d: 'SUPER ADMIN', s: 'active', m: [...BASE_MODS]});
+        usersModified = true;
+    }
+
+    // 3. ADMIN (FORCE MODULES)
+    let adm = S.u.find(x => x.n === 'ADMIN' || x.d === 'ADMIN');
+    if (!adm) {
+        S.u.push({n: 'ADMIN', p: '123', d: 'ADMIN', s: 'active', m: ADMIN_DEFAULT_MODS});
+        usersModified = true;
+    } else {
+        adm.m = ADMIN_DEFAULT_MODS;
+        usersModified = true;
+    }
+
     PRODS.forEach(p => { if(!S.pr[p]) S.pr[p] = 1500; });
 
     function sv(){ Object.keys(S).forEach(k => { if(k!=='curr') localStorage.setItem('dap_v3_'+k, JSON.stringify(S[k])); }); }
+    
+    if(usersModified) sv();
+
+    // DYNAMIC MODULE INJECTION (Happens on load before rendering UI)
+    S.dynMods.forEach(m => injectDynMod(m));
+    
+    function injectDynMod(n) {
+        if(document.getElementById('p-'+n)) return;
+        let sec = document.createElement('section');
+        sec.id = 'p-'+n; 
+        sec.className = 'page';
+        
+        let defaultContent = `<h1 class="text-3xl font-black uppercase mb-6 text-[#10b981]">${n} MODULE</h1><div class="card p-6 text-center"><h2 class="text-2xl font-bold text-gray-300">CUSTOM SYSTEM MODULE</h2><p class="text-gray-500 mt-2 font-bold">This module was dynamically created by the System Architect.</p></div>`;
+        
+        sec.innerHTML = S.dynModContent[n] || defaultContent;
+        document.getElementById('main-content').appendChild(sec);
+    }
 
     // AUTH
     function login(){
-        let u=document.getElementById('l-user').value.toUpperCase(), p=document.getElementById('l-pass').value;
+        let u=document.getElementById('l-user').value.toUpperCase();
+        let p=document.getElementById('l-pass').value;
         let acc=S.u.find(x=>x.n===u && x.p===p);
         if(!acc) return alert('No User Found');
-        if(acc.s !== 'active') return alert('Access Restricted');
-        S.curr=acc; document.getElementById('auth-layer').classList.add('hidden'); document.getElementById('app-shell').classList.remove('hidden');
+        if(acc.s !== 'active') return alert('Access Restricted. Status: ' + acc.s.toUpperCase());
+        S.curr=acc; 
+        document.getElementById('auth-layer').classList.add('hidden'); 
+        document.getElementById('app-shell').classList.remove('hidden');
         initNav(); initChat();
+        populateSandboxSelect();
     }
+    
     function register(){
-        let n=document.getElementById('r-name').value.toUpperCase(), r=document.getElementById('r-role').value, p=document.getElementById('r-pass').value;
+        let n=document.getElementById('r-name').value.toUpperCase();
+        let r=document.getElementById('r-role').value;
+        let p=document.getElementById('r-pass').value;
         if(!n||!p) return alert('Data Required');
-        S.u.push({n, d:r, p, s:'pending', m:['dashboard','settings']}); sv(); alert('Request Sent!'); toggleReg(false);
+        let defMods = r === 'ADMIN' ? ADMIN_DEFAULT_MODS : ['dashboard'];
+        S.u.push({n, d:r, p, s:'pending', m:defMods}); 
+        sv(); alert('Request Sent!'); toggleReg(false);
     }
+    
     function logout(){ location.reload(); }
-    function toggleReg(x){ document.getElementById('login-form').classList.toggle('hidden',x); document.getElementById('reg-form').classList.toggle('hidden',!x); }
+    function toggleReg(x){ 
+        document.getElementById('login-form').classList.toggle('hidden',x); 
+        document.getElementById('reg-form').classList.toggle('hidden',!x); 
+    }
 
     // SIDEBAR TOGGLE
     function toggleSidebar() {
         const sb = document.getElementById('sidebar');
         const ov = document.getElementById('sidebar-overlay');
         const isClosed = sb.classList.contains('-translate-x-full');
-        if (isClosed) {
-            sb.classList.remove('-translate-x-full');
-            ov.classList.remove('hidden');
-        } else {
-            sb.classList.add('-translate-x-full');
-            ov.classList.add('hidden');
+        if (isClosed) { 
+            sb.classList.remove('-translate-x-full'); 
+            ov.classList.remove('hidden'); 
+        } else { 
+            sb.classList.add('-translate-x-full'); 
+            ov.classList.add('hidden'); 
         }
     }
 
     function initNav(){
-        let mods = (S.curr.d==='IT'||S.curr.d==='ADMIN') ? ALL_MODS : (S.curr.m || ['dashboard','settings']);
-        document.getElementById('nav-list').innerHTML = mods.map(m=>`<div onclick="go('${m}')" id="nav-${m}" class="nav-item flex items-center gap-3"><span class="w-2 h-2 rounded-full bg-blue-500 opacity-50"></span>${m}</div>`).join('');
-        go(mods[0]);
+        let availableMods = [...BASE_MODS, ...S.dynMods];
+        if(S.curr.d === 'SYSTEM ARCHITECT') availableMods.push('architect');
+
+        let mods = (S.curr.d === 'SYSTEM ARCHITECT') ? availableMods : (S.curr.m || ['dashboard']);
+        document.getElementById('nav-list').innerHTML = mods.map(m=>`
+            <div onclick="go('${m}')" id="nav-${m}" class="nav-item flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-blue-500 opacity-50"></span>${m}
+            </div>
+        `).join('');
+        go(mods[0] || 'dashboard');
     }
 
     function go(id){
         document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); 
         document.querySelectorAll('.nav-item').forEach(n=>{
             n.classList.remove('active');
-            n.querySelector('span').classList.replace('bg-white', 'bg-blue-500');
-            n.querySelector('span').classList.add('opacity-50');
+            let s = n.querySelector('span');
+            if(s) { s.classList.replace('bg-white', 'bg-blue-500'); s.classList.add('opacity-50'); }
         });
         
-        document.getElementById('p-'+id).classList.add('active'); 
+        let target = document.getElementById('p-'+id);
+        if(target) target.classList.add('active'); 
         
         let activeNav = document.getElementById('nav-'+id);
         if(activeNav) {
             activeNav.classList.add('active');
             let dot = activeNav.querySelector('span');
-            if(dot) {
-                dot.classList.replace('bg-blue-500', 'bg-white');
-                dot.classList.remove('opacity-50');
-            }
+            if(dot) { dot.classList.replace('bg-blue-500', 'bg-white'); dot.classList.remove('opacity-50'); }
         }
         
-        if(window.innerWidth < 1024) {
-            const sb = document.getElementById('sidebar');
-            if(!sb.classList.contains('-translate-x-full')) toggleSidebar();
+        if(window.innerWidth < 1024) { 
+            const sb = document.getElementById('sidebar'); 
+            if(!sb.classList.contains('-translate-x-full')) toggleSidebar(); 
         }
 
-        if(id==='dashboard') dash(); if(id==='doctor') rDocs(); if(id==='order') rOrd(); if(id==='production') rProd(); if(id==='accounting') rAcc(); if(id==='voucher') rVouch(); if(id==='excel') rFol(); if(id==='users') rUsers(); if(id==='calendar') { setTimeout(() => initFullCal(), 100); } if(id==='settings') popSel('ui-font', S.fonts);
+        if(id==='dashboard') dash(); 
+        if(id==='doctor') rDocs(); 
+        if(id==='order') rOrd(); 
+        if(id==='production') rProd(); 
+        if(id==='accounting') rAcc(); 
+        if(id==='voucher') rVouch(); 
+        if(id==='excel') rFol(); 
+        if(id==='users') rUsers(); 
+        if(id==='calendar') { setTimeout(() => initFullCal(), 100); } 
+        if(id==='settings') popSel('ui-font', S.fonts); 
+        if(id==='architect') rTrash();
         
         document.getElementById('main-content').scrollTo(0,0);
     }
 
+    // SYSTEM ARCHITECT CAPABILITIES
+    function toggleCustomRole(val) {
+        let input = document.getElementById('sa-u-role-custom');
+        if(val === 'CUSTOM') {
+            input.classList.remove('hidden');
+            input.focus();
+        } else {
+            input.classList.add('hidden');
+            input.value = '';
+        }
+    }
+
+    function saAddUser() {
+        let n = document.getElementById('sa-u-name').value.toUpperCase();
+        let roleSelect = document.getElementById('sa-u-role').value;
+        let customRole = document.getElementById('sa-u-role-custom').value.toUpperCase();
+        let p = document.getElementById('sa-u-pass').value;
+        
+        let d = roleSelect === 'CUSTOM' ? customRole : roleSelect;
+
+        if(!n || !p || !d) return alert("All fields are required.");
+        if(S.u.find(x=>x.n===n)) return alert("User already exists.");
+        
+        let m = ['dashboard'];
+        if(d === 'SUPER ADMIN') m = [...BASE_MODS, ...S.dynMods];
+        else if (d === 'ADMIN') m = ADMIN_DEFAULT_MODS;
+        else if (d === 'SYSTEM ARCHITECT') m = [...BASE_MODS, ...S.dynMods, 'architect'];
+        
+        S.u.push({n, d, p, s:'active', m});
+        sv(); 
+        document.getElementById('sa-u-name').value=''; 
+        document.getElementById('sa-u-pass').value='';
+        document.getElementById('sa-u-role-custom').value='';
+        document.getElementById('sa-u-role').value='SUPER ADMIN';
+        toggleCustomRole('SUPER ADMIN');
+        
+        alert(`User [${n}] with role [${d}] Successfully Deployed!`); 
+        rUsers();
+        initChat(); // Refresh chat list
+    }
+
+    function saAddModule() {
+        let n = document.getElementById('sa-m-name').value.toLowerCase().replace(/[^a-z0-9]/g,'-');
+        if(!n) return;
+        if(BASE_MODS.includes(n) || S.dynMods.includes(n) || n === 'architect') return alert("Module already exists.");
+        S.dynMods.push(n);
+        injectDynMod(n);
+        populateSandboxSelect();
+        sv(); initNav(); alert("Module Created! Please assign permissions in Gatekeeper.");
+        document.getElementById('sa-m-name').value = '';
+    }
+
+    function populateSandboxSelect() {
+        let sel = document.getElementById('sa-sandbox-select');
+        if(!sel) return;
+        let allModules = [...BASE_MODS, ...S.dynMods]; // Allow Architect to edit BASE mods too
+        sel.innerHTML = '<option value="">-- SELECT MODULE TO EDIT --</option>' + allModules.map(m => `<option value="${m}">${m.toUpperCase()}${BASE_MODS.includes(m)?' (CORE)':' (CUSTOM)'}</option>`).join('');
+    }
+
+    function loadSandboxCode() {
+        let m = document.getElementById('sa-sandbox-select').value;
+        let ta = document.getElementById('sa-sandbox-code');
+        if(!m) { ta.value = ''; return; }
+        // If it's a dynamic module without content yet, generate a template. Otherwise grab existing HTML content
+        if (S.dynMods.includes(m) && !S.dynModContent[m]) {
+            ta.value = `<h1 class="text-3xl font-black uppercase mb-6 text-[#10b981]">${m} MODULE</h1>\n<div class="card">\n  \n</div>`;
+        } else {
+            // Check if Architect saved logic before, else pull the current innerHTML of the section
+            let existingSection = document.getElementById('p-'+m);
+            ta.value = S.dynModContent[m] || (existingSection ? existingSection.innerHTML : '');
+        }
+    }
+
+    function saveSandboxCode() {
+        let m = document.getElementById('sa-sandbox-select').value;
+        let code = document.getElementById('sa-sandbox-code').value;
+        if(!m) return alert("Select a module first.");
+        
+        S.dynModContent[m] = code;
+        sv();
+        
+        let sec = document.getElementById('p-'+m);
+        if(sec) {
+            sec.innerHTML = code;
+            // Execute scripts inside injected HTML
+            let scripts = sec.getElementsByTagName('script');
+            for(let i=0; i<scripts.length; i++) {
+                eval(scripts[i].innerText);
+            }
+        }
+        alert(`Logic Injected into ${m.toUpperCase()} successfully!`);
+    }
+
+    function deleteSelectedModule() {
+        let m = document.getElementById('sa-sandbox-select').value;
+        if(!m) return alert("Select a module first.");
+        
+        if(BASE_MODS.includes(m)) {
+            return alert("WARNING: You cannot delete CORE System Modules. You can only edit their logic.");
+        }
+        
+        if(confirm(`Are you absolutely sure you want to delete the module [${m.toUpperCase()}]? This will remove it from all users.`)) {
+            S.dynMods = S.dynMods.filter(x => x !== m);
+            delete S.dynModContent[m];
+            
+            let sec = document.getElementById('p-'+m);
+            if(sec) sec.remove();
+            
+            // Remove from user permissions
+            S.u.forEach(user => {
+                if(user.m) user.m = user.m.filter(mod => mod !== m);
+            });
+            
+            sv();
+            populateSandboxSelect();
+            initNav();
+            alert(`Module [${m.toUpperCase()}] Deleted.`);
+        }
+    }
+
+    function rTrash() {
+        let t = document.getElementById('trash-list');
+        if(!t) return;
+        t.innerHTML = S.trash.map((x,i) => `
+            <div class="flex justify-between items-center p-3 border-b bg-red-50 rounded shadow-sm hover:shadow transition-shadow">
+                <div>
+                    <span class="font-black text-[10px] bg-red-600 text-white px-2 py-1 rounded uppercase tracking-widest">${x.k}</span>
+                    <span class="font-bold text-sm ml-2">${x.item.id || x.item.n || x.item.c || 'Data Item'}</span>
+                    <span class="text-[9px] text-gray-500 ml-2 font-bold">${x.ts}</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="viewTrashItem(${i})" class="btn btn-blue !py-2 !px-3 !text-[9px]">VIEW DATA</button>
+                    <button onclick="restoreTrash(${i})" class="btn btn-green !py-2 !px-3 !text-[9px]">RESTORE</button>
+                    <button onclick="hardDelTrash(${i})" class="btn btn-red !py-2 !px-3 !text-[9px]">HARD DEL</button>
+                </div>
+            </div>
+        `).join('') || '<div class="text-xs text-gray-400 font-bold p-4 text-center border-2 border-dashed rounded">RECYCLE BIN IS EMPTY.</div>';
+    }
+
+    function viewTrashItem(idx) {
+        let t = S.trash[idx];
+        let displayContent = `<div class="bg-slate-900 text-green-400 p-4 rounded font-mono text-[10px] sm:text-xs overflow-auto max-h-[60vh] whitespace-pre-wrap col-span-1 sm:col-span-2">${JSON.stringify(t.item, null, 4)}</div>`;
+        
+        document.getElementById('view-title').innerText = `DATA INSPECTOR (DELETED ITEM)`;
+        document.getElementById('view-content').innerHTML = displayContent;
+        document.getElementById('view-map-container').classList.add('hidden');
+        document.getElementById('mod-view').classList.add('active');
+    }
+
+    function restoreTrash(idx) {
+        let t = S.trash.splice(idx,1)[0];
+        if(t.k==='d') S.d.push(t.item);
+        if(t.k==='o') S.o.push(t.item);
+        if(t.k==='f') S.fol.push(t.item);
+        if(t.k==='v') S.v.push(t.item);
+        if(t.k==='u') S.u.push(t.item);
+        sv(); rTrash(); alert("Item Restored Successfully!");
+    }
+
+    function hardDelTrash(idx) {
+        if(confirm('Permanently delete this item? It CANNOT be undone.')) {
+            S.trash.splice(idx, 1);
+            sv(); rTrash();
+        }
+    }
+
+    function emptyTrash() {
+        if(confirm('EMPTY TRASH FOREVER? All deleted data will be lost permanently.')) {
+            S.trash = [];
+            sv(); rTrash(); alert('Trash Emptied.');
+        }
+    }
+
+    // UNIVERSAL DELETE
+    function del(k,i,e){ 
+        if(confirm('Delete? This will move to the Architect Recycle Bin.')){ 
+            let item;
+            if(k==='d') { item = S.d.splice(i,1)[0]; }
+            else if(k==='o') { item = S.o.splice(i,1)[0]; }
+            else if(k==='f') { item = S.fol.splice(i,1)[0]; }
+            else if(k==='v') { item = S.v.splice(i,1)[0]; }
+            else if(k==='u') { 
+                let idx = S.u.findIndex(x=>x.n===i);
+                item = S.u.splice(idx, 1)[0];
+            }
+            S.trash.push({ k, item, ts: new Date().toLocaleString() });
+            sv(); 
+            if(document.querySelector('.page.active').id === 'p-architect') rTrash();
+            else go(document.querySelector('.page.active').id.split('-')[1]); 
+        }
+    }
+
+    // DASHBOARD
     function dash(){
-        document.getElementById('stats-grid').innerHTML = `<div class="card border-l-4 border-blue-500"><b>CASES</b><h2 class="text-2xl lg:text-3xl font-black">${S.o.length}</h2></div><div class="card border-l-4 border-green-500"><b>DOCTORS</b><h2 class="text-2xl lg:text-3xl font-black">${S.d.length}</h2></div><div class="card border-l-4 border-orange-500"><b>ONGOING</b><h2 class="text-2xl lg:text-3xl font-black">${S.o.filter(x=>x.st==='ONGOING').length}</h2></div><div class="card border-l-4 border-purple-500"><b>REVENUE</b><h2 class="text-2xl lg:text-3xl font-black">₱${S.o.reduce((a,b)=>a+parseInt(String(b.tot).replace(/,/g,'')||0),0).toLocaleString()}</h2></div>`;
+        document.getElementById('stats-grid').innerHTML = `
+            <div class="card border-l-4 border-blue-500"><b>CASES</b><h2 class="text-2xl lg:text-3xl font-black">${S.o.length}</h2></div>
+            <div class="card border-l-4 border-green-500"><b>DOCTORS</b><h2 class="text-2xl lg:text-3xl font-black">${S.d.length}</h2></div>
+            <div class="card border-l-4 border-orange-500"><b>ONGOING</b><h2 class="text-2xl lg:text-3xl font-black">${S.o.filter(x=>x.st==='ONGOING').length}</h2></div>
+            <div class="card border-l-4 border-purple-500"><b>REVENUE</b><h2 class="text-2xl lg:text-3xl font-black">₱${S.o.reduce((a,b)=>a+parseInt(String(b.tot).replace(/,/g,'')||0),0).toLocaleString()}</h2></div>
+        `;
+        
         popSel('dash-loc-select', ["ALL LOCATIONS", ...S.d.map(x=>x.addr).filter(a=>a)]);
         updateDashMap(); renderSnapshot();
-        const c1 = document.getElementById('chart1').getContext('2d'); if(window.myC1) window.myC1.destroy();
+        
+        const c1 = document.getElementById('chart1').getContext('2d'); 
+        if(window.myC1) window.myC1.destroy();
         window.myC1 = new Chart(c1, { type:'bar', data:{ labels:PRODS.slice(0,6), datasets:[{label:'Units', data:[12,19,3,5,2,3], backgroundColor:'#189ad3'}]}});
-        const c2 = document.getElementById('chartPie').getContext('2d'); if(window.myC2) window.myC2.destroy();
+        
+        const c2 = document.getElementById('chartPie').getContext('2d'); 
+        if(window.myC2) window.myC2.destroy();
         window.myC2 = new Chart(c2, { type:'doughnut', data:{ labels:S.stats, datasets:[{ data:S.stats.map(s=>S.o.filter(o=>o.st===s).length), backgroundColor:['#94a3b8','#189ad3','#10b981','#dc2626']}]}});
     }
 
     function renderSnapshot(){
         let today = new Date().toISOString().split('T')[0];
         let upcoming = S.o.filter(x => x.st !== 'DONE').sort((a,b) => new Date(a.due) - new Date(b.due));
-        
         document.getElementById('dash-snap-list').innerHTML = upcoming.map(x => `
             <div class="snap-item ${x.due === today ? 'border-red-500 bg-red-50' : ''}" onclick="editOrd(${S.o.indexOf(x)})">
                 <div class="flex justify-between items-center font-black">
@@ -463,7 +852,18 @@
     function rDocs(){
         let q = document.getElementById('d-search').value.toUpperCase();
         let fil = S.d.filter(x=>x.n.includes(q) || x.id.includes(q));
-        document.getElementById('b-doc').innerHTML = fil.map((x,i)=>`<tr><td><img src="${x.pic||''}" class="w-10 h-10 rounded border object-cover"></td><td>${x.id}</td><td>${x.n}</td><td>${x.tin}</td><td>${x.clinic}</td><td>${x.phone}</td><td>${x.prc}</td><td>${x.loc||''}</td><td>${x.addr}</td><td><button onclick="vDoc(${i})" class="text-green-500 mr-2 font-bold p-1">VIEW</button><button onclick="editDoc(${i})" class="text-blue-500 mr-2 font-bold p-1">EDIT</button><button onclick="del('d',${i},event)" class="text-red-500 font-bold p-1">DEL</button></td></tr>`).join('');
+        document.getElementById('b-doc').innerHTML = fil.map((x,i)=>`
+            <tr>
+                <td><img src="${x.pic||''}" class="w-10 h-10 rounded border object-cover"></td>
+                <td>${x.id}</td><td>${x.n}</td><td>${x.tin}</td><td>${x.clinic}</td><td>${x.phone}</td>
+                <td>${x.prc}</td><td>${x.loc||''}</td><td>${x.addr}</td>
+                <td>
+                    <button onclick="vDoc(${i})" class="text-green-500 mr-2 font-bold p-1">VIEW</button>
+                    <button onclick="editDoc(${i})" class="text-blue-500 mr-2 font-bold p-1">EDIT</button>
+                    <button onclick="del('d',${i},event)" class="text-red-500 font-bold p-1">DEL</button>
+                </td>
+            </tr>
+        `).join('');
     }
     
     function vDoc(i){
@@ -487,13 +887,8 @@
         let req = ['d-name', 'd-clinic', 'd-phone', 'd-addr'];
         for (let id of req) {
             let el = document.getElementById(id);
-            if (!el.value || el.value.trim() === "") {
-                alert("Please Complete the Form!");
-                el.focus();
-                return false;
-            }
+            if (!el.value || el.value.trim() === "") { alert("Please Complete the Form!"); el.focus(); return false; }
         }
-
         let i = document.getElementById('d-idx').value;
         let obj = {
             id: document.getElementById('d-id').value,
@@ -511,15 +906,42 @@
     }
 
     function editDoc(i){
-        let x=S.d[i]; document.getElementById('d-idx').value=i; document.getElementById('d-id').value=x.id; document.getElementById('d-name').value=x.n; document.getElementById('d-tin').value=x.tin; document.getElementById('d-prc').value=x.prc; document.getElementById('d-clinic').value=x.clinic; document.getElementById('d-phone').value=x.phone;
-        popSel('d-loc', S.locs); document.getElementById('d-loc').value=x.loc; document.getElementById('d-addr').value=x.addr; document.getElementById('d-img-prev').src=x.pic||''; updateMap(); document.getElementById('mod-doc').classList.add('active');
+        let x=S.d[i]; 
+        document.getElementById('d-idx').value=i; 
+        document.getElementById('d-id').value=x.id; 
+        document.getElementById('d-name').value=x.n; 
+        document.getElementById('d-tin').value=x.tin; 
+        document.getElementById('d-prc').value=x.prc; 
+        document.getElementById('d-clinic').value=x.clinic; 
+        document.getElementById('d-phone').value=x.phone;
+        popSel('d-loc', S.locs); 
+        document.getElementById('d-loc').value=x.loc; 
+        document.getElementById('d-addr').value=x.addr; 
+        document.getElementById('d-img-prev').src=x.pic||''; 
+        updateMap(); 
+        document.getElementById('mod-doc').classList.add('active');
     }
 
     // ORDER
     function rOrd(){
         let q = document.getElementById('o-search').value.toUpperCase();
         let fil = S.o.filter(x=>x.id.includes(q) || x.pat.includes(q));
-        document.getElementById('b-ord').innerHTML = fil.map((x,i)=>`<tr><td>${x.id}</td><td><img src="${x.pImg||''}" class="w-12 h-10 rounded border object-cover"></td><td>${x.pat}</td><td>${x.sex}</td><td>${x.date}</td><td>${x.due}</td><td>${x.ret}</td><td><span class="bg-gray-100 text-black px-2 py-1 rounded border font-black">${x.st}</span></td><td>${x.shade}</td><td>${x.qty}</td><td>${x.v}</td><td>${x.pay}</td><td class="text-blue-600 font-black">₱${x.tot}</td><td>${x.rem}</td><td><button onclick="vOrd(${S.o.indexOf(x)})" class="text-green-500 font-bold p-1">VIEW</button><button onclick="editOrd(${S.o.indexOf(x)})" class="text-blue-500 font-bold p-1">EDIT</button><button onclick="thermal(${S.o.indexOf(x)})" class="text-orange-500 font-bold p-1">RECEIPT</button><button onclick="del('o',${S.o.indexOf(x)},event)" class="text-red-500 font-bold p-1">DEL</button></td></tr>`).join('');
+        document.getElementById('b-ord').innerHTML = fil.map((x,i)=>`
+            <tr>
+                <td>${x.id}</td>
+                <td><img src="${x.pImg||''}" class="w-12 h-10 rounded border object-cover"></td>
+                <td>${x.pat}</td><td>${x.sex}</td><td>${x.date}</td><td>${x.due}</td><td>${x.ret}</td>
+                <td><span class="bg-gray-100 text-black px-2 py-1 rounded border font-black">${x.st}</span></td>
+                <td>${x.shade}</td><td>${x.qty}</td><td>${x.v}</td><td>${x.pay}</td>
+                <td class="text-blue-600 font-black">₱${x.tot}</td><td>${x.rem}</td>
+                <td>
+                    <button onclick="vOrd(${S.o.indexOf(x)})" class="text-green-500 font-bold p-1">VIEW</button>
+                    <button onclick="editOrd(${S.o.indexOf(x)})" class="text-blue-500 font-bold p-1">EDIT</button>
+                    <button onclick="thermal(${S.o.indexOf(x)})" class="text-orange-500 font-bold p-1">RECEIPT</button>
+                    <button onclick="del('o',${S.o.indexOf(x)},event)" class="text-red-500 font-bold p-1">DEL</button>
+                </td>
+            </tr>
+        `).join('');
     }
 
     function vOrd(i){
@@ -549,24 +971,14 @@
         let reqFields = ['o-pat', 'o-doc', 'o-date', 'o-due', 'o-qty'];
         for (let id of reqFields) {
             let el = document.getElementById(id);
-            if (!el || el.value.trim() === "") {
-                alert("Please Complete the Form!");
-                el?.focus();
-                return false;
-            }
+            if (!el || el.value.trim() === "") { alert("Please Complete the Form!"); el?.focus(); return false; }
         }
 
-        if (!document.getElementById('o-sex').value) {
-            alert("Please Complete the Form!");
-            return false;
-        }
+        if (!document.getElementById('o-sex').value) { alert("Please Select Sex!"); return false; }
 
         let prs = [];
         document.querySelectorAll('.ochk:checked').forEach(c => prs.push(c.value));
-        if (prs.length === 0) { 
-            alert("Please Complete the Form!"); 
-            return false; 
-        }
+        if (prs.length === 0) { alert("Please Select at least one Product!"); return false; }
 
         let i = document.getElementById('o-idx').value;
         let obj = {
@@ -610,6 +1022,9 @@
         document.getElementById('o-shade').value = x.shade;
         document.getElementById('o-rem').value = x.rem;
         
+        let ctypeMatch = S.ctypes.find(c => x.id.startsWith(c));
+        if(ctypeMatch) document.getElementById('o-ctype').value = ctypeMatch;
+        
         if(x.pImg && x.pImg.startsWith('data:image')) {
             document.getElementById('o-pat-img').src = x.pImg; 
             document.getElementById('o-pat-img').classList.remove('hidden'); 
@@ -638,15 +1053,30 @@
 
     // UTILITIES
     function previewImg(i, p) { if (i.files && i.files[0]) { let r = new FileReader(); r.onload = e => document.getElementById(p).src = e.target.result; r.readAsDataURL(i.files[0]); } }
-    function upPatImg(inp) { if (inp.files && inp.files[0]) { let r = new FileReader(); r.onload = e => { document.getElementById('o-pat-img').src = e.target.result; document.getElementById('o-pat-img').classList.remove('hidden'); document.getElementById('o-pat-ph').classList.add('hidden'); }; r.readAsDataURL(inp.files[0]); } }
     
-    function toggleTooth(btn){ btn.classList.toggle('active'); if(!btn.classList.contains('active')) btn.style.background='#eee'; calcPrice(); }
+    function upPatImg(inp) { 
+        if (inp.files && inp.files[0]) { 
+            let r = new FileReader(); 
+            r.onload = e => { 
+                document.getElementById('o-pat-img').src = e.target.result; 
+                document.getElementById('o-pat-img').classList.remove('hidden'); 
+                document.getElementById('o-pat-ph').classList.add('hidden'); 
+            }; 
+            r.readAsDataURL(inp.files[0]); 
+        } 
+    }
+    
+    function toggleTooth(btn){ 
+        btn.classList.toggle('active'); 
+        if(!btn.classList.contains('active')) btn.style.background='#eee'; 
+        calcPrice(); 
+    }
     
     function calcPrice(){
         let sub=0, color='#eee', activeTeeth = document.querySelectorAll('.tooth-btn.active').length || 1;
         document.querySelectorAll('.ochk:checked').forEach(c=>{ 
             sub += (S.pr[c.value] || 0); 
-            color = PCOLORS[PRODS.indexOf(c.value) % PCOLORS.length];
+            color = PCOLORS[PRODS.indexOf(c.value) % PCOLORS.length]; 
         });
         document.querySelectorAll('.tooth-btn.active').forEach(t=>t.style.background=color);
         let qty = parseInt(document.getElementById('o-qty').value) || 1;
@@ -655,7 +1085,13 @@
         document.getElementById('o-tot').innerText = Math.round((sub * activeTeeth * qty) * (1 - disc/100)).toLocaleString();
     }
     
-    function setSex(v){ document.getElementById('o-sex').value=v; document.querySelectorAll('.sex-btn').forEach(b=>b.classList.remove('active')); if(v==='M') document.getElementById('sex-m').classList.add('active'); if(v==='F') document.getElementById('sex-f').classList.add('active'); }
+    function setSex(v){ 
+        document.getElementById('o-sex').value=v; 
+        document.querySelectorAll('.sex-btn').forEach(b=>b.classList.remove('active')); 
+        if(v==='M') document.getElementById('sex-m').classList.add('active'); 
+        if(v==='F') document.getElementById('sex-f').classList.add('active'); 
+    }
+    
     function popSel(id, arr){ document.getElementById(id).innerHTML = arr.map(x=>`<option value="${x}">${x}</option>`).join(''); }
     
     function addOpt(t){ 
@@ -664,134 +1100,248 @@
             if(t==='loc') { S.locs.push(v); popSel('d-loc', S.locs); document.getElementById('d-loc').value = v; } 
             if(t==='stat') { S.stats.push(v); popSel('o-stat', S.stats); document.getElementById('o-stat').value = v; } 
             if(t==='ctype') { S.ctypes.push(v); popSel('o-ctype', S.ctypes); document.getElementById('o-ctype').value = v; onTypeChange(false); } 
-            if(t==='font') { S.fonts.push(v); popSel('ui-font', S.fonts); document.getElementById('ui-font').value = v; }
-            sv(); alert('Added and Updated!');
-        }
+            if(t==='font') { S.fonts.push(v); popSel('ui-font', S.fonts); document.getElementById('ui-font').value = v; } 
+            sv(); alert('Added and Updated!'); 
+        } 
     }
     
-    function updateMap(){ let a = document.getElementById('d-addr').value; if(a) document.getElementById('doc-map').src = `https://maps.google.com/maps?q=${encodeURIComponent(a)}&output=embed`; }
+    function updateMap(){ 
+        let a = document.getElementById('d-addr').value; 
+        if(a) document.getElementById('doc-map').src = `https://maps.google.com/maps?q=${encodeURIComponent(a)}&output=embed`; 
+    }
     
     function onTypeChange(clicked){ 
-        let t=document.getElementById('o-ctype').value; 
-        document.getElementById('o-id').value=`${t}0${1655+S.o.length}`; 
-        if(clicked && t) alert(`YOU HAVE CHANGED TO ${t}`); 
+        let t = document.getElementById('o-ctype').value;
+        let count = S.o.filter(x => x.id && x.id.startsWith(t)).length; 
+        document.getElementById('o-id').value = `${t}0${1655 + count}`; 
+        if(clicked && t) alert(`SYSTEM: Case Type switched to ${t}`); 
     }
     
     function fillDocInfo(){ let d=S.d.find(x=>x.n===document.getElementById('o-doc').value); if(d){ document.getElementById('o-pic').value=d.phone; }}
     function toggleQR(){ document.getElementById('qr-box').classList.toggle('hidden', document.getElementById('o-pay').value==='CASH'); }
     function closeModals(){ document.querySelectorAll('.modal').forEach(m=>m.classList.remove('active')); }
     function resetSys(){ if(confirm('Reset all Data?')){ localStorage.clear(); location.reload(); }}
-
+    
     function modal(t){
         closeModals();
-        if(t==='doc'){ document.querySelectorAll('#mod-doc input').forEach(i=>i.value=''); document.getElementById('d-idx').value=""; document.getElementById('d-id').value="DOC-"+(S.d.length+101); popSel('d-loc',S.locs); document.getElementById('mod-doc').classList.add('active'); }
+        if(t==='doc'){ 
+            document.querySelectorAll('#mod-doc input').forEach(i=>i.value=''); 
+            document.getElementById('d-idx').value=""; 
+            document.getElementById('d-id').value="DOC-"+(S.d.length+101); 
+            popSel('d-loc',S.locs); 
+            document.getElementById('mod-doc').classList.add('active'); 
+        }
         if(t==='ord'){
             if (S.d.length === 0) return alert("PLEASE ADD A DOCTOR FIRST");
             document.querySelectorAll('#mod-ord input:not([readonly])').forEach(i=>i.value=''); 
-            document.getElementById('o-idx').value = "";
-            document.getElementById('o-sex').value = "";
-            document.querySelectorAll('.sex-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('o-idx').value = ""; 
+            document.getElementById('o-sex').value = ""; 
+            document.querySelectorAll('.sex-btn').forEach(b => b.classList.remove('active')); 
             popSel('o-doc', S.d.map(x=>x.n)); 
             popSel('o-stat', S.stats); 
             popSel('o-ctype', S.ctypes);
             document.getElementById('o-prods').innerHTML = PRODS.map(p=>`<label class="flex items-center gap-2 text-[10px] font-bold cursor-pointer p-1 hover:bg-slate-100 rounded"><input type="checkbox" class="ochk w-4 h-4" value="${p}" onchange="calcPrice()"> ${p}</label>`).join('');
-            let th=''; for(let i=1;i<=32;i++) th+=`<div class="tooth-btn shadow-sm" onclick="toggleTooth(this)">${i}</div>`;
+            let th=''; 
+            for(let i=1;i<=32;i++) th+=`<div class="tooth-btn shadow-sm" onclick="toggleTooth(this)">${i}</div>`; 
             document.getElementById('o-teeth').innerHTML = th; 
-            document.getElementById('o-date').value = new Date().toISOString().split('T')[0];
-            onTypeChange(false); document.getElementById('mod-ord').classList.add('active');
+            document.getElementById('o-date').value = new Date().toISOString().split('T')[0]; 
+            onTypeChange(false); 
+            document.getElementById('mod-ord').classList.add('active');
         }
     }
-    
-    function del(k,i,e){ if(confirm('Delete permanently?')){ if(k==='d')S.d.splice(i,1); if(k==='o')S.o.splice(i,1); if(k==='f')S.fol.splice(i,1); if(k==='v')S.v.splice(i,1); if(k==='u')S.u=S.u.filter(x=>x.n!==i); sv(); go(document.querySelector('.page.active').id.split('-')[1]); }}
 
     // PRODUCTION
-    function rProd(){ document.getElementById('b-prod').innerHTML = S.o.filter(x=>x.st!=='DONE').map((x,i)=>`<tr><td>${x.id}</td><td>${x.due}</td><td><select onchange="upProd(${S.o.indexOf(x)},'st',this.value)" class="inp !p-1 !mb-0 !w-24 text-black font-bold"><option value="${x.st}" selected>${x.st}</option>${S.stats.map(s=>`<option value="${s}">${s}</option>`).join('')}</select></td><td><input onchange="upProd(${S.o.indexOf(x)},'asn',this.value)" value="${x.asn||''}" class="inp !p-1 !mb-0 !w-32" placeholder="Assign Tech"></td><td>${x.rem}</td><td><button onclick="del('o',${S.o.indexOf(x)},event)" class="text-red-500 font-bold">DEL</button></td></tr>`).join(''); }
+    function rProd(){ 
+        document.getElementById('b-prod').innerHTML = S.o.filter(x=>x.st!=='DONE').map((x,i)=>`
+            <tr>
+                <td>${x.id}</td><td>${x.due}</td>
+                <td><select onchange="upProd(${S.o.indexOf(x)},'st',this.value)" class="inp !p-1 !mb-0 !w-24 text-black font-bold"><option value="${x.st}" selected>${x.st}</option>${S.stats.map(s=>`<option value="${s}">${s}</option>`).join('')}</select></td>
+                <td><input onchange="upProd(${S.o.indexOf(x)},'asn',this.value)" value="${x.asn||''}" class="inp !p-1 !mb-0 !w-32" placeholder="Assign Tech"></td>
+                <td>${x.rem}</td>
+                <td><button onclick="del('o',${S.o.indexOf(x)},event)" class="text-red-500 font-bold">DEL</button></td>
+            </tr>
+        `).join(''); 
+    }
+    
     function upProd(i,f,v){ S.o[i][f]=v; sv(); rProd(); dash(); }
 
-    // CALENDAR
+    // CALENDAR (MS Teams Style)
     function initFullCal(){
-        let calEl = document.getElementById('calendar');
+        let calEl = document.getElementById('calendar'); 
         if(window.fullCal) { window.fullCal.destroy(); }
-        window.fullCal = new FullCalendar.Calendar(calEl, {
-            initialView: window.innerWidth < 768 ? 'timeGridDay' : 'dayGridMonth',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            height: window.innerWidth < 768 ? 600 : 800,
-            events: S.o.map(x=>({ title: `${x.id} - ${x.pat}`, start: x.due, extendedProps:{caseObj:x} })),
-            eventClick: info => {
-                let c = info.event.extendedProps.caseObj;
-                let n = prompt(`Case: ${c.id}\nPatient: ${c.pat}\n\nEdit/Add Note:`, c.rem);
-                if(n!==null){ let idx=S.o.findIndex(o=>o.id===c.id); S.o[idx].rem=n; sv(); initFullCal(); }
-            }
+        window.fullCal = new FullCalendar.Calendar(calEl, { 
+            themeSystem: 'standard',
+            initialView: window.innerWidth < 768 ? 'timeGridDay' : 'timeGridWeek', 
+            headerToolbar: { left: 'today prev,next', center: 'title', right: 'timeGridWeek,dayGridMonth,timeGridDay' }, 
+            height: '100%',
+            slotMinTime: '06:00:00', // Typical working day starts
+            slotMaxTime: '22:00:00',
+            nowIndicator: true,
+            allDaySlot: false,
+            events: S.o.map(x=>({ title: `${x.id} - ${x.pat}`, start: x.due, extendedProps:{caseObj:x} })), 
+            eventClick: info => { 
+                let c = info.event.extendedProps.caseObj; 
+                let n = prompt(`Case: ${c.id}\nPatient: ${c.pat}\n\nEdit/Add Note:`, c.rem); 
+                if(n!==null){ let idx=S.o.findIndex(o=>o.id===c.id); S.o[idx].rem=n; sv(); initFullCal(); } 
+            } 
         }); 
         window.fullCal.render();
     }
 
-    // ACCOUNTING
+    // ACCOUNTING & VOUCHER
     function rAcc(){ document.getElementById('price-grid').innerHTML = PRODS.map(p=>`<div class="card !p-3 text-center text-[10px] font-bold uppercase shadow-sm border-blue-100">${p}<input class="inp text-center p-in mt-2 font-black text-blue-600 text-lg" data-p="${p}" value="${S.pr[p]}" type="number"></div>`).join(''); }
     function savePrices(){ document.querySelectorAll('.p-in').forEach(i => S.pr[i.dataset.p] = parseInt(i.value) || 0); sv(); alert('Prices Updated!'); }
-
-    // VOUCHER
-    function rVouch(){
-        document.getElementById('v-list').innerHTML = S.v.map((v,i)=>{
-            let isExp = v.e && new Date(v.e) < new Date();
-            return `<div class="card !p-4 flex justify-between items-center ${isExp?'opacity-40 bg-gray-100':'border-l-4 border-green-500'}"><div><b class="text-lg">${v.c} <span class="text-green-600">(-${v.p}%)</span></b><br><small class="font-bold text-gray-500">EXPIRY: ${v.e||'PERMANENT'}</small></div><button onclick="del('v',${i})" class="btn btn-red px-4">DEL</button></div>`;
-        }).join('');
+    
+    function rVouch(){ 
+        document.getElementById('v-list').innerHTML = S.v.map((v,i)=>{ 
+            let isExp = v.e && new Date(v.e) < new Date(); 
+            return `<div class="card !p-4 flex justify-between items-center ${isExp?'opacity-40 bg-gray-100':'border-l-4 border-green-500'}"><div><b class="text-lg">${v.c} <span class="text-green-600">(-${v.p}%)</span></b><br><small class="font-bold text-gray-500">EXPIRY: ${v.e||'PERMANENT'}</small></div><button onclick="del('v',${i})" class="btn btn-red px-4">DEL</button></div>`; 
+        }).join(''); 
     }
     function addVouch(){ let c=document.getElementById('v-code').value.toUpperCase(), p=document.getElementById('v-pct').value, e=document.getElementById('v-exp').value; if(c&&p){ S.v.push({c,p,e}); sv(); rVouch(); }}
 
     // EXCEL FOLDERS
     function rFol(){ document.getElementById('fol-list').innerHTML = S.fol.map((f,i)=>`<div class="card text-center font-bold relative group">📂 ${f.n}<div class="text-xs text-gray-400 mt-1 mb-3">${f.files?.length||0} FILES</div><div class="flex justify-center gap-1"><button onclick="upFile(${i})" class="btn btn-blue py-2 flex-1 text-[9px]">UPLOAD</button><button onclick="viewFilesList(${i})" class="btn btn-green py-2 flex-1 text-[9px]">VIEW</button><button onclick="del('f',${i},event)" class="btn btn-red py-2 px-3 text-[9px]">✕</button></div></div>`).join(''); }
     function addFol(){ let n=document.getElementById('fol-name').value; if(n){ S.fol.push({n:n.toUpperCase(), files:[]}); sv(); rFol(); } }
-    function upFile(i){
-        let f=document.createElement('input'); f.type='file'; f.accept=".xlsx, .xls";
-        f.onchange=e=>{
-            let file = e.target.files[0], r = new FileReader();
-            r.onload = ev => { S.fol[i].files.push({ name:file.name, data:ev.target.result }); sv(); rFol(); alert('File Migrated'); };
-            r.readAsArrayBuffer(file);
-        }; f.click();
+    function upFile(i){ 
+        let f=document.createElement('input'); f.type='file'; f.accept=".xlsx, .xls"; 
+        f.onchange=e=>{ 
+            let file = e.target.files[0], r = new FileReader(); 
+            r.onload = ev => { S.fol[i].files.push({ name:file.name, data:ev.target.result }); sv(); rFol(); alert('File Migrated'); }; 
+            r.readAsArrayBuffer(file); 
+        }; 
+        f.click(); 
     }
-    function viewFilesList(i){
-        let h = S.fol[i].files.map((f, idx) => `<div class="p-4 border-b flex flex-col sm:flex-row sm:items-center justify-between bg-gray-50 mb-2 rounded shadow-sm hover:shadow transition-shadow"><span class="font-bold text-blue-900 mb-2 sm:mb-0 break-all">${f.name}</span><div class="flex gap-2"><button class="btn btn-blue py-1" onclick="vExcel(${i}, ${idx})">OPEN</button><button class="btn btn-red py-1" onclick="delExcelFile(${i}, ${idx})">DEL</button></div></div>`).join('');
-        document.getElementById('excel-viewer-area').innerHTML = h || "<p class='text-center p-6 text-gray-400 font-bold'>No files in folder.</p>"; document.getElementById('mod-excel-view').classList.add('active');
+    function viewFilesList(i){ 
+        let h = S.fol[i].files.map((f, idx) => `<div class="p-4 border-b flex flex-col sm:flex-row sm:items-center justify-between bg-gray-50 mb-2 rounded shadow-sm hover:shadow transition-shadow"><span class="font-bold text-blue-900 mb-2 sm:mb-0 break-all">${f.name}</span><div class="flex gap-2"><button class="btn btn-blue py-1" onclick="vExcel(${i}, ${idx})">OPEN</button><button class="btn btn-red py-1" onclick="delExcelFile(${i}, ${idx})">DEL</button></div></div>`).join(''); 
+        document.getElementById('excel-viewer-area').innerHTML = h || "<p class='text-center p-6 text-gray-400 font-bold'>No files in folder.</p>"; 
+        document.getElementById('mod-excel-view').classList.add('active'); 
     }
     function vExcel(fi, li) { let wb = XLSX.read(S.fol[fi].files[li].data, {type: 'array'}); document.getElementById('excel-viewer-area').innerHTML = '<div class="table-wrap !border-none !shadow-none">' + XLSX.utils.sheet_to_html(wb.Sheets[wb.SheetNames[0]]) + '</div>'; }
     function delExcelFile(fi, li){ if(confirm('Delete File?')){ S.fol[fi].files.splice(li, 1); sv(); rFol(); closeModals(); }}
 
-    // USERS & PERMISSIONS
+    // GATEKEEPER & USERS
     function rUsers(){
-        let isAdmIT = (S.curr.d === 'IT' || S.curr.d === 'ADMIN');
-        document.getElementById('u-pen').innerHTML = isAdmIT ? S.u.filter(x=>x.s==='pending').map(x=>`<div class="flex justify-between items-center p-3 border-b bg-yellow-50 rounded mb-2"><span class="font-black">${x.n} <span class="text-[10px] text-gray-500 uppercase ml-1">(${x.d})</span></span><div class="flex gap-2"><button onclick="uAct('${x.n}','active')" class="btn btn-green px-3 py-1 text-[9px]">APPROVE</button><button onclick="del('u','${x.n}',event)" class="btn btn-red px-3 py-1 text-[9px]">REJECT</button></div></div>`).join('') : '<p class="text-xs font-bold text-red-400 p-4 bg-red-50 rounded">System Access Restricted.</p>';
-        document.getElementById('u-act').innerHTML = S.u.filter(x=>x.s!=='pending').map((x,i)=> {
+        let isSA = S.curr.d === 'SYSTEM ARCHITECT';
+        let isSuper = S.curr.d === 'SUPER ADMIN';
+        let isAdmin = S.curr.d === 'ADMIN';
+
+        // Dynamic Gatekeeper Title
+        let gkTitle = "Gatekeeper";
+        if(isSA) gkTitle = "Gatekeeper (System Architect)";
+        else if(isSuper) gkTitle = "Gatekeeper (Super Admin)";
+        else if(isAdmin) gkTitle = "Gatekeeper (Admin Control)";
+        document.getElementById('gk-title').innerText = gkTitle;
+
+        // Admin Management Toggle
+        let canManageUsers = isSA || isSuper || (isAdmin && S.sys.adminManageUsers);
+        let sap = document.getElementById('super-admin-panel');
+        if(sap) {
+            sap.classList.toggle('hidden', !(isSA || isSuper));
+            document.getElementById('admin-manage-toggle').checked = !!S.sys.adminManageUsers;
+        }
+
+        // Visibility Rules
+        let visibleUsers = S.u.filter(x => {
+            if (isSA) return true; // Architect sees all
+            if (isSuper) return x.d !== 'SYSTEM ARCHITECT'; // Super Admin hides Architect
+            if (isAdmin) return x.d !== 'SYSTEM ARCHITECT' && x.d !== 'SUPER ADMIN'; // Admin hides Architect & Super
+            return x.n === S.curr.n;
+        });
+
+        let pending = visibleUsers.filter(x=>x.s==='pending');
+        let active = visibleUsers.filter(x=>x.s!=='pending');
+
+        document.getElementById('u-pen').innerHTML = canManageUsers ? pending.map(x=>`
+            <div class="flex justify-between items-center p-3 border-b bg-yellow-50 rounded mb-2">
+                <span class="font-black">${x.n} <span class="text-[10px] text-gray-500 uppercase ml-1">(${x.d})</span></span>
+                <div class="flex gap-2">
+                    <button onclick="uAct('${x.n}','active')" class="btn btn-green px-3 py-1 text-[9px]">APPROVE</button>
+                    <button onclick="del('u','${x.n}',event)" class="btn btn-red px-3 py-1 text-[9px]">REJECT</button>
+                </div>
+            </div>
+        `).join('') : '<p class="text-xs font-bold text-red-400 p-4 bg-red-50 rounded">System Access Restricted.</p>';
+
+        document.getElementById('u-act').innerHTML = active.map((x,i)=> {
             let isSelf = (x.n === S.curr.n);
-            return `<div class="p-3 border-b bg-gray-50 rounded mb-2"><div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2"><span class="font-black text-lg">${x.n} <span class="text-[10px] bg-blue-100 text-blue-800 px-2 py-1 rounded ml-1">${x.d}</span></span><div class="flex flex-wrap gap-1">
-                ${(isAdmIT && !isSelf) ? `<button onclick="editUserMods(${S.u.indexOf(x)})" class="btn btn-blue py-1 text-[9px]">MODS</button><button onclick="uAct('${x.n}','${x.s==='active'?'locked':'active'}')" class="btn ${x.s==='active'?'btn-orange':'btn-green'} py-1 text-[9px]">${x.s==='active'?'LOCK':'UNLOCK'}</button><button onclick="del('u','${x.n}',event)" class="btn btn-red py-1 px-2">✕</button>` : ''}
-            </div></div><div class="mt-2 flex flex-wrap gap-1">${(x.m||[]).map(m=>`<span class="mod-tag">${m}</span>`).join('')}</div></div>`;
+            let actionBtns = '';
+            
+            // Password Visibility for Architect only
+            let passBadge = isSA ? `<span class="text-[10px] bg-red-100 text-red-800 px-2 py-1 rounded ml-1 border border-red-300">PASS: ${x.p}</span>` : '';
+
+            if (canManageUsers && !isSelf) {
+                let modBtn = `<button onclick="editUserMods('${x.n}')" class="btn btn-blue py-1 text-[9px]">MODS</button>`;
+                actionBtns = `
+                    ${modBtn}
+                    <button onclick="uAct('${x.n}','${x.s==='active'?'locked':'active'}')" class="btn ${x.s==='active'?'btn-orange':'btn-green'} py-1 text-[9px]">${x.s==='active'?'LOCK':'UNLOCK'}</button>
+                    <button onclick="del('u','${x.n}',event)" class="btn btn-red py-1 px-2">✕</button>
+                `;
+            }
+            return `
+                <div class="p-3 border-b bg-gray-50 rounded mb-2">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                        <span class="font-black text-lg">${x.n} <span class="text-[10px] bg-blue-100 text-blue-800 px-2 py-1 rounded ml-1">${x.d}</span> ${passBadge}</span>
+                        <div class="flex flex-wrap gap-1">${actionBtns}</div>
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-1">${(x.m||[]).map(m=>`<span class="mod-tag">${m}</span>`).join('')}</div>
+                </div>
+            `;
         }).join('');
     }
-    function editUserMods(idx){ let u = S.u[idx]; document.getElementById('mod-target-idx').value = idx; document.getElementById('mods-check-list').innerHTML = ALL_MODS.map(m => `<label class="flex items-center gap-3 p-3 border-b hover:bg-slate-50 cursor-pointer font-bold"><input type="checkbox" class="mod-chk w-4 h-4 text-blue-600" value="${m}" ${u.m && u.m.includes(m)?'checked':''}> ${m.toUpperCase()}</label>`).join(''); document.getElementById('mod-user-mods').classList.add('active'); }
-    function saveUserMods(){ let idx=document.getElementById('mod-target-idx').value, checks=document.querySelectorAll('.mod-chk:checked'); S.u[idx].m=Array.from(checks).map(c=>c.value); sv(); closeModals(); rUsers(); }
+
+    function toggleAdminManage(val) { S.sys.adminManageUsers = val; sv(); rUsers(); }
+    
+    function editUserMods(n){ 
+        let u = S.u.find(x=>x.n===n); 
+        document.getElementById('mod-target-idx').value = S.u.indexOf(u); 
+        let availableMods = [...BASE_MODS, ...S.dynMods];
+        document.getElementById('mods-check-list').innerHTML = availableMods.map(m => `
+            <label class="flex items-center gap-3 p-3 border-b hover:bg-slate-50 cursor-pointer font-bold">
+                <input type="checkbox" class="mod-chk w-4 h-4 text-blue-600" value="${m}" ${u.m && u.m.includes(m)?'checked':''}> ${m.toUpperCase()}
+            </label>
+        `).join(''); 
+        document.getElementById('mod-user-mods').classList.add('active'); 
+    }
+    
+    function saveUserMods(){ 
+        let idx=document.getElementById('mod-target-idx').value; 
+        let checks=document.querySelectorAll('.mod-chk:checked'); 
+        S.u[idx].m=Array.from(checks).map(c=>c.value); 
+        sv(); closeModals(); rUsers(); 
+    }
+    
     function uAct(n,s){ S.u.find(x=>x.n===n).s=s; sv(); rUsers(); }
 
-    // SETTINGS & UI
+    // SETTINGS & CHAT
     function updateProfile(){ if(document.getElementById('set-n').value) S.curr.n=document.getElementById('set-n').value; if(document.getElementById('set-p').value) S.curr.p=document.getElementById('set-p').value; sv(); alert('Saved'); }
-    function changeUI(t, v){ 
-        if(t==='font') document.documentElement.style.setProperty('--font-main', v); 
-        if(t==='text') document.documentElement.style.setProperty('--text', v); 
-        if(t==='bg') document.documentElement.style.setProperty('--bg', v); 
+    function changeUI(t, v){ if(t==='font') document.documentElement.style.setProperty('--font-main', v); if(t==='text') document.documentElement.style.setProperty('--text', v); if(t==='bg') document.documentElement.style.setProperty('--bg', v); }
+    function toggleChat(){ let b=document.getElementById('chat-box'); b.style.display=b.style.display==='flex'?'none':'flex'; }
+    
+    function initChat(){ 
+        let isSA = S.curr.d === 'SYSTEM ARCHITECT';
+        let isSuper = S.curr.d === 'SUPER ADMIN';
+        
+        let visibleUsersForChat = S.u.filter(x => {
+            if (x.n === S.curr.n) return false; 
+            if (isSA) return true; 
+            if (isSuper) return x.d !== 'SYSTEM ARCHITECT'; 
+            return x.d !== 'SYSTEM ARCHITECT' && x.d !== 'SUPER ADMIN';
+        });
+
+        document.getElementById('chat-to').innerHTML='<option value="">SELECT USER TO MSG</option>' + visibleUsersForChat.map(x=>`<option value="${x.n}">${x.n}</option>`).join(''); 
     }
 
-    // CHAT
-    function toggleChat(){ let b=document.getElementById('chat-box'); b.style.display=b.style.display==='flex'?'none':'flex'; }
-    function initChat(){ document.getElementById('chat-to').innerHTML='<option value="">SELECT USER TO MSG</option>'+S.u.map(x=>`<option value="${x.n}">${x.n}</option>`).join(''); }
     function sendChat(){ let t=document.getElementById('chat-to').value, m=document.getElementById('chat-in').value; if(t&&m){ S.msg.push({f:S.curr.n, t, m}); sv(); rChat(); document.getElementById('chat-in').value=''; } }
+    
     function rChat(){
         let t=document.getElementById('chat-to').value;
         let f=S.msg.filter(x=>(x.f===S.curr.n&&x.t===t)||(x.f===t&&x.t===S.curr.n));
-        document.getElementById('chat-body').innerHTML=f.map(x=>`<div class="${x.f===S.curr.n?'text-right':'text-left'} mb-3"><div class="text-[9px] text-gray-400 font-bold mb-1">${x.f}</div><span class="${x.f===S.curr.n?'bg-blue-500 text-white':'bg-gray-200 text-gray-800'} p-2 px-3 rounded-xl inline-block shadow-sm max-w-[85%] text-left">${x.m}</span></div>`).join('') || '<div class="text-center text-gray-400 mt-10">No messages yet.</div>';
+        document.getElementById('chat-body').innerHTML=f.map(x=>`
+            <div class="${x.f===S.curr.n?'text-right':'text-left'} mb-3">
+                <div class="text-[9px] text-gray-400 font-bold mb-1">${x.f}</div>
+                <span class="${x.f===S.curr.n?'bg-blue-500 text-white':'bg-gray-200 text-gray-800'} p-2 px-3 rounded-xl inline-block shadow-sm max-w-[85%] text-left">${x.m}</span>
+            </div>
+        `).join('') || '<div class="text-center text-gray-400 mt-10">No messages yet.</div>';
         let body = document.getElementById('chat-body'); body.scrollTop = body.scrollHeight;
     }
   </script>
