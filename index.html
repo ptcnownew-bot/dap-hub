@@ -184,7 +184,7 @@
                 <section id="p-architect" class="page">
                     <h1 class="text-3xl font-black italic text-[#a855f7] mb-6 uppercase">Architect Console</h1>
                     
-                    <button onclick="location.reload()" class="btn btn-blue w-full py-4 mb-6 shadow-xl text-sm tracking-widest">🔄 REFRESH SYSTEM (NO LOGOUT)</button>
+                    <button onclick="softRefresh()" class="btn btn-blue w-full py-4 mb-6 shadow-xl text-sm tracking-widest">🔄 REFRESH SYSTEM</button>
 
                     <div class="card border-t-4 border-yellow-500 mb-6 bg-yellow-50">
                         <h3 class="font-black mb-4 text-yellow-700 uppercase">System Maintenance Control</h3>
@@ -293,12 +293,12 @@
                             <button onclick="pdf('t-ord')" class="btn btn-red shrink-0">PDF</button>
                         </div>
                     </div>
-                    <div class="table-wrap"><table id="t-ord"><thead><tr><th>CASE ID</th><th>PIC</th><th>PATIENT</th><th>SEX</th><th>DATE</th><th>DUE</th><th>RETURN</th><th>STATUS</th><th>SHADE</th><th>UNITS</th><th>VOUCHER</th><th>PAYMENT</th><th>AMOUNT</th><th>REMARKS</th><th>ACTION</th></tr></thead><tbody id="b-ord"></tbody></table></div>
+                    <div class="table-wrap"><table id="t-ord"><thead><tr><th>CASE ID</th><th>PIC</th><th>PATIENT</th><th>SEX</th><th>RECEIVED</th><th>COMPLETED</th><th>DELIVERY</th><th>STATUS</th><th>SHADE</th><th>UNITS</th><th>VOUCHER</th><th>PAYMENT</th><th>AMOUNT</th><th>ACTION</th></tr></thead><tbody id="b-ord"></tbody></table></div>
                 </section>
 
                 <section id="p-production" class="page">
                     <h1 class="text-2xl font-black italic text-[#d97706] mb-4 uppercase">Production Queue</h1>
-                    <div class="table-wrap"><table id="t-prod"><thead><tr><th>CASE ID</th><th>DUE</th><th>STATUS</th><th>ASSIGNED</th><th>REMARKS</th><th>ACTION</th></tr></thead><tbody id="b-prod"></tbody></table></div>
+                    <div class="table-wrap"><table id="t-prod"><thead><tr><th>CASE ID</th><th>DELIVERY</th><th>STATUS</th><th>ASSIGNED</th><th>REMARKS</th><th>ACTION</th></tr></thead><tbody id="b-prod"></tbody></table></div>
                 </section>
 
                 <section id="p-calendar" class="page">
@@ -380,7 +380,8 @@
                         </div>
                     </div>
                     <button onclick="document.body.classList.toggle('dark-mode')" class="btn btn-blue w-full mt-6 py-4">TOGGLE DARK MODE</button>
-                    <button id="btn-factory-reset" onclick="resetSys()" class="btn btn-red w-full mt-2 py-4 hidden">FACTORY RESET ALL DATA</button>
+                    <button id="btn-factory-reset" onclick="resetSys()" class="btn btn-red w-full mt-2 py-4 hidden">FACTORY RESET</button>
+                    <button id="btn-force-stop" onclick="forceStop()" class="btn btn-red w-full mt-2 py-4 hidden !bg-red-800">FORCE STOP</button>
                 </section>
 
             </main>
@@ -393,6 +394,39 @@
             <div id="view-content" class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mb-4"></div>
             <div id="view-map-container" class="h-96 border rounded overflow-hidden hidden"><iframe id="view-doc-map" width="100%" height="100%" frameborder="0"></iframe></div>
             <button onclick="closeModals()" class="btn btn-blue mt-4 w-full sm:w-auto">CLOSE</button>
+        </div>
+    </div>
+
+    <div id="mod-cal-edit" class="modal">
+        <div class="modal-box !max-w-3xl">
+            <h2 class="text-2xl font-black mb-4 uppercase text-[#189ad3]">Calendar Schedule Update</h2>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <div><b class="text-gray-500 text-[10px] tracking-widest uppercase block">Case ID</b> <span id="cal-v-id" class="font-black text-blue-700 text-lg"></span></div>
+                <div><b class="text-gray-500 text-[10px] tracking-widest uppercase block">Patient</b> <span id="cal-v-pat" class="font-bold text-lg"></span></div>
+                <div><b class="text-gray-500 text-[10px] tracking-widest uppercase block">Doctor</b> <span id="cal-v-doc" class="font-bold"></span></div>
+                <div><b class="text-gray-500 text-[10px] tracking-widest uppercase block">Status</b> <span id="cal-v-st" class="font-black px-2 py-1 bg-gray-200 rounded"></span></div>
+                <div><b class="text-gray-500 text-[10px] tracking-widest uppercase block">Total QTY</b> <span id="cal-v-qty" class="font-bold"></span></div>
+                <div class="sm:col-span-2"><b class="text-gray-500 text-[10px] tracking-widest uppercase block">Items / Products</b> <span id="cal-v-items" class="text-xs font-bold text-gray-800"></span></div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <input type="hidden" id="cal-idx">
+                <div><label class="text-[10px] font-black tracking-widest text-orange-600">ORDER RECEIVED</label><input id="cal-date" type="datetime-local" class="inp border-orange-300"></div>
+                <div><label class="text-[10px] font-black tracking-widest text-green-600">ORDER COMPLETED</label><input id="cal-comp" type="datetime-local" class="inp border-green-300"></div>
+                <div><label class="text-[10px] font-black tracking-widest text-blue-600">DELIVERY DATE</label><input id="cal-due" type="datetime-local" class="inp border-blue-300"></div>
+                <div><label class="text-[10px] font-black tracking-widest text-gray-600">RETURN DATE</label><input id="cal-ret" type="datetime-local" class="inp border-gray-300"></div>
+                
+                <div class="sm:col-span-2 mt-2">
+                    <label class="text-[10px] font-black tracking-widest text-gray-600">REMARKS / NOTES</label>
+                    <textarea id="cal-rem" class="inp h-20 w-full p-3" placeholder="Add specific notes or instructions here..."></textarea>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-end gap-3 mt-6 border-t pt-4">
+                <button onclick="closeModals()" class="btn btn-red py-3">CANCEL</button>
+                <button onclick="saveCalDates()" class="btn btn-green px-10 py-3 shadow-lg">SAVE SCHEDULE & NOTES</button>
+            </div>
         </div>
     </div>
 
@@ -459,11 +493,12 @@
                     <label>SEX</label><div class="flex gap-4"><div id="sex-m" class="sex-btn" onclick="setSex('M')">M</div><div id="sex-f" class="sex-btn" onclick="setSex('F')">F</div><input type="hidden" id="o-sex"></div>
                 </div>
                 <div class="space-y-2">
-                    <label>DATE TODAY</label><input id="o-date" type="date" class="inp">
-                    <label>DUE DATE</label><input id="o-due" type="date" class="inp">
-                    <label>RETURN DATE</label><input id="o-ret" type="date" class="inp">
+                    <label>ORDER RECEIVED (Date & Time)</label><input id="o-date" type="datetime-local" class="inp border-orange-300">
+                    <label>ORDER COMPLETED (Date & Time)</label><input id="o-comp" type="datetime-local" class="inp border-green-300">
+                    <label>DELIVERY DATE (Date & Time)</label><input id="o-due" type="datetime-local" class="inp border-blue-300">
+                    <label>RETURN DATE</label><input id="o-ret" type="datetime-local" class="inp">
                     <label>STATUS <button type="button" onclick="addOpt('stat')" class="bg-black text-white px-1 rounded">+</button></label><select id="o-stat" class="inp"></select>
-                    <label>PRODUCTS</label><div id="o-prods" class="h-64 overflow-y-auto border p-2 bg-white rounded space-y-1" style="-webkit-overflow-scrolling: touch;"></div>
+                    <label>PRODUCTS</label><div id="o-prods" class="h-48 overflow-y-auto border p-2 bg-white rounded space-y-1" style="-webkit-overflow-scrolling: touch;"></div>
                 </div>
                 <div class="space-y-2 md:col-span-2 xl:col-span-1">
                     <label>SHADE</label><input id="o-shade" class="inp">
@@ -471,7 +506,13 @@
                     <label>TEETH (CLICK TO SELECT)</label><div id="o-teeth" class="tooth-grid mb-4"></div>
                     <label>VOUCHER CODE</label><input id="o-v" class="inp" onkeyup="calcPrice()" placeholder="Enter Code">
                     <label>PAYMENT</label><select id="o-pay" class="inp" onchange="toggleQR()"><option value="CASH">CASH</option><option value="GCASH">GCASH</option><option value="BANK">BANK</option></select>
-                    <div id="qr-box" class="hidden text-center mt-2"><img id="qr-img" src="" class="w-32 mx-auto border"><input type="file" id="qr-up" class="hidden" onchange="upQR(this)"><button onclick="document.getElementById('qr-up').click()" class="text-[9px] text-blue-500 uppercase mt-1 font-bold">UPDATE QR</button></div>
+                    
+                    <div id="qr-box" class="hidden text-center mt-2">
+                        <img id="qr-img" src="" class="w-32 h-32 mx-auto border object-contain bg-white">
+                        <input type="file" id="qr-up" accept="image/*" class="hidden" onchange="upQR(this)">
+                        <button type="button" onclick="document.getElementById('qr-up').click()" class="text-[9px] text-blue-500 uppercase mt-1 font-bold">UPDATE QR IMAGE</button>
+                    </div>
+
                     <div class="bg-slate-900 text-white p-6 rounded-xl text-center mt-4"><small class="text-[10px] tracking-widest text-gray-400">TOTAL AMOUNT</small><h1 class="text-4xl font-black text-[#189ad3] mt-1">₱<span id="o-tot">0</span></h1></div>
                 </div>
             </div>
@@ -520,7 +561,7 @@
             maint: cachedSys.maint || { active: false } 
         },
         msg: JSON.parse(localStorage.getItem('dap_v3_msg')) || [], 
-        curr: JSON.parse(localStorage.getItem('dap_v3_curr')) || null
+        curr: null // ALWAYS START LOGGED OUT
     };
 
     // --- FIX FOR DUPLICATE USERS ---
@@ -618,7 +659,6 @@
         if(acc.s !== 'active') return alert('Access Restricted. Status: ' + acc.s.toUpperCase());
         
         S.curr=acc; 
-        localStorage.setItem('dap_v3_curr', JSON.stringify(S.curr)); // SAVE SESSION
         document.getElementById('auth-layer').classList.add('hidden'); 
         document.getElementById('app-shell').classList.remove('hidden');
         initNav(); initChat();
@@ -639,7 +679,6 @@
     }
     
     function logout(){ 
-        localStorage.removeItem('dap_v3_curr'); // WIPE SESSION
         location.reload(); 
     }
 
@@ -710,6 +749,7 @@
         if(id==='settings') {
             popSel('ui-font', S.fonts); 
             document.getElementById('btn-factory-reset').classList.toggle('hidden', S.curr.d !== 'SYSTEM ARCHITECT');
+            document.getElementById('btn-force-stop').classList.toggle('hidden', S.curr.d !== 'SYSTEM ARCHITECT');
             
             // EXPLICIT OPT-IN REVEAL LOGIC
             let srContainer = document.getElementById('show-role-container');
@@ -726,6 +766,12 @@
     }
 
     // SYSTEM ARCHITECT CAPABILITIES
+    function softRefresh() {
+        // Just updates the UI without reloading the page so you don't get logged out
+        rDocs(); rOrd(); rProd(); dash(); rAcc(); rVouch(); rFol(); rUsers(); rTrash();
+        alert('Data Refreshed Successfully!');
+    }
+
     function setMaintenance(status) {
         S.sys.maint = {
             active: status,
@@ -949,15 +995,18 @@
     function renderSnapshot(){
         let today = new Date().toISOString().split('T')[0];
         let upcoming = S.o.filter(x => x.st !== 'DONE').sort((a,b) => new Date(a.due) - new Date(b.due));
-        document.getElementById('dash-snap-list').innerHTML = upcoming.map(x => `
-            <div class="snap-item ${x.due === today ? 'border-red-500 bg-red-50' : ''}" onclick="editOrd(${S.o.indexOf(x)})">
+        document.getElementById('dash-snap-list').innerHTML = upcoming.map(x => {
+            let dueDay = x.due ? x.due.split('T')[0] : '';
+            return `
+            <div class="snap-item ${dueDay === today ? 'border-red-500 bg-red-50' : ''}" onclick="vOrd(${S.o.indexOf(x)})">
                 <div class="flex justify-between items-center font-black">
                     <span style="color: black !important; font-size: 11px;">${x.id}</span>
-                    <span class="text-[9px] ${x.due === today ? 'text-red-600' : 'text-blue-500'}">${x.due === today ? 'DUE TODAY' : x.due}</span>
+                    <span class="text-[9px] ${dueDay === today ? 'text-red-600' : 'text-blue-500'}">${dueDay === today ? 'DUE TODAY' : x.due.replace('T',' ')}</span>
                 </div>
                 <div class="text-[12px] font-bold text-slate-800 uppercase mt-1">${x.pat}</div>
                 <div style="color: black !important;" class="text-[10px] font-black mt-1">${x.st}</div>
-            </div>`).join('') || '<div class="text-center text-[10px] opacity-40 mt-10 w-full flex flex-col items-center"><span class="text-3xl mb-2">📦</span>NO PENDING CASES</div>';
+            </div>`;
+        }).join('') || '<div class="text-center text-[10px] opacity-40 mt-10 w-full flex flex-col items-center"><span class="text-3xl mb-2">📦</span>NO PENDING CASES</div>';
     }
 
     function updateDashMap(){
@@ -1048,10 +1097,13 @@
             <tr>
                 <td>${x.id}</td>
                 <td><img src="${x.pImg||''}" class="w-12 h-10 rounded border object-cover"></td>
-                <td>${x.pat}</td><td>${x.sex}</td><td>${x.date}</td><td>${x.due}</td><td>${x.ret}</td>
+                <td>${x.pat}</td><td>${x.sex}</td>
+                <td>${x.date ? x.date.replace('T', '<br>') : ''}</td>
+                <td class="text-green-600 font-bold">${x.comp ? x.comp.replace('T', '<br>') : 'PENDING'}</td>
+                <td class="text-blue-600 font-bold">${x.due ? x.due.replace('T', '<br>') : ''}</td>
                 <td><span class="bg-gray-100 text-black px-2 py-1 rounded border font-black">${x.st}</span></td>
                 <td>${x.shade}</td><td>${x.qty}</td><td>${x.v}</td><td>${x.pay}</td>
-                <td class="text-blue-600 font-black">₱${x.tot}</td><td>${x.rem}</td>
+                <td class="text-blue-600 font-black">₱${x.tot}</td>
                 <td>
                     <button onclick="vOrd(${S.o.indexOf(x)})" class="text-green-500 font-bold p-1">VIEW</button>
                     <button onclick="editOrd(${S.o.indexOf(x)})" class="text-blue-500 font-bold p-1">EDIT</button>
@@ -1063,17 +1115,19 @@
     }
 
     function vOrd(i){
-        let x = S.o[i]; document.getElementById('view-title').innerText = "Case Details";
-        document.getElementById('view-content').innerHTML = `
+        let x = S.o[i]; 
+        document.getElementById('view-title').innerText = "Case Details";
+        
+        let viewHTML = `
             <div class="col-span-1 sm:col-span-2 flex justify-center mb-4"><img src="${x.pImg||''}" class="w-32 h-32 rounded-full border-4 border-[#189ad3] object-cover shadow-lg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 100 100\\'><rect width=\\'100\\' height=\\'100\\' fill=\\'%23e2e8f0\\'/><text x=\\'50\\' y=\\'55\\' font-size=\\'30\\' text-anchor=\\'middle\\' fill=\\'%2394a3b8\\'>👤</text></svg>'"></div>
             <div class="bg-slate-50 p-2 rounded border"><b>CASE ID:</b> ${x.id}</div>
             <div class="bg-slate-50 p-2 rounded border"><b>PATIENT:</b> ${x.pat}</div>
             <div class="bg-slate-50 p-2 rounded border"><b>SEX:</b> ${x.sex||'N/A'}</div>
             <div class="bg-slate-50 p-2 rounded border"><b>DOCTOR:</b> ${x.doc}</div>
-            <div class="bg-slate-50 p-2 rounded border"><b>PIC:</b> ${x.pic||'N/A'}</div>
-            <div class="bg-slate-50 p-2 rounded border"><b>DATE:</b> ${x.date}</div>
-            <div class="bg-slate-50 p-2 rounded border"><b>DUE:</b> ${x.due}</div>
-            <div class="bg-slate-50 p-2 rounded border"><b>RETURN:</b> ${x.ret||'N/A'}</div>
+            <div class="bg-slate-50 p-2 rounded border border-orange-200"><b>RECEIVED:</b> ${x.date ? x.date.replace('T',' ') : ''}</div>
+            <div class="bg-slate-50 p-2 rounded border border-green-200"><b>COMPLETED:</b> ${x.comp ? x.comp.replace('T',' ') : 'PENDING'}</div>
+            <div class="bg-slate-50 p-2 rounded border border-blue-200"><b>DELIVERY:</b> ${x.due ? x.due.replace('T',' ') : ''}</div>
+            <div class="bg-slate-50 p-2 rounded border"><b>RETURN:</b> ${x.ret ? x.ret.replace('T',' ') : 'N/A'}</div>
             <div class="bg-slate-50 p-2 rounded border"><b>STATUS:</b> <span class="text-black font-black">${x.st}</span></div>
             <div class="bg-slate-50 p-2 rounded border"><b>SHADE:</b> ${x.shade||'N/A'}</div>
             <div class="bg-slate-50 p-2 rounded border"><b>QTY:</b> ${x.qty}</div>
@@ -1082,7 +1136,15 @@
             <div class="bg-blue-50 p-2 rounded border border-blue-200 col-span-1 sm:col-span-2"><b>TOTAL:</b> <span class="text-lg font-black text-blue-600">₱${x.tot}</span></div>
             <div class="bg-slate-50 p-2 rounded border col-span-1 sm:col-span-2"><b>ITEMS:</b> ${(x.prods||[]).join(', ')}</div>
             <div class="col-span-1 sm:col-span-2 bg-slate-50 p-2 rounded border"><b>REMARKS:</b> ${x.rem||'NONE'}</div>`;
-        document.getElementById('view-map-container').classList.add('hidden'); document.getElementById('mod-view').classList.add('active');
+            
+        // ADD QR IMAGE IF IT EXISTS
+        if (x.qrImg && x.qrImg.startsWith('data:image')) {
+            viewHTML += `<div class="bg-slate-50 p-2 rounded border col-span-1 sm:col-span-2 text-center"><b>PAYMENT QR CODE:</b><br><img src="${x.qrImg}" class="w-48 h-48 mx-auto mt-2 object-contain border bg-white shadow-sm"></div>`;
+        }
+
+        document.getElementById('view-content').innerHTML = viewHTML;
+        document.getElementById('view-map-container').classList.add('hidden'); 
+        document.getElementById('mod-view').classList.add('active');
     }
 
     function saveOrd() {
@@ -1105,6 +1167,7 @@
             pat: document.getElementById('o-pat').value.toUpperCase(),
             sex: document.getElementById('o-sex').value,
             date: document.getElementById('o-date').value,
+            comp: document.getElementById('o-comp').value,
             due: document.getElementById('o-due').value,
             ret: document.getElementById('o-ret').value,
             st: document.getElementById('o-stat').value,
@@ -1117,11 +1180,18 @@
             doc: document.getElementById('o-doc').value,
             prods: prs,
             pImg: document.getElementById('o-pat-img').src,
+            qrImg: document.getElementById('qr-img').src, // ADDED QR SAVING
             asn: (i !== "" ? S.o[i].asn : "")
         };
 
         if (i === "") S.o.push(obj); else S.o[i] = Object.assign(S.o[i], obj);
         sv(); rOrd(); rProd(); dash(); 
+        
+        // Refresh calendar if currently viewing the calendar page
+        if(document.getElementById('p-calendar').classList.contains('active')) {
+            initFullCal();
+        }
+        
         closeModals(); alert("CASE SAVED!");
         return true;
     }
@@ -1132,13 +1202,23 @@
         document.getElementById('o-id').value = x.id;
         document.getElementById('o-pat').value = x.pat;
         document.getElementById('o-doc').value = x.doc;
-        document.getElementById('o-date').value = x.date;
-        document.getElementById('o-due').value = x.due;
-        document.getElementById('o-ret').value = x.ret;
+        document.getElementById('o-date').value = x.date || '';
+        document.getElementById('o-comp').value = x.comp || '';
+        document.getElementById('o-due').value = x.due || '';
+        document.getElementById('o-ret').value = x.ret || '';
         document.getElementById('o-stat').value = x.st;
         document.getElementById('o-qty').value = x.qty;
         document.getElementById('o-shade').value = x.shade;
         document.getElementById('o-rem').value = x.rem;
+        
+        // LOAD PAYMENT AND QR
+        document.getElementById('o-pay').value = x.pay || 'CASH';
+        toggleQR();
+        if(x.qrImg && x.qrImg.startsWith('data:image')) {
+            document.getElementById('qr-img').src = x.qrImg;
+        } else {
+            document.getElementById('qr-img').src = '';
+        }
         
         let ctypeMatch = S.ctypes.find(c => x.id.startsWith(c));
         if(ctypeMatch) document.getElementById('o-ctype').value = ctypeMatch;
@@ -1163,7 +1243,7 @@
         doc.setFontSize(10); doc.text("DAP HUB RECEIPT", 29, 8, {align:'center'}); 
         doc.setFontSize(7); doc.text(`CASE: ${o.id}`, 5, 15); 
         doc.text(`PATIENT: ${o.pat}`, 5, 20); 
-        doc.text(`DATE: ${o.date}`, 5, 25);
+        doc.text(`DATE: ${o.date ? o.date.split('T')[0] : ''}`, 5, 25);
         doc.text(`ITEMS: ${(o.prods||[]).join(',').substring(0,30)}`, 5, 30);
         doc.setFontSize(9); doc.text(`TOTAL: PHP ${o.tot}`, 5, 40); 
         doc.save(`Receipt_${o.id}.pdf`);
@@ -1179,6 +1259,17 @@
                 document.getElementById('o-pat-img').src = e.target.result; 
                 document.getElementById('o-pat-img').classList.remove('hidden'); 
                 document.getElementById('o-pat-ph').classList.add('hidden'); 
+            }; 
+            r.readAsDataURL(inp.files[0]); 
+        } 
+    }
+
+    // NEW: UPLOAD QR FUNCTION ADDED
+    function upQR(inp) { 
+        if (inp.files && inp.files[0]) { 
+            let r = new FileReader(); 
+            r.onload = e => { 
+                document.getElementById('qr-img').src = e.target.result; 
             }; 
             r.readAsDataURL(inp.files[0]); 
         } 
@@ -1240,12 +1331,19 @@
     function closeModals(){ document.querySelectorAll('.modal').forEach(m=>m.classList.remove('active')); }
     
     function resetSys(){ 
-        if(confirm('WARNING: Wipe all operational data? \n\nThis will DELETE all Cases, Doctors, Vouchers, and Files.\n\nIt will KEEP User Accounts and Custom Modules.')){ 
+        if(confirm('WARNING: Factory Reset? \n\nThis will DELETE all Cases, Doctors, Vouchers, and Files.\n\n')){ 
             S.d = []; S.o = []; S.fol = []; S.v = []; S.trash = []; S.msg = []; S.pr = {};
             PRODS.forEach(p => { S.pr[p] = 1500; }); // Reset default prices
             sv(); 
-            alert('System data wiped. Reloading...');
-            location.reload(); 
+            alert('System data wiped.');
+            go('dashboard'); 
+        }
+    }
+
+    function forceStop() {
+        if(confirm('CRITICAL WARNING: FORCE STOP?\n\nThis will permanently delete ALL DATA, Would you still like to Proceed?')) {
+            localStorage.clear();
+            location.reload();
         }
     }
     
@@ -1263,6 +1361,7 @@
             document.querySelectorAll('#mod-ord input:not([readonly])').forEach(i=>i.value=''); 
             document.getElementById('o-idx').value = ""; 
             document.getElementById('o-sex').value = ""; 
+            document.getElementById('qr-img').src = ""; // CLEAR QR ON NEW
             document.querySelectorAll('.sex-btn').forEach(b => b.classList.remove('active')); 
             popSel('o-doc', S.d.map(x=>x.n)); 
             popSel('o-stat', S.stats); 
@@ -1271,7 +1370,11 @@
             let th=''; 
             for(let i=1;i<=32;i++) th+=`<div class="tooth-btn shadow-sm" onclick="toggleTooth(this)">${i}</div>`; 
             document.getElementById('o-teeth').innerHTML = th; 
-            document.getElementById('o-date').value = new Date().toISOString().split('T')[0]; 
+            
+            // Set current time correctly
+            let tzOffset = (new Date()).getTimezoneOffset() * 60000;
+            document.getElementById('o-date').value = (new Date(Date.now() - tzOffset)).toISOString().slice(0, 16); 
+            
             onTypeChange(false); 
             document.getElementById('mod-ord').classList.add('active');
         }
@@ -1281,7 +1384,7 @@
     function rProd(){ 
         document.getElementById('b-prod').innerHTML = S.o.filter(x=>x.st!=='DONE').map((x,i)=>`
             <tr>
-                <td>${x.id}</td><td>${x.due}</td>
+                <td>${x.id}</td><td>${x.due ? x.due.replace('T', ' ') : ''}</td>
                 <td><select onchange="upProd(${S.o.indexOf(x)},'st',this.value)" class="inp !p-1 !mb-0 !w-24 text-black font-bold"><option value="${x.st}" selected>${x.st}</option>${S.stats.map(s=>`<option value="${s}">${s}</option>`).join('')}</select></td>
                 <td><input onchange="upProd(${S.o.indexOf(x)},'asn',this.value)" value="${x.asn||''}" class="inp !p-1 !mb-0 !w-32" placeholder="Assign Tech"></td>
                 <td>${x.rem}</td>
@@ -1292,10 +1395,20 @@
     
     function upProd(i,f,v){ S.o[i][f]=v; sv(); rProd(); dash(); }
 
-    // CALENDAR
+    // CALENDAR - VIEW & EDIT DATES ONLY
     function initFullCal(){
         let calEl = document.getElementById('calendar'); 
         if(window.fullCal) { window.fullCal.destroy(); }
+        
+        // Generate separate events for clarity
+        let calEvents = S.o.flatMap(x => {
+            let evs = [];
+            if(x.date) evs.push({ title: `[RCVD] ${x.id} - ${x.pat}`, start: x.date, color: '#f59e0b', extendedProps: { caseObj: x } });
+            if(x.comp) evs.push({ title: `[DONE] ${x.id} - ${x.pat}`, start: x.comp, color: '#10b981', extendedProps: { caseObj: x } });
+            if(x.due) evs.push({ title: `[DLVR] ${x.id} - ${x.pat}`, start: x.due, color: '#189ad3', extendedProps: { caseObj: x } });
+            return evs;
+        });
+
         window.fullCal = new FullCalendar.Calendar(calEl, { 
             themeSystem: 'standard',
             initialView: 'dayGridMonth', 
@@ -1305,14 +1418,62 @@
             slotMaxTime: '22:00:00',
             nowIndicator: true,
             allDaySlot: false,
-            events: S.o.map(x=>({ title: `${x.id} - ${x.pat}`, start: x.due, extendedProps:{caseObj:x} })), 
+            events: calEvents, 
             eventClick: info => { 
                 let c = info.event.extendedProps.caseObj; 
-                let n = prompt(`Case: ${c.id}\nPatient: ${c.pat}\n\nEdit/Add Note:`, c.rem); 
-                if(n!==null){ let idx=S.o.findIndex(o=>o.id===c.id); S.o[idx].rem=n; sv(); initFullCal(); } 
+                let idx = S.o.findIndex(o => o.id === c.id);
+                if (idx !== -1) {
+                    openCalEdit(idx);
+                }
             } 
         }); 
         window.fullCal.render();
+    }
+
+    function openCalEdit(i) {
+        let x = S.o[i];
+        document.getElementById('cal-idx').value = i;
+        
+        // Populate View Info
+        document.getElementById('cal-v-id').innerText = x.id;
+        document.getElementById('cal-v-pat').innerText = x.pat;
+        document.getElementById('cal-v-doc').innerText = x.doc;
+        document.getElementById('cal-v-st').innerText = x.st;
+        document.getElementById('cal-v-qty').innerText = x.qty || 1;
+        document.getElementById('cal-v-items').innerText = (x.prods || []).join(', ') || 'N/A';
+        
+        // Populate Editable Dates and Notes
+        document.getElementById('cal-date').value = x.date || '';
+        document.getElementById('cal-comp').value = x.comp || '';
+        document.getElementById('cal-due').value = x.due || '';
+        document.getElementById('cal-ret').value = x.ret || '';
+        document.getElementById('cal-rem').value = x.rem || '';
+        
+        closeModals();
+        document.getElementById('mod-cal-edit').classList.add('active');
+    }
+
+    function saveCalDates() {
+        let i = document.getElementById('cal-idx').value;
+        if(i === "") return;
+        
+        S.o[i].date = document.getElementById('cal-date').value;
+        S.o[i].comp = document.getElementById('cal-comp').value;
+        S.o[i].due = document.getElementById('cal-due').value;
+        S.o[i].ret = document.getElementById('cal-ret').value;
+        S.o[i].rem = document.getElementById('cal-rem').value;
+        
+        sv();
+        rOrd();
+        rProd();
+        dash();
+        
+        if(document.getElementById('p-calendar').classList.contains('active')) {
+            initFullCal();
+        }
+        
+        closeModals();
+        alert("Calendar Schedule & Notes Updated Successfully!");
     }
 
     // ACCOUNTING & VOUCHER
@@ -1510,14 +1671,6 @@
         body.scrollTop = body.scrollHeight;
     }
 
-    // AUTO-RESTORE SESSION ON REFRESH
-    window.onload = () => {
-        if(S.curr && S.curr.s === 'active') {
-            document.getElementById('auth-layer').classList.add('hidden'); 
-            document.getElementById('app-shell').classList.remove('hidden');
-            initNav(); initChat(); populateSandboxSelect(); checkMaintenance();
-        }
-    };
   </script>
 </body>
 </html>
