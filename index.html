@@ -99,7 +99,6 @@
         ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
-        /* MS TEAMS CALENDAR STYLES OVERRIDE - FORCED BLACK TEXT */
         .fc { font-family: 'Segoe UI', var(--font-main), sans-serif !important; color: #000000 !important; }
         .fc-toolbar-title { color: #000000 !important; font-size: 1.25rem !important; font-weight: 600 !important; text-transform: none !important;}
         .fc-button-primary { background-color: white !important; color: #000000 !important; border: 1px solid #e1dfdd !important; text-transform: capitalize !important; font-weight: 600 !important; font-size: 12px !important; border-radius: 4px !important; box-shadow: none !important; }
@@ -116,7 +115,6 @@
 
         #calendar-container { background: var(--card); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow-x: auto; -webkit-overflow-scrolling: touch; }
         
-        /* Maintenance Overlay */
         #maint-overlay { position: fixed; inset: 0; background: rgba(0,31,61,0.95); z-index: 99999; display: none; align-items: center; justify-content: center; padding: 20px; text-align: center; backdrop-filter: blur(4px); }
         #maint-overlay.active { display: flex; }
     </style>
@@ -271,6 +269,20 @@
                         <div class="card"><h4>Case Statistics</h4><div class="w-64 mx-auto"><canvas id="chartPie"></canvas></div></div>
                     </div>
                 </section>
+                
+                <section id="p-acct" class="page">
+                    <h1 class="text-3xl font-black uppercase mb-6 text-[#10b981]">ACCT - Data Overview</h1>
+                    <div id="acct-summary" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6"></div>
+                    <div class="card border-t-4 border-blue-500">
+                        <h3 class="font-black mb-4 uppercase text-blue-700">Cross-Department Analysis</h3>
+                        <div class="table-wrap">
+                            <table id="t-acct">
+                                <thead><tr><th>CASE ID</th><th>DOCTOR</th><th>PATIENT</th><th>DISCOUNT</th><th>AMOUNT</th><th>PROD STATUS</th></tr></thead>
+                                <tbody id="b-acct"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
 
                 <section id="p-doctor" class="page">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
@@ -293,7 +305,7 @@
                             <button onclick="pdf('t-ord')" class="btn btn-red shrink-0">PDF</button>
                         </div>
                     </div>
-                    <div class="table-wrap"><table id="t-ord"><thead><tr><th>CASE ID</th><th>PIC</th><th>PATIENT</th><th>SEX</th><th>RECEIVED</th><th>COMPLETED</th><th>DELIVERY</th><th>STATUS</th><th>SHADE</th><th>UNITS</th><th>VOUCHER</th><th>PAYMENT</th><th>AMOUNT</th><th>ACTION</th></tr></thead><tbody id="b-ord"></tbody></table></div>
+                    <div class="table-wrap"><table id="t-ord"><thead><tr><th>CASE ID</th><th>PIC</th><th>PATIENT</th><th>SEX</th><th>RECEIVED</th><th>COMPLETED</th><th>DELIVERY</th><th>STATUS</th><th>SHADE</th><th>UNITS</th><th>DISCOUNT</th><th>PAYMENT</th><th>AMOUNT</th><th>ACTION</th></tr></thead><tbody id="b-ord"></tbody></table></div>
                 </section>
 
                 <section id="p-production" class="page">
@@ -316,13 +328,13 @@
                 </section>
 
                 <section id="p-voucher" class="page">
-                    <h1 class="text-2xl font-black mb-6 uppercase text-[#8b5cf6]">Voucher Center</h1>
+                    <h1 class="text-2xl font-black mb-6 uppercase text-[#8b5cf6]">Discount Generator</h1>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="card">
-                            <label>CODE</label><input id="v-code" class="inp uppercase mb-2">
+                            <label>CODE / IDENTIFIER</label><input id="v-code" class="inp uppercase mb-2">
                             <label>DISCOUNT %</label><input id="v-pct" type="number" class="inp mb-2">
-                            <label>EXPIRY</label><input id="v-exp" type="date" class="inp mb-4">
-                            <button onclick="addVouch()" class="btn btn-blue w-full py-3">ADD VOUCHER</button>
+                            <label>EXPIRY (Optional)</label><input id="v-exp" type="date" class="inp mb-4">
+                            <button onclick="addVouch()" class="btn btn-blue w-full py-3">GENERATE DISCOUNT</button>
                         </div>
                         <div id="v-list" class="space-y-2"></div>
                     </div>
@@ -488,7 +500,7 @@
                     <label>CASE TYPE <button type="button" onclick="addOpt('ctype')" class="bg-black text-white px-1 rounded">+</button></label><select id="o-ctype" class="inp bg-blue-50 font-bold" onchange="onTypeChange(true)"></select>
                     <label>GENERATED ID</label><input id="o-id" class="inp font-bold" readonly>
                     <label>DOCTOR</label><select id="o-doc" class="inp" onchange="fillDocInfo()"></select>
-                    <label>PIC</label><input id="o-pic" type="number" class="inp">
+                    <label>PIC (Name / Info)</label><input id="o-pic" type="text" class="inp">
                     <label>PATIENT</label><input id="o-pat" class="inp uppercase">
                     <label>SEX</label><div class="flex gap-4"><div id="sex-m" class="sex-btn" onclick="setSex('M')">M</div><div id="sex-f" class="sex-btn" onclick="setSex('F')">F</div><input type="hidden" id="o-sex"></div>
                 </div>
@@ -497,14 +509,30 @@
                     <label>ORDER COMPLETED (Date & Time)</label><input id="o-comp" type="datetime-local" class="inp border-green-300">
                     <label>DELIVERY DATE (Date & Time)</label><input id="o-due" type="datetime-local" class="inp border-blue-300">
                     <label>RETURN DATE</label><input id="o-ret" type="datetime-local" class="inp">
-                    <label>STATUS <button type="button" onclick="addOpt('stat')" class="bg-black text-white px-1 rounded">+</button></label><select id="o-stat" class="inp"></select>
-                    <label>PRODUCTS</label><div id="o-prods" class="h-48 overflow-y-auto border p-2 bg-white rounded space-y-1" style="-webkit-overflow-scrolling: touch;"></div>
+                    <label>STATUS <button type="button" onclick="addOpt('stat')" class="bg-black text-white px-1 rounded">+</button></label><select id="o-stat" class="inp font-bold text-blue-700"></select>
+                    
+                    <label class="text-blue-600 font-bold mt-2 block border-t pt-2">STL FILE UPLOAD (.stl)</label>
+                    <div class="flex items-center gap-2 mb-2">
+                        <input type="file" id="o-stl" accept=".stl" class="inp flex-1 text-[10px]" onchange="document.getElementById('o-stl-name').innerText = this.files[0]?.name || 'NO FILE'">
+                        <span id="o-stl-name" class="text-[9px] font-bold text-gray-500 w-24 truncate">NO FILE</span>
+                    </div>
+
+                    <label class="text-purple-600 font-bold mt-2 block">ORDER'S FORMS IMAGE UPLOAD</label>
+                    <div class="flex items-center gap-2 mb-2">
+                        <input type="file" id="o-form" accept="image/*" class="inp flex-1 text-[10px]" onchange="previewImg(this, 'o-form-img')">
+                        <img id="o-form-img" class="w-10 h-10 object-cover border bg-gray-100 hidden">
+                    </div>
+
+                    <label class="mt-2 block border-t pt-2">PRODUCTS</label><div id="o-prods" class="h-48 overflow-y-auto border p-2 bg-white rounded space-y-1" style="-webkit-overflow-scrolling: touch;"></div>
                 </div>
                 <div class="space-y-2 md:col-span-2 xl:col-span-1">
-                    <label>SHADE</label><input id="o-shade" class="inp">
+                    <label>SHADE <button type="button" onclick="addOpt('shade')" class="bg-black text-white px-1 rounded">+</button></label><select id="o-shade" class="inp font-bold"></select>
                     <label>UNITS (QTY)</label><input id="o-qty" type="number" value="1" class="inp" onchange="calcPrice()">
                     <label>TEETH (CLICK TO SELECT)</label><div id="o-teeth" class="tooth-grid mb-4"></div>
-                    <label>VOUCHER CODE</label><input id="o-v" class="inp" onkeyup="calcPrice()" placeholder="Enter Code">
+                    
+                    <label class="text-green-700 font-bold">DISCOUNT (GENERATED)</label>
+                    <select id="o-v" class="inp font-bold bg-green-50" onchange="calcPrice()"></select>
+                    
                     <label>PAYMENT</label><select id="o-pay" class="inp" onchange="toggleQR()"><option value="CASH">CASH</option><option value="GCASH">GCASH</option><option value="BANK">BANK</option></select>
                     
                     <div id="qr-box" class="hidden text-center mt-2">
@@ -517,9 +545,9 @@
                 </div>
             </div>
             <div class="mt-4"><label>REMARKS / INSTRUCTIONS</label><textarea id="o-rem" class="inp h-24 w-full p-3"></textarea></div>
-            <div class="flex flex-col sm:flex-row justify-end gap-3 mt-6">
+            <div class="flex flex-col sm:flex-row justify-end gap-3 mt-6 border-t pt-4">
                 <button onclick="closeModals()" class="btn btn-red py-3">CANCEL</button>
-                <button onclick="saveOrd()" class="btn btn-green px-12 py-3">SAVE CASE</button>
+                <button onclick="saveOrd()" class="btn btn-green px-12 py-3 shadow-lg">SAVE CASE</button>
             </div>
         </div>
     </div>
@@ -534,10 +562,10 @@
 
   <script>
     // CONFIG & STATE
-    const BASE_MODS = ['dashboard','doctor','order','production','calendar','accounting','voucher','excel','users','settings'];
+    const BASE_MODS = ['dashboard','doctor','order','production','calendar','accounting','acct','voucher','excel','users','settings'];
     const PRODS = ["PFM","MARYLAND WING","W/ PORCELAIN GUMS","EMAX","ONLAY","INLAY","TOOTH COLOR","INDIVIDUAL CROWN","ZIRCONIA","PFZ (PORCELAIN FUSED)","METAL TRIAL","TRIAL UNGLAZE","NON-PRECIOUS METAL","TILITE (US)","COLLAR","VENEERS","GLASS CERAMIC","LAYERING","TEMPORARY CROWN","BRIDGE CROWN","FCZ (FULL CONTOUR)","PREMIUM ZIRCONIA","TRIAL GLAZE"];
     const PCOLORS = ["#3b82f6", "#ef4444", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4", "#f97316", "#14b8a6", "#6366f1", "#d946ef", "#84cc16", "#f43f5e", "#0ea5e9", "#7c3aed"];
-    const ADMIN_DEFAULT_MODS = ['dashboard','doctor','order','production','calendar','excel','users'];
+    const ADMIN_DEFAULT_MODS = ['dashboard','doctor','order','production','calendar','excel','users','acct'];
 
     let cachedSys = JSON.parse(localStorage.getItem('dap_v3_sys')) || {};
 
@@ -549,22 +577,22 @@
         v: JSON.parse(localStorage.getItem('dap_v3_v')) || [],
         fol: JSON.parse(localStorage.getItem('dap_v3_fol')) || [],
         locs: JSON.parse(localStorage.getItem('dap_v3_locs')) || ["MANILA"],
-        stats: JSON.parse(localStorage.getItem('dap_v3_stats')) || ["PENDING", "ONGOING", "DONE"],
+        stats: JSON.parse(localStorage.getItem('dap_v3_stats')) || ["PENDING", "ONGOING", "ACCEPTED", "PRODUCTION REQUEST", "DONE", "CANCELLED"],
         ctypes: JSON.parse(localStorage.getItem('dap_v3_ctypes')) || ["AC", "TAC", "MAC", "3D MODEL"],
+        shades: JSON.parse(localStorage.getItem('dap_v3_shades')) || ["NORITAKE", "IVOCLAR", "VITA CLASSICAL", "VITA SYSTEM 3D MASTER", "VITA"],
         fonts: JSON.parse(localStorage.getItem('dap_v3_fonts')) || ["Inter", "Poppins", "Roboto", "Montserrat"],
         trash: JSON.parse(localStorage.getItem('dap_v3_trash')) || [],
         dynMods: JSON.parse(localStorage.getItem('dap_v3_dynMods')) || [],
         dynModContent: JSON.parse(localStorage.getItem('dap_v3_dynModContent')) || {},
         sys: { 
-            adminManageUsers: cachedSys.adminManageUsers !== false, // Forces TRUE by default
+            adminManageUsers: cachedSys.adminManageUsers !== false, 
             adminFullMods: cachedSys.adminFullMods || false, 
             maint: cachedSys.maint || { active: false } 
         },
         msg: JSON.parse(localStorage.getItem('dap_v3_msg')) || [], 
-        curr: null // ALWAYS START LOGGED OUT
+        curr: null 
     };
 
-    // --- FIX FOR DUPLICATE USERS ---
     let seenU = new Set();
     let ogLen = S.u.length;
     S.u = S.u.filter(x => {
@@ -574,25 +602,19 @@
     });
     let usersModified = (S.u.length !== ogLen);
 
-    // ==========================================
     // AUTO-INJECT & FORCE OVERRIDE
-    // ==========================================
-    
-    // 1. SYSTEM ARCHITECT
     let sa = S.u.find(x => x.d === 'SYSTEM ARCHITECT');
     if (!sa) {
         S.u.push({n: 'NATHAN', p: '4556137', d: 'SYSTEM ARCHITECT', s: 'active', m: [...BASE_MODS, 'architect']});
         usersModified = true;
     }
 
-    // 2. SUPER ADMIN
     let sup = S.u.find(x => x.d === 'SUPER ADMIN');
     if (!sup) {
         S.u.push({n: 'STEVEN', p: '10134679', d: 'SUPER ADMIN', s: 'active', m: [...BASE_MODS]});
         usersModified = true;
     }
 
-    // 3. ADMIN (FORCE MODULES)
     let adm = S.u.find(x => x.n === 'ADMIN' || x.d === 'ADMIN');
     if (!adm) {
         S.u.push({n: 'ADMIN', p: '12345', d: 'ADMIN', s: 'active', m: ADMIN_DEFAULT_MODS});
@@ -608,7 +630,6 @@
     
     if(usersModified) sv();
 
-    // DYNAMIC MODULE INJECTION
     S.dynMods.forEach(m => injectDynMod(m));
     
     function injectDynMod(n) {
@@ -616,14 +637,11 @@
         let sec = document.createElement('section');
         sec.id = 'p-'+n; 
         sec.className = 'page';
-        
         let defaultContent = `<h1 class="text-3xl font-black uppercase mb-6 text-[#10b981]">${n} MODULE</h1><div class="card p-6 text-center"><h2 class="text-2xl font-bold text-gray-300">CUSTOM SYSTEM MODULE</h2><p class="text-gray-500 mt-2 font-bold">This module was dynamically created by the System Architect.</p></div>`;
-        
         sec.innerHTML = S.dynModContent[n] || defaultContent;
         document.getElementById('main-content').appendChild(sec);
     }
 
-    // GLOBAL MAINTENANCE CHECKER
     function checkMaintenance() {
         if (!S.curr || S.curr.d === 'SYSTEM ARCHITECT') {
             document.getElementById('maint-overlay').classList.remove('active');
@@ -641,7 +659,6 @@
             } else {
                 timeEl.classList.add('hidden');
             }
-            
             maintOv.classList.add('active');
         } else {
             maintOv.classList.remove('active');
@@ -650,7 +667,6 @@
 
     setInterval(checkMaintenance, 3000);
 
-    // AUTH
     function login(){
         let u=document.getElementById('l-user').value.toUpperCase();
         let p=document.getElementById('l-pass').value;
@@ -663,7 +679,6 @@
         document.getElementById('app-shell').classList.remove('hidden');
         initNav(); initChat();
         populateSandboxSelect();
-        
         checkMaintenance();
     }
     
@@ -678,16 +693,13 @@
         sv(); alert('Request Sent!'); toggleReg(false);
     }
     
-    function logout(){ 
-        location.reload(); 
-    }
+    function logout(){ location.reload(); }
 
     function toggleReg(x){ 
         document.getElementById('login-form').classList.toggle('hidden',x); 
         document.getElementById('reg-form').classList.toggle('hidden',!x); 
     }
 
-    // SIDEBAR TOGGLE
     function toggleSidebar() {
         const sb = document.getElementById('sidebar');
         const ov = document.getElementById('sidebar-overlay');
@@ -738,6 +750,7 @@
         }
 
         if(id==='dashboard') dash(); 
+        if(id==='acct') rAcct();
         if(id==='doctor') rDocs(); 
         if(id==='order') rOrd(); 
         if(id==='production') rProd(); 
@@ -751,11 +764,10 @@
             document.getElementById('btn-factory-reset').classList.toggle('hidden', S.curr.d !== 'SYSTEM ARCHITECT');
             document.getElementById('btn-force-stop').classList.toggle('hidden', S.curr.d !== 'SYSTEM ARCHITECT');
             
-            // EXPLICIT OPT-IN REVEAL LOGIC
             let srContainer = document.getElementById('show-role-container');
             if(S.curr.d === 'SYSTEM ARCHITECT' || S.curr.d === 'SUPER ADMIN') {
                 srContainer.classList.remove('hidden');
-                document.getElementById('set-show-role').checked = !!S.curr.sr; // Default is undefined (false)
+                document.getElementById('set-show-role').checked = !!S.curr.sr; 
             } else {
                 srContainer.classList.add('hidden');
             }
@@ -765,10 +777,8 @@
         document.getElementById('main-content').scrollTo(0,0);
     }
 
-    // SYSTEM ARCHITECT CAPABILITIES
     function softRefresh() {
-        // Just updates the UI without reloading the page so you don't get logged out
-        rDocs(); rOrd(); rProd(); dash(); rAcc(); rVouch(); rFol(); rUsers(); rTrash();
+        rDocs(); rOrd(); rProd(); dash(); rAcc(); rVouch(); rFol(); rUsers(); rTrash(); rAcct();
         alert('Data Refreshed Successfully!');
     }
 
@@ -821,7 +831,7 @@
         
         alert(`User [${n}] with role [${d}] Successfully Deployed!`); 
         rUsers();
-        initChat(); // Refresh chat list
+        initChat(); 
     }
 
     function saAddModule() {
@@ -952,7 +962,6 @@
         }
     }
 
-    // UNIVERSAL DELETE
     function del(k,i,e){ 
         if(confirm('Delete? This will move to the Architect Recycle Bin.')){ 
             let item;
@@ -971,7 +980,7 @@
         }
     }
 
-    // DASHBOARD
+    // DASHBOARD & ACCT
     function dash(){
         document.getElementById('stats-grid').innerHTML = `
             <div class="card border-l-4 border-blue-500"><b>CASES</b><h2 class="text-2xl lg:text-3xl font-black">${S.o.length}</h2></div>
@@ -989,7 +998,29 @@
         
         const c2 = document.getElementById('chartPie').getContext('2d'); 
         if(window.myC2) window.myC2.destroy();
-        window.myC2 = new Chart(c2, { type:'doughnut', data:{ labels:S.stats, datasets:[{ data:S.stats.map(s=>S.o.filter(o=>o.st===s).length), backgroundColor:['#94a3b8','#189ad3','#10b981','#dc2626']}]}});
+        window.myC2 = new Chart(c2, { type:'doughnut', data:{ labels:S.stats, datasets:[{ data:S.stats.map(s=>S.o.filter(o=>o.st===s).length), backgroundColor:['#94a3b8','#189ad3','#10b981','#dc2626', '#f59e0b', '#3b82f6']}]}});
+    }
+
+    function rAcct() {
+        let prodCases = S.o.filter(x => x.st === 'PRODUCTION REQUEST' || x.st === 'ONGOING').length;
+        let discCases = S.o.filter(x => x.v && x.v !== "").length;
+
+        document.getElementById('acct-summary').innerHTML = `
+            <div class="card border-l-4 border-blue-500"><b>TOTAL DOCTORS</b><h2 class="text-3xl font-black">${S.d.length}</h2></div>
+            <div class="card border-l-4 border-green-500"><b>TOTAL CASES</b><h2 class="text-3xl font-black">${S.o.length}</h2></div>
+            <div class="card border-l-4 border-orange-500"><b>IN PRODUCTION</b><h2 class="text-3xl font-black">${prodCases}</h2></div>
+            <div class="card border-l-4 border-purple-500"><b>DISCOUNTED</b><h2 class="text-3xl font-black">${discCases}</h2></div>
+        `;
+
+        let discountedOrders = S.o.filter(x => x.v && x.v !== "");
+        document.getElementById('b-acct').innerHTML = discountedOrders.map(x => `
+            <tr>
+                <td>${x.id}</td><td>${x.doc}</td><td>${x.pat}</td>
+                <td class="text-red-500 font-bold">${x.v}</td>
+                <td class="text-green-600 font-black">₱${x.tot}</td>
+                <td><span class="bg-gray-100 text-black px-2 py-1 rounded border font-black">${x.st}</span></td>
+            </tr>
+        `).join('') || '<tr><td colspan="6" class="text-center text-gray-400 font-bold py-4">No discounted cases found.</td></tr>';
     }
 
     function renderSnapshot(){
@@ -1096,13 +1127,13 @@
         document.getElementById('b-ord').innerHTML = fil.map((x,i)=>`
             <tr>
                 <td>${x.id}</td>
-                <td><img src="${x.pImg||''}" class="w-12 h-10 rounded border object-cover"></td>
+                <td>${x.pic||''}</td>
                 <td>${x.pat}</td><td>${x.sex}</td>
                 <td>${x.date ? x.date.replace('T', '<br>') : ''}</td>
                 <td class="text-green-600 font-bold">${x.comp ? x.comp.replace('T', '<br>') : 'PENDING'}</td>
                 <td class="text-blue-600 font-bold">${x.due ? x.due.replace('T', '<br>') : ''}</td>
                 <td><span class="bg-gray-100 text-black px-2 py-1 rounded border font-black">${x.st}</span></td>
-                <td>${x.shade}</td><td>${x.qty}</td><td>${x.v}</td><td>${x.pay}</td>
+                <td>${x.shade}</td><td>${x.qty}</td><td>${x.v||'NONE'}</td><td>${x.pay}</td>
                 <td class="text-blue-600 font-black">₱${x.tot}</td>
                 <td>
                     <button onclick="vOrd(${S.o.indexOf(x)})" class="text-green-500 font-bold p-1">VIEW</button>
@@ -1131,13 +1162,17 @@
             <div class="bg-slate-50 p-2 rounded border"><b>STATUS:</b> <span class="text-black font-black">${x.st}</span></div>
             <div class="bg-slate-50 p-2 rounded border"><b>SHADE:</b> ${x.shade||'N/A'}</div>
             <div class="bg-slate-50 p-2 rounded border"><b>QTY:</b> ${x.qty}</div>
-            <div class="bg-slate-50 p-2 rounded border"><b>VOUCHER:</b> ${x.v||'NONE'}</div>
+            <div class="bg-slate-50 p-2 rounded border"><b>DISCOUNT APPLIED:</b> ${x.v||'NONE'}</div>
             <div class="bg-slate-50 p-2 rounded border"><b>PAYMENT:</b> ${x.pay}</div>
             <div class="bg-blue-50 p-2 rounded border border-blue-200 col-span-1 sm:col-span-2"><b>TOTAL:</b> <span class="text-lg font-black text-blue-600">₱${x.tot}</span></div>
             <div class="bg-slate-50 p-2 rounded border col-span-1 sm:col-span-2"><b>ITEMS:</b> ${(x.prods||[]).join(', ')}</div>
-            <div class="col-span-1 sm:col-span-2 bg-slate-50 p-2 rounded border"><b>REMARKS:</b> ${x.rem||'NONE'}</div>`;
+            <div class="col-span-1 sm:col-span-2 bg-slate-50 p-2 rounded border"><b>REMARKS:</b> ${x.rem||'NONE'}</div>
+            <div class="col-span-1 sm:col-span-2 bg-slate-50 p-2 rounded border"><b>STL FILE UPLOADED:</b> ${x.stlName || 'NONE'}</div>
+        `;
             
-        // ADD QR IMAGE IF IT EXISTS
+        if (x.formImg && x.formImg.startsWith('data:image')) {
+            viewHTML += `<div class="bg-slate-50 p-2 rounded border col-span-1 sm:col-span-2 text-center"><b>ORDER FORM IMAGE:</b><br><img src="${x.formImg}" class="max-w-full h-auto mx-auto mt-2 object-contain border bg-white shadow-sm"></div>`;
+        }
         if (x.qrImg && x.qrImg.startsWith('data:image')) {
             viewHTML += `<div class="bg-slate-50 p-2 rounded border col-span-1 sm:col-span-2 text-center"><b>PAYMENT QR CODE:</b><br><img src="${x.qrImg}" class="w-48 h-48 mx-auto mt-2 object-contain border bg-white shadow-sm"></div>`;
         }
@@ -1180,14 +1215,15 @@
             doc: document.getElementById('o-doc').value,
             prods: prs,
             pImg: document.getElementById('o-pat-img').src,
-            qrImg: document.getElementById('qr-img').src, // ADDED QR SAVING
+            qrImg: document.getElementById('qr-img').src, 
+            formImg: document.getElementById('o-form-img').src, // Order Form Image Save
+            stlName: document.getElementById('o-stl-name').innerText, // Saving the filename of STL for UI display
             asn: (i !== "" ? S.o[i].asn : "")
         };
 
         if (i === "") S.o.push(obj); else S.o[i] = Object.assign(S.o[i], obj);
-        sv(); rOrd(); rProd(); dash(); 
+        sv(); rOrd(); rProd(); dash(); rAcct();
         
-        // Refresh calendar if currently viewing the calendar page
         if(document.getElementById('p-calendar').classList.contains('active')) {
             initFullCal();
         }
@@ -1200,6 +1236,7 @@
         let x = S.o[i]; modal('ord');
         document.getElementById('o-idx').value = i;
         document.getElementById('o-id').value = x.id;
+        document.getElementById('o-pic').value = x.pic || '';
         document.getElementById('o-pat').value = x.pat;
         document.getElementById('o-doc').value = x.doc;
         document.getElementById('o-date').value = x.date || '';
@@ -1208,10 +1245,21 @@
         document.getElementById('o-ret').value = x.ret || '';
         document.getElementById('o-stat').value = x.st;
         document.getElementById('o-qty').value = x.qty;
-        document.getElementById('o-shade').value = x.shade;
         document.getElementById('o-rem').value = x.rem;
         
-        // LOAD PAYMENT AND QR
+        document.getElementById('o-shade').value = x.shade || '';
+        document.getElementById('o-v').value = x.v || '';
+        
+        document.getElementById('o-stl-name').innerText = x.stlName || 'NO FILE';
+        
+        if (x.formImg && x.formImg.startsWith('data:image')) {
+            document.getElementById('o-form-img').src = x.formImg;
+            document.getElementById('o-form-img').classList.remove('hidden');
+        } else {
+            document.getElementById('o-form-img').src = '';
+            document.getElementById('o-form-img').classList.add('hidden');
+        }
+        
         document.getElementById('o-pay').value = x.pay || 'CASH';
         toggleQR();
         if(x.qrImg && x.qrImg.startsWith('data:image')) {
@@ -1250,7 +1298,16 @@
     }
 
     // UTILITIES
-    function previewImg(i, p) { if (i.files && i.files[0]) { let r = new FileReader(); r.onload = e => document.getElementById(p).src = e.target.result; r.readAsDataURL(i.files[0]); } }
+    function previewImg(i, p) { 
+        if (i.files && i.files[0]) { 
+            let r = new FileReader(); 
+            r.onload = e => {
+                document.getElementById(p).src = e.target.result; 
+                document.getElementById(p).classList.remove('hidden');
+            };
+            r.readAsDataURL(i.files[0]); 
+        } 
+    }
     
     function upPatImg(inp) { 
         if (inp.files && inp.files[0]) { 
@@ -1264,7 +1321,6 @@
         } 
     }
 
-    // NEW: UPLOAD QR FUNCTION ADDED
     function upQR(inp) { 
         if (inp.files && inp.files[0]) { 
             let r = new FileReader(); 
@@ -1289,9 +1345,15 @@
         });
         document.querySelectorAll('.tooth-btn.active').forEach(t=>t.style.background=color);
         let qty = parseInt(document.getElementById('o-qty').value) || 1;
-        let disc = 0, vch = S.v.find(x=>x.c === document.getElementById('o-v').value.toUpperCase());
-        if(vch && !(vch.e && new Date(vch.e) < new Date())) disc = vch.p;
-        document.getElementById('o-tot').innerText = Math.round((sub * activeTeeth * qty) * (1 - disc/100)).toLocaleString();
+        
+        let discPct = 0;
+        let selectedVoucher = document.getElementById('o-v').value;
+        if(selectedVoucher) {
+            let vch = S.v.find(x => x.c === selectedVoucher);
+            if(vch && !(vch.e && new Date(vch.e) < new Date())) discPct = vch.p;
+        }
+
+        document.getElementById('o-tot').innerText = Math.round((sub * activeTeeth * qty) * (1 - discPct/100)).toLocaleString();
     }
     
     function setSex(v){ 
@@ -1307,9 +1369,10 @@
         let v=prompt('New Value:'); 
         if(v){ 
             if(t==='loc') { S.locs.push(v); popSel('d-loc', S.locs); document.getElementById('d-loc').value = v; } 
-            if(t==='stat') { S.stats.push(v); popSel('o-stat', S.stats); document.getElementById('o-stat').value = v; } 
-            if(t==='ctype') { S.ctypes.push(v); popSel('o-ctype', S.ctypes); document.getElementById('o-ctype').value = v; onTypeChange(false); } 
+            if(t==='stat') { S.stats.push(v.toUpperCase()); popSel('o-stat', S.stats); document.getElementById('o-stat').value = v.toUpperCase(); } 
+            if(t==='ctype') { S.ctypes.push(v.toUpperCase()); popSel('o-ctype', S.ctypes); document.getElementById('o-ctype').value = v.toUpperCase(); onTypeChange(false); } 
             if(t==='font') { S.fonts.push(v); popSel('ui-font', S.fonts); document.getElementById('ui-font').value = v; } 
+            if(t==='shade') { S.shades.push(v.toUpperCase()); popSel('o-shade', S.shades); document.getElementById('o-shade').value = v.toUpperCase(); }
             sv(); alert('Added and Updated!'); 
         } 
     }
@@ -1333,7 +1396,7 @@
     function resetSys(){ 
         if(confirm('WARNING: Factory Reset? \n\nThis will DELETE all Cases, Doctors, Vouchers, and Files.\n\n')){ 
             S.d = []; S.o = []; S.fol = []; S.v = []; S.trash = []; S.msg = []; S.pr = {};
-            PRODS.forEach(p => { S.pr[p] = 1500; }); // Reset default prices
+            PRODS.forEach(p => { S.pr[p] = 1500; }); 
             sv(); 
             alert('System data wiped.');
             go('dashboard'); 
@@ -1358,20 +1421,28 @@
         }
         if(t==='ord'){
             if (S.d.length === 0) return alert("PLEASE ADD A DOCTOR FIRST");
-            document.querySelectorAll('#mod-ord input:not([readonly])').forEach(i=>i.value=''); 
+            document.querySelectorAll('#mod-ord input:not([readonly]):not([type="file"])').forEach(i=>i.value=''); 
+            document.getElementById('o-stl-name').innerText = 'NO FILE';
+            document.getElementById('o-form-img').src = '';
+            document.getElementById('o-form-img').classList.add('hidden');
             document.getElementById('o-idx').value = ""; 
             document.getElementById('o-sex').value = ""; 
-            document.getElementById('qr-img').src = ""; // CLEAR QR ON NEW
+            document.getElementById('qr-img').src = ""; 
             document.querySelectorAll('.sex-btn').forEach(b => b.classList.remove('active')); 
             popSel('o-doc', S.d.map(x=>x.n)); 
             popSel('o-stat', S.stats); 
             popSel('o-ctype', S.ctypes);
+            popSel('o-shade', S.shades);
+
+            let vOpts = `<option value="">NO DISCOUNT (0%)</option>`;
+            vOpts += S.v.map(v => `<option value="${v.c}">${v.c} (-${v.p}%)</option>`).join('');
+            document.getElementById('o-v').innerHTML = vOpts;
+
             document.getElementById('o-prods').innerHTML = PRODS.map(p=>`<label class="flex items-center gap-2 text-[10px] font-bold cursor-pointer p-1 hover:bg-slate-100 rounded"><input type="checkbox" class="ochk w-4 h-4" value="${p}" onchange="calcPrice()"> ${p}</label>`).join('');
             let th=''; 
             for(let i=1;i<=32;i++) th+=`<div class="tooth-btn shadow-sm" onclick="toggleTooth(this)">${i}</div>`; 
             document.getElementById('o-teeth').innerHTML = th; 
             
-            // Set current time correctly
             let tzOffset = (new Date()).getTimezoneOffset() * 60000;
             document.getElementById('o-date').value = (new Date(Date.now() - tzOffset)).toISOString().slice(0, 16); 
             
@@ -1382,10 +1453,10 @@
 
     // PRODUCTION
     function rProd(){ 
-        document.getElementById('b-prod').innerHTML = S.o.filter(x=>x.st!=='DONE').map((x,i)=>`
+        document.getElementById('b-prod').innerHTML = S.o.filter(x=>x.st!=='DONE' && x.st!=='CANCELLED').map((x,i)=>`
             <tr>
                 <td>${x.id}</td><td>${x.due ? x.due.replace('T', ' ') : ''}</td>
-                <td><select onchange="upProd(${S.o.indexOf(x)},'st',this.value)" class="inp !p-1 !mb-0 !w-24 text-black font-bold"><option value="${x.st}" selected>${x.st}</option>${S.stats.map(s=>`<option value="${s}">${s}</option>`).join('')}</select></td>
+                <td><select onchange="upProd(${S.o.indexOf(x)},'st',this.value)" class="inp !p-1 !mb-0 !w-auto text-black font-bold"><option value="${x.st}" selected>${x.st}</option>${S.stats.map(s=>`<option value="${s}">${s}</option>`).join('')}</select></td>
                 <td><input onchange="upProd(${S.o.indexOf(x)},'asn',this.value)" value="${x.asn||''}" class="inp !p-1 !mb-0 !w-32" placeholder="Assign Tech"></td>
                 <td>${x.rem}</td>
                 <td><button onclick="del('o',${S.o.indexOf(x)},event)" class="text-red-500 font-bold">DEL</button></td>
@@ -1400,7 +1471,6 @@
         let calEl = document.getElementById('calendar'); 
         if(window.fullCal) { window.fullCal.destroy(); }
         
-        // Generate separate events for clarity
         let calEvents = S.o.flatMap(x => {
             let evs = [];
             if(x.date) evs.push({ title: `[RCVD] ${x.id} - ${x.pat}`, start: x.date, color: '#f59e0b', extendedProps: { caseObj: x } });
@@ -1434,7 +1504,6 @@
         let x = S.o[i];
         document.getElementById('cal-idx').value = i;
         
-        // Populate View Info
         document.getElementById('cal-v-id').innerText = x.id;
         document.getElementById('cal-v-pat').innerText = x.pat;
         document.getElementById('cal-v-doc').innerText = x.doc;
@@ -1442,7 +1511,6 @@
         document.getElementById('cal-v-qty').innerText = x.qty || 1;
         document.getElementById('cal-v-items').innerText = (x.prods || []).join(', ') || 'N/A';
         
-        // Populate Editable Dates and Notes
         document.getElementById('cal-date').value = x.date || '';
         document.getElementById('cal-comp').value = x.comp || '';
         document.getElementById('cal-due').value = x.due || '';
@@ -1463,15 +1531,11 @@
         S.o[i].ret = document.getElementById('cal-ret').value;
         S.o[i].rem = document.getElementById('cal-rem').value;
         
-        sv();
-        rOrd();
-        rProd();
-        dash();
+        sv(); rOrd(); rProd(); dash();
         
         if(document.getElementById('p-calendar').classList.contains('active')) {
             initFullCal();
         }
-        
         closeModals();
         alert("Calendar Schedule & Notes Updated Successfully!");
     }
@@ -1609,14 +1673,13 @@
         if(document.getElementById('set-n').value) S.curr.n=document.getElementById('set-n').value; 
         if(document.getElementById('set-p').value) S.curr.p=document.getElementById('set-p').value; 
         
-        // Save the explicit opt-in setting for Showing Role
         if(S.curr.d === 'SYSTEM ARCHITECT' || S.curr.d === 'SUPER ADMIN') {
             S.curr.sr = document.getElementById('set-show-role').checked;
         }
 
         sv(); 
         alert('Saved'); 
-        initChat(); // Refresh chat list based on new settings
+        initChat(); 
     }
 
     function changeUI(t, v){ if(t==='font') document.documentElement.style.setProperty('--font-main', v); if(t==='text') document.documentElement.style.setProperty('--text', v); if(t==='bg') document.documentElement.style.setProperty('--bg', v); }
